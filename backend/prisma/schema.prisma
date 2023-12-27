@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  extensions = [postgis]
+}
+
+model UserType{
+  id        Int     @id @default(autoincrement())
+  type      Type
+  user      User[]
+}
+
+enum Type{
+  admin
+  user
+}
+
+model User{
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  firstName   String
+  lastName    String
+  gender      String
+  phone       String?
+  address     String?
+  password    String
+  unit        MeasurementSystem
+  userTypeId  Int
+  userType    UserType @relation(fields: [userTypeId], references: [id])
+  userHealth  UserHealth?
+}
+
+enum MeasurementSystem{
+  Metric
+  Imperial
+}
+
+model Medication{
+  id                      Int       @id @default(autoincrement())
+  name                    String
+  frequency               String
+  dosage                  String
+  startDate               DateTime
+  respiratoryCondition    RespiratoryCondition[]
+  allergy                 Allergy[]
+}
+
+model RespiratoryCondition{
+  id                  Int       @id @default(autoincrement())
+  condition           String
+  diangnosis          String
+  symptomsFrequency   String
+  triggers            String
+  medicationId        Int
+  medications         Medication @relation(fields: [medicationId], references: [id])
+  userHealth          UserHealth[]
+}
+
+model Allergy{
+    id              Int       @id @default(autoincrement())
+    allergen        String
+    severity        String
+    duration        String
+    triggers        String
+    medicationId    Int
+    medications     Medication @relation(fields: [medicationId], references: [id])
+    userHealth      UserHealth[]
+}
+
+model UserHealth{
+  id                      Int                   @id @default(autoincrement())
+  weight                  Int
+  bloodType               String
+  userId                  Int                   @unique
+  user                    User                  @relation(fields: [userId], references: [id])
+  allergyId               Int
+  allergy                 Allergy               @relation(fields: [allergyId], references: [id])
+  respiratoryConditionId  Int
+  respiratoryCondition    RespiratoryCondition  @relation(fields: [respiratoryConditionId], references: [id])
+}
+
