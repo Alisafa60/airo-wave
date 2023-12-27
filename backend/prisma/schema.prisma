@@ -24,18 +24,19 @@ enum Type{
 }
 
 model User{
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
-  firstName   String
-  lastName    String
-  gender      String
-  phone       String?
-  address     String?
-  password    String
-  unit        MeasurementSystem
-  userTypeId  Int
-  userType    UserType @relation(fields: [userTypeId], references: [id])
-  userHealth  UserHealth?
+  id                Int       @id @default(autoincrement())
+  email             String    @unique
+  firstName         String
+  lastName          String
+  gender            String
+  phone             String?
+  address           String?
+  password          String
+  unit              MeasurementSystem
+  userTypeId        Int
+  userType          UserType @relation(fields: [userTypeId], references: [id])
+  healthCondition   HealthCondition?
+  location          UserLocation[]
 }
 
 enum MeasurementSystem{
@@ -61,7 +62,7 @@ model RespiratoryCondition{
   triggers            String
   medicationId        Int
   medications         Medication @relation(fields: [medicationId], references: [id])
-  userHealth          UserHealth[]
+  healthConditon      HealthCondition[]
 }
 
 model Allergy{
@@ -72,10 +73,10 @@ model Allergy{
     triggers        String
     medicationId    Int
     medications     Medication @relation(fields: [medicationId], references: [id])
-    userHealth      UserHealth[]
+    healthConditon  HealthCondition[]
 }
 
-model UserHealth{
+model HealthCondition{
   id                      Int                   @id @default(autoincrement())
   weight                  Int
   bloodType               String
@@ -85,5 +86,64 @@ model UserHealth{
   allergy                 Allergy               @relation(fields: [allergyId], references: [id])
   respiratoryConditionId  Int
   respiratoryCondition    RespiratoryCondition  @relation(fields: [respiratoryConditionId], references: [id])
+  dailyHealth             DailyHealth[]
 }
+
+model Device{
+  id                      Int                   @id @default(autoincrement())
+  name                    String
+  manufacturer            String
+  model                   String
+  connectivityStatus      Int
+  batteryLevel            String
+  temperature             String?
+  humidity                String?
+  pollenLevel             String?
+  co2Level                String?
+  vocLevel                String?
+  heartRate               String?
+  powerData               String?
+  bloodO2Level            String?
+  sleepDuration           Int?
+  sleepQuality            String?
+  stressLevel             String?
+  pm1_0                   Float?
+  pm2_5                   Float?
+  pm10                    Float?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+}
+
+model SleepData{
+  id                      Int                   @id @default(autoincrement())
+  duration                Int
+  quality                 String
+  dailyHealth             DailyHealth?
+}
+
+model StressData{
+  id                      Int                   @id @default(autoincrement())
+  stressLevel             String
+  dailyHealth             DailyHealth[]
+}
+
+model DailyHealth{
+  id                      Int                   @id @default(autoincrement())
+  severity                Int
+  userHealthId            Int
+  healthConditions        HealthCondition       @relation(fields: [userHealthId], references: [id])
+  sleepDataId             Int                   @unique
+  sleepData               SleepData             @relation(fields: [sleepDataId], references: [id])
+  stressDataId            Int
+  stressLevels            StressData            @relation(fields: [stressDataId], references: [id])
+}
+
+model UserLocation {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  location   Unsupported("geography(Point, 4326)")
+  createdAt  DateTime @default(now())
+}
+
 

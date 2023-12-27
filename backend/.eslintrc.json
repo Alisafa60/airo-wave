@@ -13,8 +13,27 @@
         "ecmaVersion": "latest"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint", "@ts-safeql/eslint-plugin"
     ],
     "rules": {
+        "@ts-safeql/check-sql": [
+            "error",
+            {
+              "connections": [
+                {
+                  // The migrations path:
+                  "migrationsDir": "./prisma/migrations",
+                  "targets": {
+                    // The sql tags that should be checked.
+                    // either `db.$queryRaw` or `db.$executeRaw`:
+                    "tag": "prisma.+($queryRaw|$executeRaw)",
+                    // Transform the query result to array
+                    "transform": "{type}[]"
+                  }
+                }
+              ]
+            }
+        ]
     }
 }
+
