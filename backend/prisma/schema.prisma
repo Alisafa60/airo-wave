@@ -37,6 +37,8 @@ model User{
   userType          UserType @relation(fields: [userTypeId], references: [id])
   healthCondition   HealthCondition?
   location          UserLocation[]
+  enviromentalData  EnviromentalData[]
+  device            Device[]
 }
 
 enum MeasurementSystem{
@@ -55,25 +57,25 @@ model Medication{
 }
 
 model RespiratoryCondition{
-  id                  Int       @id @default(autoincrement())
+  id                  Int                @id @default(autoincrement())
   condition           String
   diangnosis          String
   symptomsFrequency   String
   triggers            String
   medicationId        Int
-  medications         Medication @relation(fields: [medicationId], references: [id])
+  medications         Medication         @relation(fields: [medicationId], references: [id])
   healthConditon      HealthCondition[]
 }
 
 model Allergy{
-    id              Int       @id @default(autoincrement())
-    allergen        String
-    severity        String
-    duration        String
-    triggers        String
-    medicationId    Int
-    medications     Medication @relation(fields: [medicationId], references: [id])
-    healthConditon  HealthCondition[]
+  id                  Int                @id @default(autoincrement())
+  allergen            String
+  severity            String
+  duration            String
+  triggers            String
+  medicationId        Int
+  medications         Medication         @relation(fields: [medicationId], references: [id])
+  healthConditon      HealthCondition[]
 }
 
 model HealthCondition{
@@ -96,35 +98,66 @@ model Device{
   model                   String
   connectivityStatus      Int
   batteryLevel            String
-  temperature             String?
-  humidity                String?
-  pollenLevel             String?
-  co2Level                String?
-  vocLevel                String?
-  heartRate               String?
-  powerData               String?
+  temperature             Int?
+  humidity                Float?
+  co2Level                Float?
+  vocLevel                Float?
   bloodO2Level            String?
-  sleepDuration           Int?
-  sleepQuality            String?
-  stressLevel             String?
   pm1_0                   Float?
   pm2_5                   Float?
   pm10                    Float?
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  sleepData               SleepData[]
+  stressData              StressData[]
+  userLocations           UserLocation[]
+  enviromentalData        EnviromentalData[]
+  userId                  Int
+  user                    User                   @relation(fields: [userId], references: [id])
+  heartRateData           HeartRateData[]
+  powerData               PowerData[]
 }
 
 model SleepData{
-  id                      Int                   @id @default(autoincrement())
+  id                      Int                 @id @default(autoincrement())
   duration                Int
   quality                 String
+  deviceId                Int
+  device                  Device              @relation(fields: [deviceId], references: [id])
   dailyHealth             DailyHealth?
+  userLocationId          Int        
+  userLocation            UserLocation        @relation(fields: [userLocationId], references: [id])
+  
+}
+
+model HeartRateData{
+  id                      Int          @id @default(autoincrement())
+  restingHr               Int
+  maxHr                   Int
+  createdAt               DateTime     @default(now())
+  updatedAt               DateTime     @updatedAt
+  deviceId                Int
+  device                  Device             @relation(fields: [deviceId], references: [id])
+}
+
+model PowerData{
+  id                      Int          @id @default(autoincrement())
+  power                   Int
+  maxPower                Int
+  createdAt               DateTime     @default(now())
+  updatedAt               DateTime     @updatedAt
+  deviceId                Int
+  device                  Device             @relation(fields: [deviceId], references: [id])
 }
 
 model StressData{
-  id                      Int                   @id @default(autoincrement())
+  id                      Int                @id @default(autoincrement())
   stressLevel             String
+  deviceId                Int
+  device                  Device             @relation(fields: [deviceId], references: [id])
   dailyHealth             DailyHealth[]
+  userLocationId          Int       
+  userLocation            UserLocation       @relation(fields: [userLocationId], references: [id])
 }
 
 model DailyHealth{
@@ -139,11 +172,43 @@ model DailyHealth{
 }
 
 model UserLocation {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  user       User     @relation(fields: [userId], references: [id])
-  location   Unsupported("geography(Point, 4326)")
-  createdAt  DateTime @default(now())
+  id                Int                                      @id @default(autoincrement())
+  location          Unsupported("geography(Point, 4326)")
+  userId            Int
+  user              User                                     @relation(fields: [userId], references: [id])
+  deviceId          Int
+  device            Device                                   @relation(fields: [deviceId], references: [id])
+  stress            StressData[]
+  sleep             SleepData[]
+  createdAt         DateTime                                 @default(now())
+  eniromentalData   EnviromentalData[]
 }
 
+model EnviromentalData{
+  id                      Int         @id @default(autoincrement())
+  temperature             Float
+  humidity                Float
+  aqi                     Float
+  treePollen              Float
+  grassPollen             Float
+  weedPollen              Float
+  co2Level                Float
+  ozoneLevel              Float?
+  coLevel                 Float?
+  vocLevel                Float?
+  so2Level                Float?
+  no2Level                Float?
+  pm1_0                   Float?
+  pm2_5                   Float?
+  pm10                    Float?
+  windSpeed               Float?
+  createdAt               DateTime     @default(now())
+  updatedAt               DateTime     @updatedAt
+  deviceId                Int
+  device                  Device       @relation(fields: [deviceId], references: [id])
+  userLocationId          Int       
+  userLocation            UserLocation @relation(fields: [userLocationId], references: [id])
+  userId                  Int
+  user                    User         @relation(fields: [userId], references: [id])
+}
 
