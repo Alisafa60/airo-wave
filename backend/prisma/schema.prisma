@@ -21,24 +21,34 @@ model UserType{
 enum Type{
   admin
   user
+  healthProfessional
 }
 
 model User{
-  id                Int       @id @default(autoincrement())
-  email             String    @unique
-  firstName         String
-  lastName          String
-  gender            String
-  phone             String?
-  address           String?
-  password          String
-  unit              MeasurementSystem
-  userTypeId        Int
-  userType          UserType @relation(fields: [userTypeId], references: [id])
-  healthCondition   HealthCondition?
-  location          UserLocation[]
-  enviromentalData  EnviromentalData[]
-  device            Device[]
+  id                    Int                @id @default(autoincrement())
+  email                 String             @unique
+  firstName             String
+  lastName              String
+  gender                String
+  phone                 String?
+  profilePicture        String? 
+  address               String?
+  password              String
+  unit                  MeasurementSystem
+  userTypeId            Int
+  userType              UserType            @relation(fields: [userTypeId], references: [id])
+  healthCondition       HealthCondition?
+  location              UserLocation[]
+  enviromentalData      EnviromentalHealthData[]
+  device                Device[]
+  notifications         PushNotification[]
+  healthProessional     HealthProfessional[]
+  contactProfesional    ContactProfessional[]
+  mlPrediction          MlPrediction[]
+  feedback              Feedback[]
+  conversations         Conversation[]  
+  messages              Message[]        
+  responses             Response[]       
 }
 
 enum MeasurementSystem{
@@ -111,7 +121,7 @@ model Device{
   sleepData               SleepData[]
   stressData              StressData[]
   userLocations           UserLocation[]
-  enviromentalData        EnviromentalData[]
+  enviromentalHealthData  EnviromentalHealthData[]
   userId                  Int
   user                    User                   @relation(fields: [userId], references: [id])
   heartRateData           HeartRateData[]
@@ -172,19 +182,19 @@ model DailyHealth{
 }
 
 model UserLocation {
-  id                Int                                      @id @default(autoincrement())
-  location          Unsupported("geography(Point, 4326)")
-  userId            Int
-  user              User                                     @relation(fields: [userId], references: [id])
-  deviceId          Int
-  device            Device                                   @relation(fields: [deviceId], references: [id])
-  stress            StressData[]
-  sleep             SleepData[]
-  createdAt         DateTime                                 @default(now())
-  eniromentalData   EnviromentalData[]
+  id                      Int                                      @id @default(autoincrement())
+  location                Unsupported("geography(Point, 4326)")
+  userId                  Int
+  user                    User                                     @relation(fields: [userId], references: [id])
+  deviceId                Int
+  device                  Device                                   @relation(fields: [deviceId], references: [id])
+  stress                  StressData[]
+  sleep                   SleepData[]
+  createdAt               DateTime                                 @default(now())
+  eniromentalHealthData   EnviromentalHealthData[]
 }
 
-model EnviromentalData{
+model EnviromentalHealthData{
   id                      Int         @id @default(autoincrement())
   temperature             Float
   humidity                Float
@@ -212,3 +222,89 @@ model EnviromentalData{
   user                    User         @relation(fields: [userId], references: [id])
 }
 
+model PushNotification {
+  id              Int       @id @default(autoincrement())
+  title           String
+  body            String
+  data            Json      // Additional data to send with the notification
+  type            String    
+  sentAt          DateTime  @default(now())
+  deliveredAt     DateTime?
+  readAt          DateTime?
+  userId          Int
+  user            User      @relation(fields: [userId], references: [id])
+}
+
+model MlPrediction{
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  user           User         @relation(fields: [userId], references: [id])
+  predictedValue String
+  timestamp      DateTime     @default(now())
+  feedback       Feedback[]
+}
+
+model Feedback {
+  id                 Int                 @id @default(autoincrement())
+  userId             Int
+  user               User                @relation(fields: [userId], references: [id])
+  healthProId        Int?
+  healthProfessional HealthProfessional? @relation(fields: [healthProId], references: [id])
+  feedbackType       String   
+  comments           String?
+  predictionId       Int
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  prediction         MlPrediction       @relation(fields: [predictionId], references: [id])
+}
+
+model HealthProfessional {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  user            User      @relation(fields: [userId], references: [id])
+  specialization  String
+  certifications  String[]
+  messages        ContactProfessional[]
+  feedback        Feedback[]
+}
+
+model ContactProfessional {
+  id              Int                 @id @default(autoincrement())
+  senderId        Int
+  sender          User                @relation(fields: [senderId], references: [id])
+  recipientId     Int
+  recipient       HealthProfessional  @relation(fields: [recipientId], references: [id])
+  content         String
+  sentAt          DateTime            @default(now())
+  readAt          DateTime?
+  repliedAt       DateTime?
+  replyContent    String?
+}
+
+model Conversation {
+  id            Int          @id @default(autoincrement())
+  userId        Int
+  user          User       @relation(fields: [userId], references: [id])
+  messages      Message[]
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  content        String
+  timestamp      DateTime     @default(now())
+  senderId       Int
+  sender         User         @relation(fields: [senderId], references: [id])
+  conversationId Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  responses      Response[]
+}
+
+model Response {
+  id         Int      @id @default(autoincrement())
+  content    String
+  timestamp  DateTime @default(now())
+  senderId   Int
+  sender     User     @relation(fields: [senderId], references: [id])
+  messageId  Int
+  message    Message  @relation(fields: [messageId], references: [id])
+}
