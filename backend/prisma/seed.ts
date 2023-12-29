@@ -6,13 +6,13 @@ const prisma = new PrismaClient();
 async function main() {
     const user = await prisma.user.create({
         data:{
-            email:'ali@hotmail.com',
+            email:'ali1@hotmail.com',
             firstName:'ali',
             lastName:'safa',
             gender:'male',
             password:'ali1234',
             unit:'Metric',
-            userTypeId:2,
+            userTypeId:3,
         }
     })
 }

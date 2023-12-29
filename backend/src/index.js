@@ -1,6 +1,5 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const authRoutes = require('./routes/auth.routes');
 require("dotenv").config();
 
 const prisma = new PrismaClient();
@@ -8,8 +7,12 @@ const app = express();
 
 app.use(express.json());
 
+const authRoutes = require('./routes/auth.routes');
+const imageRoutes = require('./routes/image.routes');
 
 app.use('/auth', authRoutes);
+app.use('/api', imageRoutes);
+module.exports = app;
 
 const PORT = process.env.PORT || 3000;
 
