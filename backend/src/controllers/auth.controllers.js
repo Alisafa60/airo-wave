@@ -4,6 +4,11 @@ const jwt = require('jsonwebtoken');
 
 const prisma = new PrismaClient();
 
+const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(password, salt);
+};
+
 const register = async (req, res) => {
   const { email, password, firstName, lastName, gender, unit, type, profilePicture } = req.body;
 
@@ -18,21 +23,17 @@ const register = async (req, res) => {
 
   try {
     let userTypeConnect = { type };
-    const hashedPassword = await bcrypt.hash(password, 10)
-    
-    if (type === 'user') {
-      const userType = await prisma.userType.findFirst({ where: { type: 'user' } });
+    const userInDb = await prisma.user.findUnique({ where: { email } });
+
+    // Check if the password has been modified or it's a new user
+    const hashedPassword = userInDb ? userInDb.password : await hashPassword(password);
+
+    if (type === 'user' || type === 'healthProfessional') {
+      const userType = await prisma.userType.findFirst({ where: { type } });
       if (userType) {
         userTypeConnect = { id: userType.id };
       } else {
-        return res.status(500).json({ error: "User type 'user' not found" });
-      }
-    } else if (type === 'healthProfessional') {
-      const userType = await prisma.userType.findFirst({ where: { type: 'healthProfessional' } });
-      if (userType) {
-        userTypeConnect = { id: userType.id };
-      } else {
-        return res.status(500).json({ error: "User type 'healthProfessional' not found" });
+        return res.status(500).json({ error: `User type '${type}' not found` });
       }
     }
 
@@ -57,6 +58,45 @@ const register = async (req, res) => {
   }
 };
 
+const login = async(req, res) => {
+  const {email, password} = req.body;
+
+  try{
+    const user = await prisma.user.findUnique({
+      where: {email},
+      include:{
+        userType: true,
+      },
+    });
+
+    if(!user){
+      return res.status(400).send({message: "Invalid email/password"});
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if(!isValidPassword){
+      return res.status(400).send({message: "Invalid email/password"});
+    }
+
+    const {password: hashedPassword, ...userDetails} = user;
+
+    const token = jwt.sign(
+      {...userDetails},
+      process.env.JWT_SECRET,
+      {expiresIn: "30 days"}
+    );
+
+    return res.status(200).send({
+      user: userDetails,
+      token,
+    });
+  } catch(e){
+    console.error("error in login", e);
+    return res.status(500).json({error: e.message});
+  }
+}
+
 module.exports = {
   register,
+  login,
 };
