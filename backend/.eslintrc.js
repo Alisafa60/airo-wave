@@ -6,6 +6,10 @@ module.exports = {
   // exclude `parserOptions` if you are not using TypeScript
   parserOptions: {
     project: './tsconfig.json',
+    ecmaVersion: 'latest',
+  },
+  env:{
+    es6: 'true',
   },
   rules: {
     '@ts-safeql/check-sql': [

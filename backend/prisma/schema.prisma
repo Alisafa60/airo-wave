@@ -39,7 +39,7 @@ model User{
   userType              UserType            @relation(fields: [userTypeId], references: [id])
   healthCondition       HealthCondition?
   location              UserLocation[]
-  enviromentalData      EnviromentalHealthData[]
+  enviromentalHealthData EnviromentalHealthData[]
   device                Device[]
   notifications         PushNotification[]
   healthProessional     HealthProfessional[]
@@ -191,7 +191,7 @@ model UserLocation {
   stress                  StressData[]
   sleep                   SleepData[]
   createdAt               DateTime                                 @default(now())
-  eniromentalHealthData   EnviromentalHealthData[]
+  enviromentalHealthData  EnviromentalHealthData[]
 }
 
 model EnviromentalHealthData{
