@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const upload = require('../utils/imageUpload');
+const upload = require('../../utils/imageUpload');
 
 const prisma = new PrismaClient();
 
