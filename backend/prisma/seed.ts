@@ -12,7 +12,7 @@ async function main() {
             gender:'male',
             password:'ali1234',
             unit:'Metric',
-            userTypeId:3,
+            userTypeId:3,//usertype of admin, with id=1 for user and id=2 for healthprofessional
         }
     })
 }

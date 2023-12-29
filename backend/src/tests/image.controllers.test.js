@@ -34,3 +34,28 @@ describe('Image Controller', () => {
   });
 
 });
+
+describe('Image Controller', () => {
+  it('should delete the profile picture', async function () {
+    this.timeout(10000);
+
+    const loginResponse = await supertest(app)
+      .post('/auth/login')
+      .send({
+        email: 'lama@se.com',
+        password: 'ali1234',
+      });
+
+    const token = loginResponse.body.token;
+    const decodedToken = jwt.decode(token);
+    const userId = decodedToken.user_id;
+
+    // Delete profile picture
+    const deleteResponse = await supertest(app)
+      .delete(`/api/users/${userId}/profile-picture`)
+      .set('Authorization', `Bearer ${token}`);
+
+    assert.strictEqual(deleteResponse.status, 204);
+
+  });
+});

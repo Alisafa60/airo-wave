@@ -32,7 +32,7 @@ const uploadProfilePicture = async (req, res) => {
 
 const deleteProfilePicture = async (req, res) => {
   try {
-    const userId = req.user.id;y
+    const userId = req.user.id;
 
     if (!userId) {
       return res.status(400).json({ error: 'User not found in the request.' });
