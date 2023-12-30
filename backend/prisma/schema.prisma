@@ -94,10 +94,10 @@ model HealthCondition{
   bloodType               String
   userId                  Int                   @unique
   user                    User                  @relation(fields: [userId], references: [id])
-  allergyId               Int
-  allergy                 Allergy               @relation(fields: [allergyId], references: [id])
-  respiratoryConditionId  Int
-  respiratoryCondition    RespiratoryCondition  @relation(fields: [respiratoryConditionId], references: [id])
+  allergyId               Int?
+  allergy                 Allergy?               @relation(fields: [allergyId], references: [id])
+  respiratoryConditionId  Int?
+  respiratoryCondition    RespiratoryCondition?  @relation(fields: [respiratoryConditionId], references: [id])
   dailyHealth             DailyHealth[]
 }
 
