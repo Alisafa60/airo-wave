@@ -61,7 +61,7 @@ model Medication{
   name                    String
   frequency               String
   dosage                  String
-  startDate               DateTime
+  startDate               DateTime?
   respiratoryCondition    RespiratoryCondition[]
   allergy                 Allergy[]
   healthConditon          HealthCondition[]
@@ -73,8 +73,8 @@ model RespiratoryCondition{
   diangnosis          String
   symptomsFrequency   String
   triggers            String
-  medicationId        Int
-  medications         Medication         @relation(fields: [medicationId], references: [id])
+  medicationId        Int?
+  medications         Medication?        @relation(fields: [medicationId], references: [id])
   healthConditon      HealthCondition[]
 }
 
@@ -84,24 +84,24 @@ model Allergy{
   severity            String
   duration            String
   triggers            String
-  medicationId        Int
-  medications         Medication         @relation(fields: [medicationId], references: [id])
+  medicationId        Int?
+  medications         Medication?        @relation(fields: [medicationId], references: [id])
   healthConditon      HealthCondition[]
 }
 
 model HealthCondition{
-  id                      Int                   @id @default(autoincrement())
+  id                      Int                    @id @default(autoincrement())
   weight                  Int
   bloodType               String
-  userId                  Int                   @unique
-  user                    User                  @relation(fields: [userId], references: [id])
+  userId                  Int                    @unique
+  user                    User                   @relation(fields: [userId], references: [id])
   allergyId               Int?
   allergy                 Allergy?               @relation(fields: [allergyId], references: [id])
   respiratoryConditionId  Int?
   respiratoryCondition    RespiratoryCondition?  @relation(fields: [respiratoryConditionId], references: [id])
   dailyHealth             DailyHealth[]
   medicationId            Int?                     
-  medications             Medication?             @relation(fields: [medicationId], references: [id])
+  medications             Medication?            @relation(fields: [medicationId], references: [id])
 }
 
 model Device{
