@@ -1,43 +1,64 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const createOrFindMedication = async ({name, frequency, dosage, startDate }) => {
-
-    const existingMedication = await prisma.medication.findFirst({
-      where: { name },
-    });
-  
-    if (existingMedication) {
-      return existingMedication;
-    }
-  
-    // If the medication doesn't exist, create a new one
-    const newMedication = await prisma.medication.create({
-      data: {
-        name,
-        frequency: frequency || null,
-        dosage: dosage || null,
-        startDate: startDate || null,
-      },
-    });
-  
-    return newMedication;
-};
-
 const createMedication = async (req, res) => {
   try {
-    const { name, frequency, dosage, startDate } = req.body;
+    const { name, frequency, dosage, startDate, context } = req.body;
 
     const newMedication = await prisma.medication.create({
       data: {
         name,
         frequency,
         dosage,
-        startDate: startDate || null, 
+        startDate: startDate || null,
       },
     });
 
-    res.status(201).json({ medication: newMedication });
+    // Assuming userId is available in the request, replace it with the actual way you retrieve userId
+    const userId = req.user.id;
+
+    // Connect the medication to the user's health condition (UserHealth)
+    const userHealth = await prisma.healthCondition.findUnique({
+      where: { userId: userId },
+    });
+
+    if (!userHealth || !userHealth.id) {
+      return res.status(400).json({ error: 'User health information not found.' });
+    }
+
+    const updatedUserHealth = await prisma.healthCondition.update({
+      where: { id: userHealth.id },
+      data: {
+        medications: {
+          connect: { id: newMedication.id },
+        },
+      },
+    });
+    let conditionId = null;
+
+    if (context === 'allergy' && userHealth.allergyId) {
+      conditionId = userHealth.allergyId;
+      await prisma.allergy.update({
+        where: { id: conditionId },
+        data: {
+          medications: {
+            connect: { id: newMedication.id },
+          },
+        },
+      });
+    } else if (context === 'respiratoryCondition' && userHealth.respiratoryConditionId) {
+      conditionId = userHealth.respiratoryConditionId;
+      await prisma.respiratoryCondition.update({
+        where: { id: conditionId },
+        data: {
+          medications: {
+            connect: { id: newMedication.id },
+          },
+        },
+      });
+    }
+
+    res.status(201).json({ medication: newMedication, updatedUserHealth });
   } catch (e) {
     console.error('Error creating medication', e);
     res.status(500).json({ error: e.message });
@@ -105,7 +126,6 @@ const deleteMedicationById = async (req, res) => {
 };
 
 module.exports = {
-  createOrFindMedication,
   createMedication,
   getAllMedications,
   getMedicationById,

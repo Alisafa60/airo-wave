@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { handleError } = require('../../helpers');
 const prisma = new PrismaClient();
 
 const addUserHealth = async (req, res) => {
@@ -22,9 +23,40 @@ const addUserHealth = async (req, res) => {
 
     res.status(201).json({ userHealth: newUserHealth, userHealthId });
   } catch (e) {
-    console.error('Error adding new user health', e);
-    res.status(500).json({ error: e.message });
+    handleError(res, e, 'Error adding new user health');
   }
 };
 
-module.exports = { addUserHealth };
+const getUserHealth = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const userHealth = await prisma.healthCondition.findUnique({
+      where: { userId: userId },
+    });
+
+    if (!userHealth || !userHealth.id) {
+      return res.status(404).json({ error: 'User health information not found.' });
+    }
+
+    res.json({ userHealth });
+  } catch (e) {
+    handleError(res, e, 'Error getting user health');
+  }
+};
+
+const deleteUserHealthById = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const deletedUserHealth = await prisma.healthCondition.delete({
+      where: { userId: userId },
+    });
+
+    res.json({ message: 'User health deleted successfully', deletedUserHealth });
+  } catch (e) {
+    handleError(res, e, 'Error deleting user health');
+  }
+};
+
+module.exports = { addUserHealth, getUserHealth, deleteUserHealthById };

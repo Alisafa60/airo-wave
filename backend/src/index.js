@@ -12,11 +12,13 @@ const authRoutes = require('./routes/auth.routes');
 const imageRoutes = require('./routes/image.routes');
 const allergyRoutes = require('./routes/allergy.routes');
 const healtRoutes = require('./routes/userHealth.routes')
+const medicationRoutes = require('./routes/medication.routes')
 
 app.use('/auth', authRoutes);
 app.use('/api', authMiddleware, imageRoutes);
 app.use('/api', authMiddleware, allergyRoutes);
 app.use('/api', authMiddleware, healtRoutes);
+app.use('/api', authMiddleware, medicationRoutes);
 
 module.exports = app;
 
