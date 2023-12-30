@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const {handleError} = require('../../helpers');
 
 const createMedication = async (req, res) => {
   try {
@@ -14,10 +15,9 @@ const createMedication = async (req, res) => {
       },
     });
 
-    // Assuming userId is available in the request, replace it with the actual way you retrieve userId
     const userId = req.user.id;
 
-    // Connect the medication to the user's health condition (UserHealth)
+    // Connect the medication to the user's health condition 
     const userHealth = await prisma.healthCondition.findUnique({
       where: { userId: userId },
     });
@@ -60,43 +60,46 @@ const createMedication = async (req, res) => {
 
     res.status(201).json({ medication: newMedication, updatedUserHealth });
   } catch (e) {
-    console.error('Error creating medication', e);
-    res.status(500).json({ error: e.message });
+    handleError(res, e, 'Error creating medication');
   }
 };
 
 const getAllMedications = async (req, res) => {
   try {
-    const medications = await prisma.medication.findMany();
+    const userId = req.user.id;
+    const medications = await prisma.medication.findMany({
+      where:{ healthConditon: { userId: userId }}
+    });
     res.json({ medications });
   } catch (e) {
-    console.error('Error creating medication', e);
-    res.status(500).json({ error: e.message });
+    handleError(res, e, 'Error retrieving medications');
   }
 };
 
 const getMedicationById = async (req, res) => {
-  const { id } = req.params;
   try {
+    const { id } = req.params;
+    const userId = req.user.id;
     const medication = await prisma.medication.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: id },
+      include: { healthCondition: { where: { userId: userId }}},
     });
     if (!medication) {
       return res.status(404).json({ error: 'Medication not found' });
     }
     res.json({ medication });
   } catch (e) {
-    console.error('Error creating medication', e);
-    res.status(500).json({ error: e.message });
+    handleError(res, e, 'Error retrieving medication');
   }
 };
 
 const updateMedicationById = async (req, res) => {
-  const { id } = req.params;
-  const { name, frequency, dosage, startDate } = req.body;
   try {
+    const { id } = req.params;
+    const { name, frequency, dosage, startDate } = req.body;
     const updatedMedication = await prisma.medication.update({
-      where: { id: parseInt(id) },
+      where: { id: id },
+      include: { healthCondition: { where: { userId: userId }}},
       data: {
         name,
         frequency,
@@ -106,22 +109,21 @@ const updateMedicationById = async (req, res) => {
     });
     res.json({ medication: updatedMedication });
   } catch (e) {
-    console.error('Error creating medication', e);
-    res.status(500).json({ error: e.message });
+    handleError(res, e, 'Error creating medication');
   }
 };
 
-
 const deleteMedicationById = async (req, res) => {
-  const { id } = req.params;
   try {
+    const { id } = req.params;
+    const userId = req.user.id;
     await prisma.medication.delete({
-      where: { id: parseInt(id) },
+      where: { id: id },
+      include: { healthCondition: { where: { userId: userId }}},
     });
     res.json({ message: 'Medication deleted successfully' });
   } catch (e) {
-    console.error('Error creating medication', e);
-    res.status(500).json({ error: e.message });
+    handleError(res, e, 'Error deleting medication');
   }
 };
 

@@ -30,7 +30,6 @@ const addUserHealth = async (req, res) => {
 const getUserHealth = async (req, res) => {
   try {
     const userId = req.user.id;
-
     const userHealth = await prisma.healthCondition.findUnique({
       where: { userId: userId },
     });
@@ -45,11 +44,27 @@ const getUserHealth = async (req, res) => {
   }
 };
 
+const updateUserHealth = async (req, res) => {
+  try{
+    const userId = req.user.id;
+    const updateUserHealth = await prisma.healthCondition.update({
+      where: { userId: userId },
+      data: {
+        weight,
+        bloodType,
+      }
+    });
+
+    res.json({ updateUserHealth });
+  }catch(e){
+    handleError(res, e, 'Error updating user health');
+  }
+}
+
 const deleteUserHealthById = async (req, res) => {
   try {
     const userId = req.user.id;
-
-    const deletedUserHealth = await prisma.healthCondition.delete({
+    await prisma.healthCondition.delete({
       where: { userId: userId },
     });
 
@@ -59,4 +74,9 @@ const deleteUserHealthById = async (req, res) => {
   }
 };
 
-module.exports = { addUserHealth, getUserHealth, deleteUserHealthById };
+module.exports = {
+  addUserHealth,
+  getUserHealth,
+  updateUserHealth,
+  deleteUserHealthById 
+};

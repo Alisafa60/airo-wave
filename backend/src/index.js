@@ -13,12 +13,16 @@ const imageRoutes = require('./routes/image.routes');
 const allergyRoutes = require('./routes/allergy.routes');
 const healtRoutes = require('./routes/userHealth.routes')
 const medicationRoutes = require('./routes/medication.routes')
+const userHealth = require('./routes/userHealth.routes');
+const respiratoryCondition = require('./routes/respiratoryCondition.routes');
 
 app.use('/auth', authRoutes);
 app.use('/api', authMiddleware, imageRoutes);
 app.use('/api', authMiddleware, allergyRoutes);
 app.use('/api', authMiddleware, healtRoutes);
 app.use('/api', authMiddleware, medicationRoutes);
+app.use('/api', authMiddleware, userHealth);
+app.use('/api', authMiddleware, respiratoryCondition);
 
 module.exports = app;
 
