@@ -56,15 +56,16 @@ enum MeasurementSystem{
   Imperial
 }
 
-model Medication{
-  id                      Int       @id @default(autoincrement())
-  name                    String
-  frequency               String
-  dosage                  String
-  startDate               DateTime?
-  respiratoryCondition    RespiratoryCondition[]
-  allergy                 Allergy[]
-  healthConditon          HealthCondition[]
+model HealthCondition{
+  id                      Int                    @id @default(autoincrement())
+  weight                  Int
+  bloodType               String
+  userId                  Int                    @unique
+  user                    User                   @relation(fields: [userId], references: [id])
+  respiratoryConditions   RespiratoryCondition[] 
+  allergies               Allergy[]
+  dailyHealth             DailyHealth[]           
+  medications             Medication[]
 }
 
 model RespiratoryCondition{
@@ -73,9 +74,9 @@ model RespiratoryCondition{
   diangnosis          String
   symptomsFrequency   String
   triggers            String
-  medicationId        Int?
-  medications         Medication?        @relation(fields: [medicationId], references: [id])
-  healthConditon      HealthCondition[]
+  healthConditionId   Int
+  healthCondition     HealthCondition   @relation(fields: [healthConditionId], references: [id])
+  medications         Medication[]
 }
 
 model Allergy{
@@ -84,24 +85,24 @@ model Allergy{
   severity            String
   duration            String
   triggers            String
-  medicationId        Int?
-  medications         Medication?        @relation(fields: [medicationId], references: [id])
-  healthConditon      HealthCondition[]
+  healthConditionId   Int
+  healthCondition     HealthCondition   @relation(fields: [healthConditionId], references: [id])
+  medications         Medication[]
 }
 
-model HealthCondition{
-  id                      Int                    @id @default(autoincrement())
-  weight                  Int
-  bloodType               String
-  userId                  Int                    @unique
-  user                    User                   @relation(fields: [userId], references: [id])
-  allergyId               Int?
-  allergy                 Allergy?               @relation(fields: [allergyId], references: [id])
+
+model Medication{
+  id                      Int       @id @default(autoincrement())
+  name                    String
+  frequency               String
+  dosage                  String
+  startDate               DateTime?
   respiratoryConditionId  Int?
   respiratoryCondition    RespiratoryCondition?  @relation(fields: [respiratoryConditionId], references: [id])
-  dailyHealth             DailyHealth[]
-  medicationId            Int?                     
-  medications             Medication?            @relation(fields: [medicationId], references: [id])
+  allergyId               Int?
+  allergy                 Allergy?                @relation(fields: [allergyId], references: [id])
+  healthConditionId       Int
+  healthCondtion          HealthCondition          @relation(fields: [healthConditionId], references: [id])
 }
 
 model Device{
@@ -111,14 +112,6 @@ model Device{
   model                   String
   connectivityStatus      Int
   batteryLevel            String
-  temperature             Int?
-  humidity                Float?
-  co2Level                Float?
-  vocLevel                Float?
-  bloodO2Level            String?
-  pm1_0                   Float?
-  pm2_5                   Float?
-  pm10                    Float?
   createdAt               DateTime              @default(now())
   updatedAt               DateTime              @updatedAt
   sleepData               SleepData[]
@@ -137,7 +130,8 @@ model SleepData{
   quality                 String
   deviceId                Int
   device                  Device              @relation(fields: [deviceId], references: [id])
-  dailyHealth             DailyHealth?
+  dailyHealthId           Int
+  dailyHealth             DailyHealth         @relation(fields: [dailyHealthId], references: [id])
   userLocationId          Int        
   userLocation            UserLocation        @relation(fields: [userLocationId], references: [id])
   
@@ -150,7 +144,7 @@ model HeartRateData{
   createdAt               DateTime     @default(now())
   updatedAt               DateTime     @updatedAt
   deviceId                Int
-  device                  Device             @relation(fields: [deviceId], references: [id])
+  device                  Device       @relation(fields: [deviceId], references: [id])
 }
 
 model PowerData{
@@ -160,7 +154,7 @@ model PowerData{
   createdAt               DateTime     @default(now())
   updatedAt               DateTime     @updatedAt
   deviceId                Int
-  device                  Device             @relation(fields: [deviceId], references: [id])
+  device                  Device        @relation(fields: [deviceId], references: [id])
 }
 
 model StressData{
@@ -168,7 +162,8 @@ model StressData{
   stressLevel             String
   deviceId                Int
   device                  Device             @relation(fields: [deviceId], references: [id])
-  dailyHealth             DailyHealth[]
+  dailyHealthId           Int
+  dailyHealth             DailyHealth         @relation(fields: [dailyHealthId], references: [id])
   userLocationId          Int       
   userLocation            UserLocation       @relation(fields: [userLocationId], references: [id])
 }
@@ -178,10 +173,8 @@ model DailyHealth{
   severity                Int
   userHealthId            Int
   healthConditions        HealthCondition       @relation(fields: [userHealthId], references: [id])
-  sleepDataId             Int                   @unique
-  sleepData               SleepData             @relation(fields: [sleepDataId], references: [id])
-  stressDataId            Int
-  stressLevels            StressData            @relation(fields: [stressDataId], references: [id])
+  sleepData               SleepData[]
+  stressData              StressData[]
 }
 
 model UserLocation {
@@ -199,13 +192,13 @@ model UserLocation {
 
 model EnviromentalHealthData{
   id                      Int         @id @default(autoincrement())
-  temperature             Float
-  humidity                Float
-  aqi                     Float
-  treePollen              Float
-  grassPollen             Float
-  weedPollen              Float
-  co2Level                Float
+  temperature             Float?
+  humidity                Float?
+  aqi                     Float?
+  treePollen              Float?
+  grassPollen             Float?
+  weedPollen              Float?
+  co2Level                Float?
   ozoneLevel              Float?
   coLevel                 Float?
   vocLevel                Float?
@@ -215,6 +208,7 @@ model EnviromentalHealthData{
   pm2_5                   Float?
   pm10                    Float?
   windSpeed               Float?
+  bloodO2Level            String?
   createdAt               DateTime     @default(now())
   updatedAt               DateTime     @updatedAt
   deviceId                Int
@@ -256,9 +250,9 @@ model Feedback {
   feedbackType       String   
   comments           String?
   predictionId       Int
+  prediction         MlPrediction       @relation(fields: [predictionId], references: [id])
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
-  prediction         MlPrediction       @relation(fields: [predictionId], references: [id])
 }
 
 model HealthProfessional {
