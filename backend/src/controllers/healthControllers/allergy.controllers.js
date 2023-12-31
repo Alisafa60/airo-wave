@@ -1,115 +1,145 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const {handleError} = require('../../helpers');
+const { handleError } = require('../../helpers');
 
 const addAllergy = async (req, res) => {
-    try {
-      const { allergen, severity, duration, triggers } = req.body;
-      const userId = req.user.id;
-      const userHealth = await prisma.healthCondition.findUnique({
-        where: { userId: userId },
-      });
+  try {
+    const { allergen, severity, duration, triggers } = req.body;
+    const userId = req.user.id;
+    // Find the user's health condition
+    const healthCondition = await prisma.healthCondition.findUnique({
+      where: { userId: userId },
+    });
 
-      if (!userHealth || !userHealth.id) {
-        return res.status(400).json({ error: 'User health information not found.' });
-      }
-  
-      const userHealthId = userHealth.id;
-  
-      const newAllergy = await prisma.allergy.create({
-        data: {
-          allergen,
-          severity,
-          duration,
-          triggers,
-        },
-      });
-  
-      // Connect the allergy to the obtained UserHealth entry
-      const updatedUserHealth = await prisma.healthCondition.update({
-        where: { id: userHealthId },
-        data: {
-          allergy: { connect: { id: newAllergy.id } },
-        },
-      });
-  
-      res.status(201).json({ allergy: newAllergy, updatedUserHealth });
-    } catch (e) {
-      handleError(res, e, 'Error adding allergy');
+    if (!healthCondition || !healthCondition.id) {
+      return res.status(400).json({ error: 'User health information not found.' });
     }
+
+    if (!allergen || !severity || !duration || !triggers) {
+      return res.status(400).json({ error: 'Required fields are missing for allergy creation.' });
+    }
+
+    const newAllergy = await prisma.allergy.create({
+      data: {
+        allergen,
+        severity,
+        duration,
+        triggers,
+        healthCondition: { connect: { id: healthCondition.id }},
+      },
+    });
+
+    res.status(201).json({ allergy: newAllergy });
+  } catch (e) {
+    handleError(res, e, 'Error adding allergy');
+  }
 };
 
- const getAllAllergies = async (req, res) => {
+const getAllAllergies = async (req, res) => {
   try {
-      const userId = req.user.id;
-      const userAllergies = await prisma.healthCondition.findUnique({
-          where: { userId: userId },
-          include: { allergy: true },
-      });
+    const userId = req.user.id;
+    const allergies = await prisma.allergy.findMany({
+      where: {
+        healthCondition: {
+          userId: userId,
+        },
+      },
+    });
 
-      if (!userAllergies || !userAllergies.allergy) {
-          return res.status(404).json({ error: 'No allergies found for the user.' });
-      }
-
-      res.json({ allergies: userAllergies.allergy });
+    res.json({ allergies });
   } catch (e) {
-      handleError(res, e, 'Error getting allergies');
+    handleError(res, e, 'Error retrieving allergies');
   }
 };
 
 const getAllergyById = async (req, res) => {
   try {
-      const { id } = req.params;
-      const userId = req.user.id;
-      const userAllergy = await prisma.allergy.findUnique({
-          where: { id: id },
-          include: { healthCondition: { where: { userId: userId }}},
-      });
+    const userId = req.user.id;
+    const allergyId = req.params.id; 
 
-      if (!userAllergy || !userAllergy.healthCondition) {
-          return res.status(404).json({ error: 'Allergy not found for the user.' });
-      }
+    const allergy = await prisma.allergy.findUnique({
+      where: {
+        id: parseInt(allergyId),
+        healthCondition: {
+          userId: userId,
+        },
+      },
+    });
 
-      res.json({ allergy: userAllergy });
+    if (!allergy) {
+      return res.status(404).json({ error: 'Allergy not found for the logged-in user.' });
+    }
+
+    res.json({ allergy });
   } catch (e) {
-      handleError(res, e, 'Error getting allergy');
+    handleError(res, e, 'Error retrieving allergy');
   }
 };
 
 const updateAllergyById = async (req, res) => {
   try {
-      const { id } = req.params;
-      const userId = req.user.id;
-      const { allergen, severity, duration, triggers } = req.body;
-      const updatedAllergy = await prisma.allergy.update({
-          where: { id: id },
-          include: { healthCondition: { where: { userId: userId }}},
-          data: {
-              allergen,
-              severity,
-              duration,
-              triggers,
-          },
-      });
+    const userId = req.user.id;
+    const allergyId = req.params.id;
+    const { allergen, severity, duration, triggers } = req.body;
 
-      res.json({ allergy: updatedAllergy });
+    const existingAllergy = await prisma.allergy.findUnique({
+      where: {
+        id: parseInt(allergyId),
+        healthCondition: {
+          userId: userId,
+        },
+      },
+    });
+
+    if (!existingAllergy) {
+      return res.status(404).json({ error: 'Allergy not found for the logged-in user.' });
+    }
+
+    const updatedAllergy = await prisma.allergy.update({
+      where: {
+        id: parseInt(allergyId),
+      },
+      data: {
+        allergen,
+        severity,
+        duration,
+        triggers,
+      },
+    });
+
+    res.json({ updatedAllergy });
   } catch (e) {
-      handleError(res, e, 'Error updating allergy');
+    handleError(res, e, 'Error updating allergy');
   }
 };
 
 const deleteAllergyById = async (req, res) => {
   try {
-      const { id } = req.params;
-      const userId = req.user.id;
-      await prisma.allergy.delete({
-          where: { id: id },
-          include: { healthCondition: { where: { userId: userId }}},
-      });
-      
-      res.json({ message: 'Allergy deleted successfully' });
+    const userId = req.user.id;
+    const allergyId = req.params.id;
+
+    const existingAllergy = await prisma.allergy.findUnique({
+      where: {
+        id: parseInt(allergyId),
+        healthCondition: {
+          userId: userId,
+        },
+      },
+    });
+
+    if (!existingAllergy) {
+      return res.status(404).json({ error: 'Allergy not found for the logged-in user.' });
+    }
+
+    await prisma.allergy.delete({
+      where: {
+        id: parseInt(allergyId),
+      },
+    });
+
+    res.json({ message: 'Allergy deleted successfully' });
   } catch (e) {
-      handleError(res, e, 'Error deleting allergy');
+    handleError(res, e, 'Error deleting allergy');
   }
 };
 
