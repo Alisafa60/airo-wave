@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const allergyController = require('../controllers/healthControllers/allergy.controllers');
 
-router.post('/user/heath/allergy', allergyController.addAllergy);
+router.post('/user/health/allergy', allergyController.addAllergy);
 router.get('/user/health/allergies', allergyController.getAllAllergies);
 router.get('/user/health/allergy/:id', allergyController.getAllergyById);
 router.put('/user/health/allergy/:id', allergyController.updateAllergyById);
