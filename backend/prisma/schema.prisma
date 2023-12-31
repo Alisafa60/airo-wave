@@ -92,7 +92,7 @@ model Allergy{
 
 
 model Medication{
-  id                      Int       @id @default(autoincrement())
+  id                      Int                    @id @default(autoincrement())
   name                    String
   frequency               String
   dosage                  String
@@ -100,9 +100,9 @@ model Medication{
   respiratoryConditionId  Int?
   respiratoryCondition    RespiratoryCondition?  @relation(fields: [respiratoryConditionId], references: [id])
   allergyId               Int?
-  allergy                 Allergy?                @relation(fields: [allergyId], references: [id])
+  allergy                 Allergy?               @relation(fields: [allergyId], references: [id])
   healthConditionId       Int
-  healthCondtion          HealthCondition          @relation(fields: [healthConditionId], references: [id])
+  healthCondition         HealthCondition        @relation(fields: [healthConditionId], references: [id])
 }
 
 model Device{
