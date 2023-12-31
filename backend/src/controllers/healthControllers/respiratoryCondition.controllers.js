@@ -6,15 +6,18 @@ const addRespiratoryCondition = async (req, res) => {
     try {
         const { condition, diagnosis, symptomsFrequency, triggers } = req.body;
         const userId = req.user.id;
-        const userHealth = await prisma.healthCondition.findUnique({
+        // Find the user's health condition
+        const healthCondition = await prisma.healthCondition.findUnique({
             where: { userId: userId },
         });
 
-        if (!userHealth || !userHealth.id) {
+        if (!healthCondition || !healthCondition.id) {
             return res.status(400).json({ error: 'User health information not found.' });
-          }
-      
-        const userHealthId = userHealth.id;
+        }
+
+        if (!allergen || !severity || !duration || !triggers) {
+            return res.status(400).json({ error: 'Required fields are missing for allergy creation.' });
+        }
 
         const newRespiratoryCondition = await prisma.respiratoryCondition.create({
             data: {
@@ -22,62 +25,80 @@ const addRespiratoryCondition = async (req, res) => {
                 diagnosis,
                 symptomsFrequency,
                 triggers,
+                healthCondition: { connect: { id: healthCondition.id }},
             },
         });
 
-        const updatedUserHealth = await prisma.healthCondition.update({
-            where: { id: userHealthId },
-            data: {
-              respiratoryCondition: { connect: { id: newRespiratoryCondition.id } },
-            },
-          });
-
-        res.status(201).json({ respiratoryCondition: newRespiratoryCondition, updatedUserHealth});
+        res.status(201).json({ respiratoryCondition: newRespiratoryCondition});
     } catch (e) {
         handleError(res, e, 'Error adding respiratory condition');
     }
 };
 
-const getAllRespiratoryConditions = async(req, res) => {
-    try{
+const getAllRespiratoryConditions = async (req, res) => {
+    try {
         const userId = req.user.id;
         const respiratoryConditions = await prisma.respiratoryCondition.findMany({
-            where: { healthConditon: { userId : userId }}
+            where: {
+                healthCondition: {
+                    userId: userId,
+                },
+            },
         });
 
-        res.json({respiratoryConditions})
+        res.json({ respiratoryConditions });
     } catch (e) {
-        handleError(res, e, 'Error retrieving respiratory conditons ')
+        handleError(res, e, 'Error retrieving respiratory conditions');
     }
-}
+};
 
-const getRespiratoryConditionById = async(req, res) => {
-    try{
-        const {id} = req.params;
+const getRespiratoryConditionById = async (req, res) => {
+    try {
         const userId = req.user.id;
+        const respiratoryConditionId = req.params.id;
+
         const respiratoryCondition = await prisma.respiratoryCondition.findUnique({
-            where: { id: id },
-            include: { healthCondition: { where: { userId: userId }}},
+            where: {
+                id: parseInt(respiratoryConditionId),
+                healthCondition: {
+                    userId: userId,
+                },
+            },
         });
 
-        if (!respiratoryCondition){
-            return res.status(404).json({error: 'Respiratory condition not found'});
+        if (!respiratoryCondition) {
+            return res.status(404).json({ error: 'Respiratory condition not found for the logged-in user.' });
         }
 
         res.json({ respiratoryCondition });
-    } catch(e){
-        handleError(res, e, 'Error getting respiratory condition');
+    } catch (e) {
+        handleError(res, e, 'Error retrieving respiratory condition by ID');
     }
-}
+};
 
 const updateRespiratoryConditionById = async (req, res) => {
     try {
-        const { id } = req.params;
         const userId = req.user.id;
+        const respiratoryConditionId = req.params.id;
         const { condition, diagnosis, symptomsFrequency, triggers } = req.body;
+
+        const existingRespiratoryCondition = await prisma.respiratoryCondition.findUnique({
+            where: {
+                id: parseInt(respiratoryConditionId),
+                healthCondition: {
+                    userId: userId,
+                },
+            },
+        });
+
+        if (!existingRespiratoryCondition) {
+            return res.status(404).json({ error: 'Respiratory condition not found for the logged-in user.' });
+        }
+
         const updatedRespiratoryCondition = await prisma.respiratoryCondition.update({
-            where: { id: id },
-            include: { healthCondition: { where: { userId: userId }}},
+            where: {
+                id: parseInt(respiratoryConditionId),
+            },
             data: {
                 condition,
                 diagnosis,
@@ -86,26 +107,42 @@ const updateRespiratoryConditionById = async (req, res) => {
             },
         });
 
-        res.json({ respiratoryCondition: updatedRespiratoryCondition });
+        res.json({ updatedRespiratoryCondition });
     } catch (e) {
-        handleError(res, e, 'Error updating respiratory condition by ID');
+        handleError(res, e, 'Error updating respiratory condition');
     }
 };
 
 const deleteRespiratoryConditionById = async (req, res) => {
     try {
-        const { id } = req.params;
         const userId = req.user.id;
-        await prisma.respiratoryCondition.delete({
-            where: { id: id },
-            include: { healthCondition: { where: { userId: userId }}},
+        const respiratoryConditionId = req.params.id;
+
+        const existingRespiratoryCondition = await prisma.respiratoryCondition.findUnique({
+            where: {
+                id: parseInt(respiratoryConditionId),
+                healthCondition: {
+                    userId: userId,
+                },
+            },
         });
-        
+
+        if (!existingRespiratoryCondition) {
+            return res.status(404).json({ error: 'Respiratory condition not found for the logged-in user.' });
+        }
+
+        await prisma.respiratoryCondition.delete({
+            where: {
+                id: parseInt(respiratoryConditionId),
+            },
+        });
+
         res.json({ message: 'Respiratory condition deleted successfully' });
     } catch (e) {
-        handleError(res, e, 'Error deleting respiratory condition by ID');
+        handleError(res, e, 'Error deleting respiratory condition');
     }
 };
+
 
 module.exports = {
     addRespiratoryCondition,
