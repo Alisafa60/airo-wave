@@ -45,21 +45,31 @@ const getUserHealth = async (req, res) => {
 };
 
 const updateUserHealth = async (req, res) => {
-  try{
+  try {
     const userId = req.user.id;
-    const updateUserHealth = await prisma.healthCondition.update({
+    const { weight, bloodType } = req.body;
+
+    const existingUserHealth = await prisma.healthCondition.findUnique({
+      where: { userId: userId },
+    });
+
+    if (!existingUserHealth || !existingUserHealth.id) {
+      return res.status(404).json({ error: 'User health information not found.' });
+    }
+
+    const updatedUserHealth = await prisma.healthCondition.update({
       where: { userId: userId },
       data: {
         weight,
         bloodType,
-      }
+      },
     });
 
-    res.json({ updateUserHealth });
-  }catch(e){
+    res.json({ updatedUserHealth });
+  } catch (e) {
     handleError(res, e, 'Error updating user health');
   }
-}
+};
 
 const deleteUserHealthById = async (req, res) => {
   try {
@@ -68,7 +78,7 @@ const deleteUserHealthById = async (req, res) => {
       where: { userId: userId },
     });
 
-    res.json({ message: 'User health deleted successfully', deletedUserHealth });
+    res.json({ message: 'User health deleted successfully' });
   } catch (e) {
     handleError(res, e, 'Error deleting user health');
   }
