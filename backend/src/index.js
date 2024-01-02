@@ -19,6 +19,9 @@ const userLocation = require('./routes/userLocation.routes');
 const dailyHealth = require('./routes/dailyHealth.routes');
 const enviromentalHealth = require('./routes/enviromentalHealth.routes');
 const notification = require('./routes/notification.routes');
+const healthProfessional = require('./routes/healthProfessional.routes');
+const userProfile = require('./routes/userHealth.routes')
+const machineLearningPredictions = require('./routes/ml.routes');
 
 app.use('/auth', authRoutes);
 app.use('/api', authMiddleware, imageRoutes);
@@ -31,6 +34,9 @@ app.use('/api', authMiddleware, userLocation);
 app.use('/api', authMiddleware, dailyHealth );
 app.use('/api', authMiddleware, enviromentalHealth);
 app.use('/api', authMiddleware, notification);
+app.use('/api', authMiddleware, healthProfessional);
+app.use('api', authMiddleware, userProfile);
+app.use('api', authMiddleware, machineLearningPredictions);
 
 module.exports = app;
 
