@@ -16,6 +16,9 @@ const medicationRoutes = require('./routes/medication.routes')
 const userHealth = require('./routes/userHealth.routes');
 const respiratoryCondition = require('./routes/respiratoryCondition.routes');
 const userLocation = require('./routes/userLocation.routes');
+const dailyHealth = require('./routes/dailyHealth.routes');
+const enviromentalHealth = require('./routes/enviromentalHealth.routes');
+const notification = require('./routes/notification.routes');
 
 app.use('/auth', authRoutes);
 app.use('/api', authMiddleware, imageRoutes);
@@ -25,6 +28,9 @@ app.use('/api', authMiddleware, medicationRoutes);
 app.use('/api', authMiddleware, userHealth);
 app.use('/api', authMiddleware, respiratoryCondition);
 app.use('/api', authMiddleware, userLocation);
+app.use('/api', authMiddleware, dailyHealth );
+app.use('/api', authMiddleware, enviromentalHealth);
+app.use('/api', authMiddleware, notification);
 
 module.exports = app;
 
