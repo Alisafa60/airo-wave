@@ -1,5 +1,7 @@
-const { Prisma } = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
 const Joi = require('joi');
+const prisma = new PrismaClient();
+const { handleError } = require('../../helpers');
 
 const environmentalDataSchema = Joi.object({
   temperature: Joi.number().allow(null),
@@ -30,8 +32,8 @@ const environmentalDataSchema = Joi.object({
 
 const createEnvironmentalData = async (req, res) => {
   try {
-    const { temperature, humidity, aqi, treePollen, grassPollen, weedPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm2_5, pm10, windSpeed, bloodO2Level, heartRate, deviceId, userLocationId, userId } = req.body;
-
+    const { temperature, humidity, aqi, treePollen, grassPollen, weedPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm2_5, pm10, windSpeed, bloodO2Level, heartRate, deviceId, userLocationId} = req.body;
+    const userId = req.user.id;
     const { error, value } = environmentalDataSchema.validate({
       temperature, humidity, aqi, treePollen, grassPollen, weedPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm2_5, pm10, windSpeed, bloodO2Level, heartRate, deviceId, userLocationId, userId
     });
@@ -40,7 +42,7 @@ const createEnvironmentalData = async (req, res) => {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const newEnvironmentalData = await prisma.environmentalHealthData.create({
+    const newEnvironmentalData = await prisma.enviromentalHealthData.create({
       data: value,
     });
 
@@ -68,9 +70,9 @@ const getEnvironmentalDataByDateRange = async (req, res) => {
         return res.status(400).json({ error: dateRangeError.details[0].message });
       }
 
-      const environmentalDataList = await prisma.environmentalHealthData.findMany({
+      const environmentalDataList = await prisma.enviromentalHealthData.findMany({
         where: {
-          userId,
+          userId:userId,
           createdAt: {
             gte: new Date(dateRange.startDate),
             lte: new Date(dateRange.endDate),
@@ -80,7 +82,7 @@ const getEnvironmentalDataByDateRange = async (req, res) => {
   
       res.status(200).json({ environmentalDataList });
     } catch (e) {
-      handleError(res, e, 'Error retrieving EnvironmentalHealthData by date range');
+      handleError(res, e, 'Error retrieving EnvironmentalHealthData');
     }
   };
   
@@ -88,13 +90,13 @@ const getEnvironmentalDataByDateRange = async (req, res) => {
     try {
       const userId = req.user.id;
   
-      const environmentalDataList = await prisma.environmentalHealthData.findMany({
-        where: { userId },
+      const environmentalDataList = await prisma.enviromentalHealthData.findMany({
+        where: { userId:userId },
       });
   
       res.status(200).json({ environmentalDataList });
     } catch (e) {
-      handleError(res, e, 'Error retrieving EnvironmentalHealthData list');
+      handleError(res, e, 'Error retrieving EnvironmentalHealthData');
     }
   };
   
