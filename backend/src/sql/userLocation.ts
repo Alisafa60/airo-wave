@@ -10,7 +10,7 @@ type MyUserLocation = {
   userId: number;
   deviceId: number;
 };
-
+//This script is compiled to js script (in backend/dist/sql) which is then used in user location controller
 const prisma = new PrismaClient().$extends({
   model: {
     userLocation: {

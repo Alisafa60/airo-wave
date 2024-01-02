@@ -13,9 +13,9 @@ datasource db {
 }
 
 model UserType{
-  id        Int     @id @default(autoincrement())
-  type      Type
-  user      User[]
+  id                  Int           @id @default(autoincrement())
+  type                Type
+  user                User[]
 }
 
 enum Type{
@@ -250,7 +250,7 @@ model Feedback {
   user               User                @relation(fields: [userId], references: [id])
   healthProId        Int?
   healthProfessional HealthProfessional? @relation(fields: [healthProId], references: [id])
-  feedbackType       String   
+  feedbackType       FeedbackType   
   comments           String?
   predictionId       Int
   prediction         MlPrediction       @relation(fields: [predictionId], references: [id])
@@ -258,14 +258,21 @@ model Feedback {
   updatedAt          DateTime           @updatedAt
 }
 
+enum FeedbackType {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}
+
 model HealthProfessional {
-  id              Int       @id @default(autoincrement())
-  userId          Int
-  user            User      @relation(fields: [userId], references: [id])
-  specialization  String
-  certifications  String[]
-  messages        ContactProfessional[]
-  feedback        Feedback[]
+  id                    Int       @id @default(autoincrement())
+  userId                Int
+  user                  User      @relation(fields: [userId], references: [id])
+  specialization        String
+  certifications        String[]
+  license               String
+  messages              ContactProfessional[]
+  feedback              Feedback[]
 }
 
 model ContactProfessional {
