@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const { handleError } = require('../../helpers');
 
+
 const createDailyHealth = async (req, res) => {
   try {
     const { severity } = req.body;
@@ -55,16 +56,43 @@ const getAllDailyHealth = async (req, res) => {
   }
 };
 
+const getLastDailyHealth = async (req, res) => {
+  try{
+    const userId = req.user.id;
+    const dailyHealthId = req.params.id;
+
+    const dailyHealth = await prisma.dailyHealth.findUnique({
+      where: {
+        id: dailyHealthId,
+        healthConditions:{
+          userId: userId,
+        },
+      },
+    });
+
+    if (!dailyHealth){
+      return res.status(404).json({ error: 'Daily health entry not found'});
+    }
+
+    res.status(200).json({ dailyHealth });
+  }catch(e){
+    handleError(res, e, 'Error retrieving DailyHealth entry');
+  }
+}
+
 const getDailyHealthById = async (req, res) => {
   try {
     const userId = req.user.id;
-    const dailyHealthId = req.params.id; 
-
-    const dailyHealth = await prisma.dailyHealth.findUnique({
+    const dailyHealthId = req.params.id;
+    
+    const dailyHealth = await prisma.dailyHealth.findFirst({
       where: {
         id: parseInt(dailyHealthId),
         healthConditions: {
           userId: userId,
+        },
+        orderBy:{
+          createdAt: 'desc',
         },
       },
     });
@@ -95,7 +123,7 @@ const updateDailyHealthById = async (req, res) => {
     });
 
     if (!existingDailyHealth) {
-      return res.status(404).json({ error: 'DailyHealth entry not found for the logged-in user.' });
+      return res.status(404).json({ error: 'DailyHealth entry not found.' });
     }
 
     const updatedDailyHealth = await prisma.dailyHealth.update({
@@ -116,6 +144,7 @@ const updateDailyHealthById = async (req, res) => {
 module.exports = {
   createDailyHealth,
   getAllDailyHealth,
+  getLastDailyHealth,
   getDailyHealthById,
   updateDailyHealthById,
 };
