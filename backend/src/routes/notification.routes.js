@@ -6,5 +6,4 @@ router.post('/user/notifications', pushNotificationController.createPushNotifica
 router.get('/user/notifications', pushNotificationController.getPushNotificationsByUser);
 router.put('/user/notifications/:id/mark-as-read', pushNotificationController.markNotificationAsRead);
 
-// Export the router
 module.exports = router;

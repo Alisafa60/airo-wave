@@ -10,6 +10,7 @@ const createUserLocation = async (req, res) => {
   try {
     const userId = req.user.id;
     const { location, deviceId } = req.body;
+
     const newUserLocation = await prisma.userLocation.create({
       userId,
       location: { longitude: location.longitude, latitude: location.latitude },
@@ -26,6 +27,7 @@ const getUserLocationById = async (req, res) => {
   try {
     const { id } = req.params;
     userId = req.user.id;
+
     const userLocation = await prisma1.userLocation.findUnique({
       where: { id: parseInt(id), userId: userId },
     });
@@ -37,6 +39,7 @@ const getUserLocationById = async (req, res) => {
     if (!userLocation) {
       return res.status(404).json({ error: 'UserLocation not found' });
     }
+    //convert the string location to point coordinates
     const wktString = location[0].location;
     const geometry = wkx.Geometry.parse(Buffer.from(wktString, 'hex'));
     const point = geometry.toWkt();
@@ -49,8 +52,9 @@ const getUserLocationById = async (req, res) => {
 const getUserLastLocation = async (req, res) => {
   try {
     const userId = req.user.id;
+
     const lastUserLocation = await prisma.userLocation.findFirst({
-      where: { userId },
+      where: { userId:userId },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -60,7 +64,7 @@ const getUserLastLocation = async (req, res) => {
     WHERE "userId" = ${parseInt(userId)}
     ORDER BY "createdAt" Desc
   `;
-
+    //convert the string location to point coordinates
     const wktString = location[0].location;
     const geometry = wkx.Geometry.parse(Buffer.from(wktString, 'hex'));
     const point = geometry.toWkt();
@@ -82,7 +86,7 @@ const getUserLocationsByTimeRange = async (req, res) => {
 
     const userLocations = await prisma.userLocation.findMany({
       where: {
-        userId,
+        userId:userId,
         createdAt: {
           gte: new Date(startTime),
           lte: new Date(endTime),
@@ -103,7 +107,7 @@ const getUserLocationsWithPagination = async (req, res) => {
     const { page = 1, pageSize = 10 } = req.query;
 
     const userLocations = await prisma.userLocation.findMany({
-      where: { userId },        
+      where: { userId:userId },        
       orderBy: { createdAt: 'asc' }, 
       skip: (page - 1) * pageSize,    
       take: parseInt(pageSize),       
