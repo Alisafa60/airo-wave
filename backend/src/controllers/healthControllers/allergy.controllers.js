@@ -100,10 +100,10 @@ const updateAllergyById = async (req, res) => {
         id: parseInt(allergyId),
       },
       data: {
-        allergen,
-        severity,
-        duration,
-        triggers,
+        allergen: allergen || existingAllergy.allergen,
+        severity: severity || existingAllergy.severity,
+        duration: duration || existingAllergy.duration,
+        triggers: triggers || existingAllergy.triggers,
       },
     });
 

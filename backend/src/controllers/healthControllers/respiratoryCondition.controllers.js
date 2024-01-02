@@ -72,7 +72,7 @@ const getRespiratoryConditionById = async (req, res) => {
 
         res.json({ respiratoryCondition });
     } catch (e) {
-        handleError(res, e, 'Error retrieving respiratory condition by ID');
+        handleError(res, e, 'Error retrieving respiratory condition');
     }
 };
 
@@ -100,10 +100,10 @@ const updateRespiratoryConditionById = async (req, res) => {
                 id: parseInt(respiratoryConditionId),
             },
             data: {
-                condition,
-                diagnosis,
-                symptomsFrequency,
-                triggers,
+                condition: condition || existingRespiratoryCondition.condition,
+                diagnosis: diagnosis|| existingRespiratoryCondition.condition,
+                symptomsFrequency: symptomsFrequency || existingRespiratoryCondition.symptomsFrequency,
+                triggers: triggers || existingRespiratoryCondition.triggers,
             },
         });
 
@@ -142,7 +142,6 @@ const deleteRespiratoryConditionById = async (req, res) => {
         handleError(res, e, 'Error deleting respiratory condition');
     }
 };
-
 
 module.exports = {
     addRespiratoryCondition,

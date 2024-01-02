@@ -144,9 +144,9 @@ const updateMedicationById = async (req, res) => {
         id: parseInt(medicationId),
       },
       data: {
-        name,
-        frequency,
-        dosage,
+        name: name || existingMedication.name,
+        frequency: frequency || existingMedication.frequency,
+        dosage: dosage || existingMedication.dosage,
         startDate: startDate || null,
       },
     });

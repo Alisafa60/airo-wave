@@ -60,8 +60,8 @@ const updateUserHealth = async (req, res) => {
     const updatedUserHealth = await prisma.healthCondition.update({
       where: { userId: userId },
       data: {
-        weight,
-        bloodType,
+        weight: weight || existingUserHealth.weight,
+        bloodType: bloodType || existingUserHealth.bloodType,
       },
     });
 

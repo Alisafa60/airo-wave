@@ -86,22 +86,22 @@ const getEnvironmentalDataByDateRange = async (req, res) => {
     }
   };
   
-  const getEnvironmentalDataList = async (req, res) => {
-    try {
-      const userId = req.user.id;
-  
-      const environmentalDataList = await prisma.enviromentalHealthData.findMany({
-        where: { userId:userId },
-      });
-  
-      res.status(200).json({ environmentalDataList });
-    } catch (e) {
-      handleError(res, e, 'Error retrieving EnvironmentalHealthData');
-    }
-  };
-  
-  module.exports = {
-    createEnvironmentalData,
-    getEnvironmentalDataByDateRange,
-    getEnvironmentalDataList,
+const getEnvironmentalDataList = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const environmentalDataList = await prisma.enviromentalHealthData.findMany({
+      where: { userId:userId },
+    });
+
+    res.status(200).json({ environmentalDataList });
+  } catch (e) {
+    handleError(res, e, 'Error retrieving EnvironmentalHealthData');
   }
+};
+
+module.exports = {
+  createEnvironmentalData,
+  getEnvironmentalDataByDateRange,
+  getEnvironmentalDataList,
+}
