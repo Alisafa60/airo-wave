@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const { PrismaClient } = require('@prisma/client');
-// Extend the Prisma client
 const prisma = new PrismaClient().$extends({
     model: {
         userLocation: {
