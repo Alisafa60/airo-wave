@@ -51,6 +51,7 @@ model User{
   messages              Message[]        
   responses             Response[]   
   replies               Reply[]    
+  routes                Route[]
 }
 
 enum MeasurementSystem{
@@ -338,4 +339,13 @@ model Response {
   sender     User     @relation(fields: [senderId], references: [id])
   messageId  Int
   message    Message  @relation(fields: [messageId], references: [id])
+}
+
+model Route {
+  id             Int                                          @id @default(autoincrement())
+  geometry       Unsupported("geography(LineString, 4326)")
+  userId         Int
+  userLocation   User                                         @relation(fields: [userId], references: [id])
+  createdAt      DateTime                                     @default(now())
+  updatedAt      DateTime?                                     @updatedAt
 }
