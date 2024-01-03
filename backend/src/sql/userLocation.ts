@@ -1,17 +1,17 @@
-const { PrismaClient } = require('@prisma/client')
+// const { PrismaClient } = require('@prisma/client')
 
-type MyPoint = {
-  latitude: number;
-  longitude: number;
-};
+// type MyPoint = {
+//   latitude: number;
+//   longitude: number;
+// };
 
 type MyUserLocation = {
   location: MyPoint;
   userId: number;
   deviceId: number;
 };
-//This script is compiled to js script (in backend/dist/sql) which is then used in user location controller
-const prisma = new PrismaClient().$extends({
+// This script is compiled to js script (in backend/dist/sql) which is then used in user location controller
+const prisma1 = new PrismaClient().$extends({
   model: {
     userLocation: {
       async create(data: MyUserLocation) {
@@ -33,4 +33,4 @@ const prisma = new PrismaClient().$extends({
   },
 });
 
-module.exports = prisma;
+module.exports = prisma1;

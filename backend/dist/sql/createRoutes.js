@@ -9,25 +9,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const { PrismaClient } = require('@prisma/client');
-// This script is compiled to js script (in backend/dist/sql) which is then used in user location controller
 const prisma = new PrismaClient().$extends({
     model: {
-        userLocation: {
+        route: {
             create(data) {
                 return __awaiter(this, void 0, void 0, function* () {
                     // Create an object using the custom types from above
-                    const userLocation = {
-                        location: data.location,
+                    const route = {
+                        coordinates: data.coordinates,
                         userId: data.userId,
-                        deviceId: data.deviceId,
                     };
-                    // Convert the custom location to a POINT string
-                    const point = `POINT(${userLocation.location.longitude} ${userLocation.location.latitude})`;
+                    // Convert the custom LineString to a LINESTRING string
+                    const lineString = `LINESTRING(${route.coordinates
+                        .map(point => `${point.longitude} ${point.latitude}`)
+                        .join(', ')})`;
                     // Insert the object into the database
                     yield prisma.$queryRaw `
-          INSERT INTO "UserLocation" (location, userId, deviceId) VALUES (ST_GeomFromText(${point}, 4326), ${userLocation.userId}, ${userLocation.deviceId});
+          INSERT INTO "Route" (geometry, "userId") VALUES (ST_GeomFromText(${lineString}, 4326), ${route.userId});
         `;
-                    return userLocation;
+                    return route;
+                });
+            },
+            findDistance(routeId) {
+                var _a, _b;
+                return __awaiter(this, void 0, void 0, function* () {
+                    const result = yield prisma.$queryRaw `SELECT ST_Length(geometry::geography) as distance FROM "Route" WHERE id = ${routeId}`;
+                    return (_b = (_a = result === null || result === void 0 ? void 0 : result[0]) === null || _a === void 0 ? void 0 : _a.distance) !== null && _b !== void 0 ? _b : null;
                 });
             },
         },
