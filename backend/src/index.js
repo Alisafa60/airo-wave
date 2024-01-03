@@ -22,6 +22,12 @@ const notification = require('./routes/notification.routes');
 const healthProfessional = require('./routes/healthProfessional.routes');
 const userProfile = require('./routes/userHealth.routes')
 const machineLearningPredictions = require('./routes/ml.routes');
+const contactProfessional = require('./routes/contractProfessional.routes');
+const chatbot = require('./routes/chatbot.routes');
+const heartRate = require('./routes/heartRate.routes');
+const stress = require('./routes/stress.routes');
+const userRoutes = require('./routes/createRoutes.controllers');
+const device = require('./routes/device.routes');
 
 app.use('/auth', authRoutes);
 app.use('/api', authMiddleware, imageRoutes);
@@ -37,6 +43,12 @@ app.use('/api', authMiddleware, notification);
 app.use('/api', authMiddleware, healthProfessional);
 app.use('api', authMiddleware, userProfile);
 app.use('api', authMiddleware, machineLearningPredictions);
+app.use('/api', authMiddleware, contactProfessional);
+app.use('/api', authMiddleware, chatbot);
+app.use('/api', authMiddleware, stress);
+app.use('/api', authMiddleware, heartRate);
+app.use('/api', authMiddleware, userRoutes);
+app.use('/api', authMiddleware, device);
 
 module.exports = app;
 
