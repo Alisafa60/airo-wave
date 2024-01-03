@@ -143,6 +143,7 @@ model HeartRateData{
   id                          Int                 @id @default(autoincrement())
   restingHr                   Int
   maxHr                       Int
+  averageHr                   Int
   createdAt                   DateTime            @default(now())
   updatedAt                   DateTime            @updatedAt()
   deviceId                    Int
