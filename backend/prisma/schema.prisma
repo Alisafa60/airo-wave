@@ -33,10 +33,10 @@ model User{
   phone                 String?
   profilePicture        String? 
   address               String?
-  password              String
+  password              String            
   unit                  MeasurementSystem
   userTypeId            Int
-  userType              UserType            @relation(fields: [userTypeId], references: [id])
+  userType              UserType           @relation(fields: [userTypeId], references: [id])
   healthCondition       HealthCondition?
   location              UserLocation[]
   enviromentalHealthData EnviromentalHealthData[]
@@ -46,7 +46,7 @@ model User{
   contactProfesional    ContactProfessional[]
   mlPrediction          MlPrediction[]
   feedback              Feedback[]
-  conversations         ConversationWithBot[]
+  conversationWithBot   ConversationWithBot[]
   conversation          Conversation[] 
   messages              Message[]        
   responses             Response[]   
