@@ -57,7 +57,7 @@ const getAllDevices = async(req, res) => {
 
 const getDeviceById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
     const userId = req.user.id;
 
     const device = await prisma.device.findUnique({
@@ -79,7 +79,7 @@ const getDeviceById = async (req, res) => {
 
 const updateDevice = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
     const { name, manufacturer, model, connectivityStatus, batteryLevel } = req.body;
     const userId = req.user.id;
 
