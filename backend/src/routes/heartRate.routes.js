@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const heartRate = require('../controllers/healthControllers/heartRate.controllers');
 
-router.post('/heartRateData', heartRate.createHeartRateData);
-router.get('/heartRateData/:id', heartRate.getHeartRateDataById);
-router.get('/heartRateData/last', heartRate.getLastHeartRateData);
-router.put('/heartRateData/:id', heartRate.updateHeartRateData);
+router.post('/user/health/heartRate', heartRate.createHeartRateData);
+router.get('/user/heath/heartRate/:id', heartRate.getHeartRateDataById);
+router.get('/user/health/heartRate/last', heartRate.getLastHeartRateData);
 
 module.exports = router;
