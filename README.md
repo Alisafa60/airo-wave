@@ -11,7 +11,7 @@
 
 ### User Stories
 - As a person with respiratory problems, I want to monitor air quality in my location and planned destinations, receiving alerts for unsafe conditions.
--As a cyclist with allergies, I want to access real-time pollen levels and air quality information to ensure safe cycling, with personalized route recommendations.
+- As a cyclist with allergies, I want to access real-time pollen levels and air quality information to ensure safe cycling, with personalized route recommendations.
 - As a general user, I want to quickly check real-time air quality, compare it between locations, and track my performance while considering environmental conditions.
 
 <br><br>
