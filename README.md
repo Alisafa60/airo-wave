@@ -12,7 +12,7 @@
 ### User Stories
 - As an individual with respiratory problems, I need to monitor and receive real-time alerts about the air quality of my current location and those I plan to visit.
 - As a cyclist with allergies, I want to access real-time environmental data on pollen levels and air quality as I plan for an activity to minimize allergens.
-- As a user, I need to ensure healthy indoor enviroment for myself and others.
+- As a healthcare professional, I need access to real-time environmental data alongside my patients' health information, enabling me to make informed clinical assessments and provide tailored recommendations.
 
 <br><br>
 
