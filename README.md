@@ -10,8 +10,8 @@
 > This App seamlessly integrates user profiles, medical history, symptom tracking, and real-time environmental data. Harnessing the power of machine learning and continuous refinement through user input, it offers actionable insights tailored to individual well-being
 
 ### User Stories
-- As a person with respiratory problem, I need to monitor the air quality of my location and locations I visit.
-- As a cyclist with allergies, I want to access real-time environmental data on pollen levels and air quality as I plan for an activity.
+- As an individual with respiratory problems, I need to monitor and receive real-time alerts about the air quality of my current location and those I plan to visit.
+- As a cyclist with allergies, I want to access real-time environmental data on pollen levels and air quality as I plan for an activity to minimize allergens.
 - As a user, I need to ensure healthy indoor enviroment for myself and others.
 
 <br><br>
