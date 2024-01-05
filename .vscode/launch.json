@@ -9,7 +9,7 @@
             "cwd": "mobile_app",
             "request": "launch",
             "type": "dart",
-            "args": ["-d", "<Pixel_3a_API_34_extension_level_7_x86_64>"]
+            "args": ["-d", "Pixel_3a_API_34_extension_level_7_x86_64"]
         },
         {
             "name": "mobile_app (profile mode)",
