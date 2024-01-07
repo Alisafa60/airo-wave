@@ -31,6 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
   
+  flutter_svg: ^2.0.9
+  
   font_awesome_flutter: ^10.6.0
     
 
@@ -55,11 +57,22 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  
+  assets: 
+      - lib/assets/icons/home-filled.svg
+      - lib/assets/icons/MedCat.svg
+      - lib/assets/icons/activity-waves.svg
+      - lib/assets/icons/map-location.svg
+      - lib/assets/icons/group-add.svg
+      - lib/assets/icons/add-circle.svg
+      - lib/assets/icons/notification-bell.svg
+      - lib/assets/icons/community.svg
+
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
