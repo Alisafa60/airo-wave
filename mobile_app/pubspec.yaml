@@ -71,6 +71,7 @@ flutter:
       - lib/assets/icons/add-circle.svg
       - lib/assets/icons/notification-bell.svg
       - lib/assets/icons/community.svg
+      - lib/assets/images/profile-picture.png
 
 
 
