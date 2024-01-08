@@ -135,6 +135,7 @@ class HomeScreen extends StatelessWidget{
 
           Container(
             height: (screenHeight - appBarHeight - bottomNavBarHeight) * 0.55,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
               children: [
                 Row(
