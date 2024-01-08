@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import './screens/home.dart';
-import './screens/signup.dart';
+import 'package:mobile_app/screens/login.dart';
+// import './screens/home.dart';
+// import './screens/signup.dart';
+
 
 
 void main() {
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const HomeScreen(),
-      home: const SignupScreen(),
+      home: const LoginScreen(),
     );
   }
 }

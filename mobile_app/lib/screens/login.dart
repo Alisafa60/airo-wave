@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SignupScreen extends StatelessWidget{
-  const SignupScreen({super.key});
+class LoginScreen extends StatelessWidget{
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context){
@@ -17,7 +17,7 @@ class SignupScreen extends StatelessWidget{
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Create an Account",
+              "Log In",
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.w700,
@@ -85,11 +85,16 @@ class SignupScreen extends StatelessWidget{
               ),
             ),
             const SizedBox(height: 5,),
-            const Text(
-              'Password must contain at least 8 characters',
-              style: TextStyle(
-                color: Color.fromRGBO(74, 74, 74, 0.6),
-                fontSize: 15,
+            GestureDetector(
+              onTap: () {
+                
+              },
+              child: const Text(
+              'Forgot Password?',
+                style: TextStyle(
+                  color: Color.fromRGBO(74, 74, 74, 0.6),
+                  fontSize: 15,
+                ),
               ),
             ),
             const SizedBox(height: 30),
@@ -103,7 +108,7 @@ class SignupScreen extends StatelessWidget{
               ),
               child: const Center(
                child: Text(
-                'Sign Up',
+                'Log In',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -242,4 +247,3 @@ class SignupScreen extends StatelessWidget{
     );
   }
 }
- 
