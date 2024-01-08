@@ -9,6 +9,20 @@ class LoginScreen extends StatelessWidget{
     return Scaffold(
       appBar: AppBar(
         backgroundColor:const Color.fromRGBO(255, 252, 252, 1),
+        actions: [
+          Container(
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(74, 74, 74, 0.1),
+              borderRadius: BorderRadius.circular(40),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.clear),
+              color: const Color.fromRGBO(74, 74, 74, 1), 
+              onPressed: () {  },
+              iconSize: 30,
+            )
+          )
+        ],
       ),
       
       body: Padding(
