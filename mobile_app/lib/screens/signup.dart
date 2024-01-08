@@ -151,19 +151,31 @@ class SignupScreen extends StatelessWidget{
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
               ),
-              child: const Center(
-               child: Text(
-                'Continue with Google',
-                style: TextStyle(
-                  color: Color.fromRGBO(74, 74, 74, 1),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-               )
+              child: Row(
+                children: [
+                  // Add the Google logo here
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Image.asset(
+                      'lib/assets/images/google.png', 
+                      height: 24,
+                      width: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 55,),
+                  const Text(
+                    'Continue with Google',
+                    style: TextStyle(
+                      color: Color.fromRGBO(74, 74, 74, 1),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 10,),
-            Container(
+             Container(
               height: 50,
               width: double.infinity,
               padding: const EdgeInsets.all(5),
@@ -172,19 +184,30 @@ class SignupScreen extends StatelessWidget{
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
               ),
-              child: const Center(
-               child: Text(
-                'Continue with Facebook',
-                style: TextStyle(
-                  color: Color.fromRGBO(74, 74, 74, 1),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-               )
+              child: const Row(
+                children: [
+                  // Add the Google logo here
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(
+                      Icons.facebook, 
+                      size: 24,
+                    ),
+                  ),
+                  SizedBox(width: 52,),
+                  Text(
+                    'Continue with Facebook',
+                    style: TextStyle(
+                      color: Color.fromRGBO(74, 74, 74, 1),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 10,),
-            Container(
+             const SizedBox(height: 10,),
+             Container(
               height: 50,
               width: double.infinity,
               padding: const EdgeInsets.all(5),
@@ -193,15 +216,26 @@ class SignupScreen extends StatelessWidget{
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
               ),
-              child: const Center(
-               child: Text(
-                'Continue with Apple',
-                style: TextStyle(
-                  color: Color.fromRGBO(74, 74, 74, 1),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-               )
+              child: const Row(
+                children: [
+                  // Add the Google logo here
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(
+                      Icons.apple, 
+                      size: 24,
+                    ),
+                  ),
+                  SizedBox(width: 60,),
+                  Text(
+                    'Continue with Apple',
+                    style: TextStyle(
+                      color: Color.fromRGBO(74, 74, 74, 1),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
