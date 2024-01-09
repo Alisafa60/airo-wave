@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:popup_menu/popup_menu.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  UserProfileScreen({Key? key}) : super(key: key);
+  const UserProfileScreen({Key? key}) : super(key: key);
 
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
@@ -11,6 +11,7 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final GlobalKey _containerKey = GlobalKey();
   bool _isMetric = true; 
+  String? _selectedGender;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(255, 252, 252, 1),
+        title: const Text(
+            "Profile",
+            selectionColor: Color.fromRGBO(74, 74, 74, 1),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+          ),),
+          centerTitle: true,
         actions: [
           Container(
             decoration: BoxDecoration(
@@ -136,7 +145,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             Container(
               height: 40,
               width: double.infinity,
-              padding: const EdgeInsets.all(5),
+              padding: const EdgeInsets.all(10),
               child: DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   hintText: 'Select gender',
@@ -151,14 +160,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     borderSide: BorderSide(width: 2, color: Color.fromRGBO(74, 74, 74, 0.4)), 
                   ),
                 ),
+                value: _selectedGender,
                 items: ['Male', 'Female', 'Other'].map((String gender) {
                   return DropdownMenuItem<String>(
                     value: gender,
-                    child: Text(gender),
+                    child: Text(gender,),
                   );
                 }).toList(),
                 onChanged: (String? value) {
-                  
+                  setState(() {
+                    _selectedGender = value;
+                  });
                 },
               ),
             ),
