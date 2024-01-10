@@ -74,6 +74,8 @@ flutter:
       - lib/assets/icons/community.svg
       - lib/assets/images/profile-picture.png
       - lib/assets/images/google.png
+      - lib/assets/icons/MedCat-orange.svg
+      - lib/assets/icons/home-filled-gray.svg
 
 
 
