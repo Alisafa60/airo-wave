@@ -195,27 +195,27 @@ class HomeScreen extends StatelessWidget{
         items: [
           BottomNavigationBarItem(
             icon: SvgPicture.asset('lib/assets/icons/home-filled.svg',
-            height: 40, width: 40,),
+            height: 35, width: 35,),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset('lib/assets/icons/MedCat.svg',
-            height: 40, width: 40,),
+            height: 35, width: 35,),
             label: 'MedCat',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset('lib/assets/icons/map-location.svg',
-            height: 40, width: 40,),
+            height: 35, width: 35,),
             label: 'Maps',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset('lib/assets/icons/activity-waves.svg',
-            height: 40, width: 40,),
+            height: 35, width: 35,),
             label: 'Activities',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset('lib/assets/icons/community.svg',
-            height: 40, width: 40,),
+            height: 35, width: 35,),
             label: 'Community',
           ),
         ]),

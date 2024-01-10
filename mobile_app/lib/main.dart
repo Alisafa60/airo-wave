@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/screens/home.dart';
 import 'package:mobile_app/screens/login.dart';
+import 'package:mobile_app/screens/med_cat.dart';
 import 'package:mobile_app/screens/signup.dart';
-import 'package:mobile_app/screens/userProfile.dart';
+import 'package:mobile_app/screens/user_profile.dart';
 import 'package:mobile_app/screens/user_health.dart';
 // import 'package:mobile_app/screens/login.dart';
 // import 'package:mobile_app/screens/userProfile.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const HomeScreen(),
-      home: UserHealth(),
+      home: MedCatScreen(),
     );
   }
 }
