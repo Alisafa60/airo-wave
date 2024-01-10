@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class MedCatScreen extends StatelessWidget{
+class MedCatScreen extends StatefulWidget{
   const MedCatScreen ({super.key});
+   _ExpandableContainerState createState() => _ExpandableContainerState();
+}
 
+class _ExpandableContainerState extends State<MedCatScreen> {
+   double containerHeight = 180;
+  bool isExpanded = false;
   @override
   Widget build(BuildContext context){
 
@@ -18,6 +23,13 @@ class MedCatScreen extends StatelessWidget{
           ),
         ),
         centerTitle: true,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Container(
+            height: 1,
+            color: Colors.black12,
+          ),
+        ),
       ),
 
       body: Padding(
@@ -73,7 +85,11 @@ class MedCatScreen extends StatelessWidget{
               child: Container(
                 height: 55,
                 decoration: BoxDecoration(
-                  color: const Color.fromRGBO(74, 74, 74, 0.2),
+                  border: Border.all(
+                    color: Colors.black12,
+                    width: 2,
+                  ),
+                  // color: const Color.fromRGBO(74, 74, 74, 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -85,7 +101,7 @@ class MedCatScreen extends StatelessWidget{
                           print('Pressed button $i');
                         },
                         child: CircleAvatar(
-                          backgroundColor: const Color.fromRGBO(255, 113, 19, 0.683),
+                          backgroundColor: const Color.fromRGBO(255, 117, 19, 0.683),
                           child: Text(
                             i.toString(),
                             style: const TextStyle(
@@ -97,7 +113,99 @@ class MedCatScreen extends StatelessWidget{
                   ],
                 ),
               ),
-            )
+            ),
+            const SizedBox(height: 15,),
+            Container(
+              height: 130,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.black12,
+                  width: 2,
+                ),
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: () {
+                        
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: const BoxDecoration(
+                          color: Color.fromRGBO(255, 117, 19, 1), // Adjust the color as needed
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                          ),
+                        ),
+                        child: const Text(
+                          'Show Analysis',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.white, // Adjust the text color as needed
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 10,),
+            Container(
+              height: 40,
+              width: double.infinity,
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: const TextField(
+                textAlign: TextAlign.start,
+                textAlignVertical: TextAlignVertical.bottom,
+                decoration: InputDecoration(
+                  hintText: '...Ask MedCat',
+                  hintStyle: TextStyle(
+                    color: Color.fromRGBO(74, 74, 74, 0.4),
+                  ),
+                  border: InputBorder.none,
+                ),
+                 style: TextStyle(
+                  height: 1, // Adjust the value to vertically center the text within the TextField
+                ),
+              ),
+            ),
+            SizedBox(height: 10,),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  // Toggle between the initial height and the whole screen
+                  containerHeight = isExpanded ? 180 : MediaQuery.of(context).size.height;
+                  isExpanded = !isExpanded;
+                });
+              },
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: containerHeight,
+                width: double.infinity,
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  'Expanded Content Here',
+                  style: TextStyle(
+                    color: Color.fromRGBO(74, 74, 74, 1),
+                  ),
+                ),
+              ),
+            ),
           ]
         ),
       ),
@@ -106,12 +214,12 @@ class MedCatScreen extends StatelessWidget{
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/home-filled.svg',
+            icon: SvgPicture.asset('lib/assets/icons/home-filled-gray.svg',
             height: 35, width: 35,),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/MedCat.svg',
+            icon: SvgPicture.asset('lib/assets/icons/MedCat-orange.svg',
             height: 35, width: 35,),
             label: 'MedCat',
           ),
