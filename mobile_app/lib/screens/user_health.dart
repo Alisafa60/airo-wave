@@ -301,7 +301,26 @@ class _UserHealthState extends State<UserHealth> {
                         ..._buildFieldsForMedication(medicationEntries[i], i),
                 ],
               ),
-             
+              SizedBox(height: 40,),
+              Container(
+                height: 50,
+                width: double.infinity,
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(255, 115, 19, 1),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Save and Exit',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  )
+                ),
+              ),
             ],  
           ),
         ),
