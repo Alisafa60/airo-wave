@@ -7,8 +7,8 @@ class MedCatScreen extends StatefulWidget{
 }
 
 class _ExpandableContainerState extends State<MedCatScreen> {
-   double containerHeight = 180;
-  bool isExpanded = false;
+  OverlayEntry? _overlayEntry;
+  bool _isExpanded = false;
   @override
   Widget build(BuildContext context){
 
@@ -181,17 +181,14 @@ class _ExpandableContainerState extends State<MedCatScreen> {
               ),
             ),
             SizedBox(height: 10,),
-            GestureDetector(
+              GestureDetector(
               onTap: () {
-                setState(() {
-                  // Toggle between the initial height and the whole screen
-                  containerHeight = isExpanded ? 180 : MediaQuery.of(context).size.height;
-                  isExpanded = !isExpanded;
-                });
+                if (!_isExpanded) {
+                  _toggleOverlay();
+                }
               },
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                height: containerHeight,
+              child: Container(
+                height: 40,
                 width: double.infinity,
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
@@ -199,7 +196,7 @@ class _ExpandableContainerState extends State<MedCatScreen> {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text(
-                  'Expanded Content Here',
+                  'Tap to Expand',
                   style: TextStyle(
                     color: Color.fromRGBO(74, 74, 74, 1),
                   ),
@@ -243,5 +240,50 @@ class _ExpandableContainerState extends State<MedCatScreen> {
     );
   }
 
+void _toggleOverlay() {
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 0,
+        left: 0,
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.black54,
+            child: GestureDetector(
+              onTap: () {
+                _overlayEntry?.remove();
+                _isExpanded = false;
+              },
+              child: Center(
+                child: Container(
+                  width: 400,
+                  height: 1000,
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Expanded Content Here',
+                        style: TextStyle(
+                          color: Color.fromRGBO(74, 74, 74, 1),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(context)?.insert(overlayEntry);
+    _overlayEntry = overlayEntry;
+    _isExpanded = true;
+  }
 
 }
+
