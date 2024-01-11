@@ -31,133 +31,138 @@ class _MedCatScreenState extends State<MedCatScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              color: const Color.fromRGBO(255, 252, 252, 1),
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // route for user profile
-                    },
-                    child: ClipOval(
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                                'lib/assets/images/profile-picture.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 5,),
-                  const Text(
-                    'Ali Safa',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromRGBO(74, 74, 74, 1),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20,),
-            Text(
-              ' How is your Allergy today?',
-              style: TextStyle(
-                fontSize: 16,
-                color: Color.fromRGBO(74, 74, 74, 1),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 10,),
-            Container(
-              child: Container(
-                height: 55,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black12,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    for (int i = 1; i <= 5; i++)
+      body: SlidingUpPanel(
+        maxHeight: MediaQuery.of(context).size.height * 0.7,
+        minHeight: 80,
+        panel: _buildPanel(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  color: const Color.fromRGBO(255, 252, 252, 1),
+                  child: Column(
+                    children: [
                       GestureDetector(
                         onTap: () {
-                          print('Pressed button $i');
+                          //route for user profile
                         },
-                        child: CircleAvatar(
-                          backgroundColor:
-                          const Color.fromRGBO(255, 117, 19, 0.683),
-                          child: Text(
-                            i.toString(),
-                            style: const TextStyle(
-                              color: Colors.white,
+                        child: ClipOval(
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('lib/assets/images/profile-picture.png'),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 15,),
-            Container(
-              height: 130,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.black12,
-                  width: 2,
-                ),
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: GestureDetector(
-                      onTap: () {
-                        // Handle tap
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: const BoxDecoration(
-                          color: Color.fromRGBO(255, 117, 19, 1),
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'Show Analysis',
+                      const SizedBox(height: 5,),
+                      const Text(
+                          'Ali Safa',
                           style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromRGBO(74, 74, 74, 1),
+                          )
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20,),
+                Text(
+                  ' How is your Allergy today?',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color.fromRGBO(74, 74, 74, 1),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 10,),
+                Container(
+                  child: Container(
+                    height: 55,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black12,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        for (int i = 1; i <= 5; i++)
+                          GestureDetector(
+                            onTap: () {
+                              print('Pressed button $i');
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: const Color.fromRGBO(255, 117, 19, 0.683),
+                              child: Text(
+                                i.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15,),
+                Container(
+                  height: 130,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.black12,
+                      width: 2,
+                    ),
+                  ),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: () {
+                            // Handle tap
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: const BoxDecoration(
+                              color: Color.fromRGBO(255, 117, 19, 1),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              'Show Analysis',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 10,),
+              ],
             ),
-            SizedBox(height: 10,),
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -188,9 +193,24 @@ class _MedCatScreenState extends State<MedCatScreen> {
                 height: 35, width: 35,),
               label: 'Community',
             ),
-          ],
+          ]
       ),
     );
   }
-
+ 
+   Widget _buildPanel() {
+    // Customize your panel content here
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child: Text(
+          'Panel Content',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
 }
