@@ -178,10 +178,20 @@ class _MedCatScreenState extends State<MedCatScreen> {
           ),
           GestureDetector(
             onTap: () {
+            if (!isExpanded) {
               setState(() {
-                isExpanded = !isExpanded;
+                isExpanded = true;
                 expandedContainerIndex = -1;
               });
+            }
+          },
+          onVerticalDragUpdate: (details) {
+            if (details.primaryDelta! > 0 && isExpanded) {
+              setState(() {
+                isExpanded = false;
+                expandedContainerIndex = -1;
+              });
+            }
             },
             child: AnimatedContainer(
               duration: Duration(milliseconds: 500),
@@ -196,7 +206,6 @@ class _MedCatScreenState extends State<MedCatScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Add a Row for the icon and text
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -206,7 +215,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           size: 30,
                         ),
                         SvgPicture.asset(
-                          'lib/assets/icons/MedCat-white.svg', // Replace with your title
+                          'lib/assets/icons/MedCat-white.svg', 
                           height: 30,
                           width: 30,
                         ),
@@ -270,7 +279,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                             height: 50,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.white, // Adjust the color as needed
+                              color: Colors.white, 
                             ),
                             child: Row(
                               children: [
@@ -302,6 +311,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
               ),
             ),
           ),
+
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
