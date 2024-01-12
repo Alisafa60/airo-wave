@@ -185,17 +185,33 @@ class _MedCatScreenState extends State<MedCatScreen> {
             },
             child: AnimatedContainer(
               duration: Duration(milliseconds: 500),
-              height: isExpanded ? MediaQuery.of(context).size.height * 0.67 : 200,
+              height: isExpanded ? MediaQuery.of(context).size.height * 0.67 : 245,
               width: 400,
               decoration: BoxDecoration(
-                 color:  Color.fromARGB(56, 6, 6, 6),
-                 borderRadius: BorderRadius.circular(10),
+                color: Color.fromARGB(159, 6, 6, 6),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Padding(
                 padding: EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Add a Row for the icon and text
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(
+                          isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        SvgPicture.asset(
+                          'lib/assets/icons/MedCat-white.svg', // Replace with your title
+                          height: 30,
+                          width: 30,
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 10,),
                     GestureDetector(
                       onTap: () => handleContainerTap(0),
@@ -218,7 +234,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                             ),
                           ),
                         ),
-                      )
+                      ),
                     ),
                     SizedBox(height: 10,),
                     GestureDetector(
@@ -234,7 +250,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              'Press mee!',
+                              'Press meee!',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -242,22 +258,10 @@ class _MedCatScreenState extends State<MedCatScreen> {
                             ),
                           ),
                         ),
-                      )
+                      ),
                     ),
                   ],
                 ),
-              )
-            ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Icon(
-                isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up,
-                color: Colors.white,
-                size: 40,
               ),
             ),
           ),
