@@ -10,6 +10,18 @@ class MedCatScreen extends StatefulWidget {
 
 class _MedCatScreenState extends State<MedCatScreen> {
   bool isExpanded = false;
+  int expandedContainerIndex = -1;
+
+  void handleContainerTap (int index){
+    setState(() {
+      if (index == expandedContainerIndex){
+        isExpanded = !isExpanded;
+      }else {
+        isExpanded = true;
+        expandedContainerIndex = index;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,6 +180,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
             onTap: () {
               setState(() {
                 isExpanded = !isExpanded;
+                expandedContainerIndex = -1;
               });
             },
             child: AnimatedContainer(
@@ -178,7 +191,6 @@ class _MedCatScreenState extends State<MedCatScreen> {
                  color:  Color.fromARGB(56, 6, 6, 6),
                  borderRadius: BorderRadius.circular(10),
               ),
-             
               child: Padding(
                 padding: EdgeInsets.all(20),
                 child: Column(
@@ -186,56 +198,51 @@ class _MedCatScreenState extends State<MedCatScreen> {
                   children: [
                     SizedBox(height: 10,),
                     GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isExpanded = true;
-                        });
-                        print('Container pressed!');
-                      },
-                      child: Container(
-                        width: 300,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Color.fromRGBO(95, 156, 247, 0.653),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Press me!',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                      onTap: () => handleContainerTap(0),
+                      child: Visibility(
+                        visible: expandedContainerIndex == 0 || !isExpanded,
+                        child: Container(
+                          width: 300,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color.fromRGBO(95, 156, 247, 0.653),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Press me!',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      )
                     ),
-                    
                     SizedBox(height: 10,),
-                   GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isExpanded = true;
-                        });
-                        print('Container pressed!');
-                      },
-                      child: Container(
-                        width: 300,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Color.fromRGBO(95, 156, 247, 0.653),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Press me!',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () => handleContainerTap(1),
+                      child: Visibility(
+                        visible: expandedContainerIndex == 1 || !isExpanded,
+                        child: Container(
+                          width: 300,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color.fromRGBO(95, 156, 247, 0.653),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Press mee!',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      )
                     ),
                   ],
                 ),
