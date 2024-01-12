@@ -188,7 +188,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
               height: isExpanded ? MediaQuery.of(context).size.height * 0.67 : 245,
               width: 400,
               decoration: BoxDecoration(
-                color: Color.fromARGB(159, 6, 6, 6),
+                color: Color.fromARGB(159, 19, 19, 27),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Padding(
@@ -255,6 +255,43 @@ class _MedCatScreenState extends State<MedCatScreen> {
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: isExpanded,
+                      child: Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white, // Adjust the color as needed
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                        hintText: 'Message MedCat...',
+                                        border: InputBorder.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.send),
+                                  onPressed: () {
+                                    // Handle send button press
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         ),
