@@ -202,7 +202,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                       child: Visibility(
                         visible: expandedContainerIndex == 0 || !isExpanded,
                         child: Container(
-                          width: 300,
+                          width: double.infinity,
                           height: 70,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -226,7 +226,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                       child: Visibility(
                         visible: expandedContainerIndex == 1 || !isExpanded,
                         child: Container(
-                          width: 300,
+                          width: double.infinity,
                           height: 70,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -247,6 +247,18 @@ class _MedCatScreenState extends State<MedCatScreen> {
                   ],
                 ),
               )
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Icon(
+                isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up,
+                color: Colors.white,
+                size: 40,
+              ),
             ),
           ),
         ],
