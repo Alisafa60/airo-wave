@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class MapsScreen extends StatelessWidget {
-  const MapsScreen({super.key});
+  const MapsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,49 +26,55 @@ class MapsScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                // pinned: true,
-                expandedHeight: 500,
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text('item ${1 + index}'),
-                    );
-                  },
-                  childCount: 20,
-                ),
-              ),
-            ],
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey[200],
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    icon: Icon(Icons.search),
-                    border: InputBorder.none,
+      body: SlidingUpPanel(
+        panel: Center(
+          child: Text("This is the panel content"),
+        ),
+        maxHeight: MediaQuery.of(context).size.height*0.7,
+        minHeight: MediaQuery.of(context).size.height*0.15,
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  height: 50,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Color.fromARGB(44, 74, 74, 74), width: 1.5),
+                    borderRadius: BorderRadius.circular(9),
                   ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children : [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10), 
+                        child: Icon(
+                          Icons.search,
+                          size: 30,
+                          color: Color.fromRGBO(74, 74, 74, 0.7),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          textAlignVertical: TextAlignVertical.bottom,
+                          decoration: InputDecoration(
+                            hintText: 'Search',
+                            hintStyle: TextStyle(
+                              color: Color.fromRGBO(74, 74, 74, 0.4),
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      )
+                    ]
+                  )
                 ),
-              ),
-            ),
-          ),
-        ],
+              ]),
+            )
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
