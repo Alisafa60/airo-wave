@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-class MapsScreen extends StatelessWidget {
-  const MapsScreen({Key? key}) : super(key: key);
+class MapsScreen extends StatefulWidget {
+  @override
+  _MapsScreenState createState() => _MapsScreenState();
+}
+
+class _MapsScreenState extends State<MapsScreen> {
+  PageController _pageController = PageController(initialPage: 0);
+  int _currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,78 +32,127 @@ class MapsScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SlidingUpPanel(
-        panelBuilder: (ScrollController scrollController) => Column(
-          children: [
-            Container(
-              height: 30,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Image.asset('lib/assets/icons/rectangle-filled.png', height: 40, width: 40),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              height: 200, // Adjust the height as needed
-              color: Colors.white, // Background color
-              child: const Center(
-                child: Text("This is the panel content"),
-              ),
-            ),
-          ],
-        ),
-        // panel: Center(
-        //   child: Text("This is the panel content"),
-        // ),
-        
-        maxHeight: MediaQuery.of(context).size.height*0.7,
-        minHeight: MediaQuery.of(context).size.height*0.15,
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.all(20),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  height: 50,
+                  height: 45,
                   width: double.infinity,
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color.fromARGB(44, 74, 74, 74), width: 1.5),
-                    borderRadius: BorderRadius.circular(9),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children : [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10), 
-                        child: Icon(
-                          Icons.search,
-                          size: 30,
-                          color: Color.fromRGBO(74, 74, 74, 0.7),
-                        ),
+                  child: TextField(
+                    textAlign: TextAlign.start,
+                    textAlignVertical: TextAlignVertical.bottom,
+                    decoration: InputDecoration(
+                      hintText: ' Search',
+                      hintStyle: TextStyle(
+                        color: Color.fromRGBO(74, 74, 74, 0.4),
                       ),
-                      Expanded(
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.bottom,
-                          decoration: InputDecoration(
-                            hintText: 'Search',
-                            hintStyle: TextStyle(
-                              color: Color.fromRGBO(74, 74, 74, 0.4),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Color.fromRGBO(74, 74, 74, 0.7),
+                      ),
+                      border: InputBorder.none,
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(7),
+                        borderSide: BorderSide(width: 2, color: Color.fromRGBO(255, 115 , 29, 0.6)), 
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(7),
+                        borderSide: BorderSide(width: 2, color: Color.fromRGBO(74, 74, 74, 0.2)), 
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: SlidingUpPanel(
+              panelBuilder: (ScrollController scrollController) => Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Image.asset(
+                      'lib/assets/icons/rectangle-filled.png',
+                      height: 30,
+                      width: 40,
+                      // adjust height and width as needed
+                    ),
+                  ),
+                  Container(
+                    height: 30,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: _currentPageIndex == 0 ? Color.fromRGBO(255, 115, 19, 1) : Color.fromARGB(100, 0, 0, 0),
+                                borderRadius: BorderRadius.circular(8), // Adjust borderRadius as needed
+                              ),
+                              child: Text(
+                                'Routes',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
-                            border: InputBorder.none,
+                          ),
+                          SizedBox(width: 70),
+                          GestureDetector(
+                            onTap: () {
+                              _pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: _currentPageIndex == 1 ? Color.fromRGBO(255, 115, 19, 1) : const Color.fromARGB(100, 0, 0, 0),
+                                borderRadius: BorderRadius.circular(8), // Adjust borderRadius as needed
+                              ),
+                              child: Text(
+                                'Saved',
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPageIndex = index;
+                        });
+                      },
+                      children: [
+                        Container(
+                          color: Colors.white, 
+                          child: Center(
+                            child: Text("Routes Page Content"),
                           ),
                         ),
-                      )
-                    ]
-                  )
-                ),
-              ]),
-            )
-        ),
+                        Container(
+                          color: Colors.white, 
+                          child: Center(
+                            child: Text("Saved Page Content"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
