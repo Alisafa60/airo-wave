@@ -1,14 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/api_survice.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class LoginScreen extends StatelessWidget{
-  const LoginScreen({super.key});
+class LoginScreen extends StatelessWidget {
+  final ApiService apiService;
+  LoginScreen({super.key, required this.apiService});
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  
+  Future<void> loginUser(String email, String password) async {
+    final Map<String, String> requestBody = {'email': email, 'password': password};
+
+    try {
+      final http.Response response = await apiService.post('/auth/login', requestBody);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        print('Login successful: $data');
+      } else {
+        print('Login failed. Status code: ${response.statusCode}, Body: ${response.body}');
+      }
+    } catch (error) {
+      print('Error during login: $error');
+    }
+  }
 
   @override
-  Widget build(BuildContext context){
-
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:const Color.fromRGBO(255, 252, 252, 1),
+        backgroundColor: const Color.fromRGBO(255, 252, 252, 1),
         actions: [
           Container(
             decoration: BoxDecoration(
@@ -17,14 +40,13 @@ class LoginScreen extends StatelessWidget{
             ),
             child: IconButton(
               icon: const Icon(Icons.clear),
-              color: const Color.fromRGBO(74, 74, 74, 1), 
-              onPressed: () {  },
+              color: const Color.fromRGBO(74, 74, 74, 1),
+              onPressed: () {},
               iconSize: 30,
-            )
+            ),
           )
         ],
       ),
-      
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(
@@ -56,7 +78,8 @@ class LoginScreen extends StatelessWidget{
                 border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: const TextField(
+              child: TextField(
+                controller: emailController,
                 textAlign: TextAlign.start,
                 textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
@@ -70,7 +93,7 @@ class LoginScreen extends StatelessWidget{
             ),
             const SizedBox(height: 20),
             const Text(
-              'Passwrod',
+              'Password',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
@@ -86,7 +109,8 @@ class LoginScreen extends StatelessWidget{
                 border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: const TextField(
+              child: TextField(
+                controller: passwordController,
                 textAlign: TextAlign.start,
                 textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
@@ -100,11 +124,11 @@ class LoginScreen extends StatelessWidget{
             ),
             const SizedBox(height: 5,),
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 
               },
               child: const Text(
-              'Forgot Password?',
+                'Forgot Password?',
                 style: TextStyle(
                   color: Color.fromRGBO(74, 74, 74, 0.6),
                   fontSize: 15,
@@ -112,23 +136,33 @@ class LoginScreen extends StatelessWidget{
               ),
             ),
             const SizedBox(height: 30),
-            Container(
-              height: 50,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(255, 115, 19, 1),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: const Center(
-               child: Text(
-                'Log In',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
+            GestureDetector(
+              onTap: () async {
+                // Get the email and password from the TextFields
+                String email = emailController.text;
+                String password = passwordController.text;
+
+                // Call the loginUser function
+                await loginUser(email, password);
+              },
+              child: Container(
+                height: 50,
+                width: double.infinity,
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(255, 115, 19, 1),
+                  borderRadius: BorderRadius.circular(5),
                 ),
-               )
+                child: const Center(
+                  child: Text(
+                    'Log In',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 15),
@@ -174,7 +208,7 @@ class LoginScreen extends StatelessWidget{
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Image.asset(
-                      'lib/assets/images/google.png', 
+                      'lib/assets/images/google.png',
                       height: 24,
                       width: 24,
                     ),
@@ -192,7 +226,7 @@ class LoginScreen extends StatelessWidget{
               ),
             ),
             const SizedBox(height: 10,),
-             Container(
+            Container(
               height: 50,
               width: double.infinity,
               padding: const EdgeInsets.all(5),
@@ -207,7 +241,7 @@ class LoginScreen extends StatelessWidget{
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Icon(
-                      Icons.facebook, 
+                      Icons.facebook,
                       size: 24,
                     ),
                   ),
@@ -223,8 +257,8 @@ class LoginScreen extends StatelessWidget{
                 ],
               ),
             ),
-             const SizedBox(height: 10,),
-             Container(
+            const SizedBox(height: 10,),
+            Container(
               height: 50,
               width: double.infinity,
               padding: const EdgeInsets.all(5),
@@ -239,7 +273,7 @@ class LoginScreen extends StatelessWidget{
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Icon(
-                      Icons.apple, 
+                      Icons.apple,
                       size: 24,
                     ),
                   ),
@@ -257,7 +291,7 @@ class LoginScreen extends StatelessWidget{
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }
