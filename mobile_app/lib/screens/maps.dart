@@ -27,9 +27,32 @@ class MapsScreen extends StatelessWidget {
         ),
       ),
       body: SlidingUpPanel(
-        panel: Center(
-          child: Text("This is the panel content"),
+        panelBuilder: (ScrollController scrollController) => Column(
+          children: [
+            Container(
+              height: 30,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Image.asset('lib/assets/icons/rectangle-filled.png', height: 40, width: 40),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              height: 200, // Adjust the height as needed
+              color: Colors.white, // Background color
+              child: const Center(
+                child: Text("This is the panel content"),
+              ),
+            ),
+          ],
         ),
+        // panel: Center(
+        //   child: Text("This is the panel content"),
+        // ),
+        
         maxHeight: MediaQuery.of(context).size.height*0.7,
         minHeight: MediaQuery.of(context).size.height*0.15,
         body: Center(
