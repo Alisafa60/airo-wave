@@ -3,26 +3,38 @@ import 'package:mobile_app/api_survice.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   final ApiService apiService;
   LoginScreen({super.key, required this.apiService});
 
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  String errorText = '';
   
   Future<void> loginUser(String email, String password) async {
     final Map<String, String> requestBody = {'email': email, 'password': password};
 
     try {
-      final http.Response response = await apiService.post('/auth/login', requestBody);
+      final http.Response response = await widget.apiService.post('/auth/login', requestBody);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         print('Login successful: $data');
       } else {
+        setState(() {
+          errorText = 'Invalid email/password';
+        });
         print('Login failed. Status code: ${response.statusCode}, Body: ${response.body}');
       }
     } catch (error) {
+       setState(() {
+        errorText = 'Error during login: $error';
+      });
       print('Error during login: $error');
     }
   }
@@ -75,7 +87,7 @@ class LoginScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+                border: Border.all(color: errorText.isNotEmpty ? Colors.red : const Color.fromRGBO(74, 74, 74, 0.5)),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: TextField(
@@ -106,13 +118,14 @@ class LoginScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+                border: Border.all(color: errorText.isNotEmpty ? Colors.red : const Color.fromRGBO(74, 74, 74, 0.5)),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: TextField(
                 controller: passwordController,
                 textAlign: TextAlign.start,
                 textAlignVertical: TextAlignVertical.bottom,
+                obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Password',
                   hintStyle: TextStyle(
@@ -135,6 +148,8 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 2,),
+            Text(errorText, style: TextStyle(color: Colors.red, fontSize: 15),),
             const SizedBox(height: 30),
             GestureDetector(
               onTap: () async {
