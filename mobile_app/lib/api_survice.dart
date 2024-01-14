@@ -58,5 +58,20 @@ class ApiService {
     }
   }
 
+  Future<http.Response> put(String path, Map<String, String> headers, Map<String, dynamic> body) async {
+    final Uri uri = Uri.parse('$baseUrl$path');
+
+    try {
+      final http.Response response = await http.put(
+        uri,
+        headers: headers,
+        body: jsonEncode(body),
+      );
+      return response;
+    } catch (error) {
+      throw Exception('Error during API call: $error');
+    }
+  }
+
 }
 
