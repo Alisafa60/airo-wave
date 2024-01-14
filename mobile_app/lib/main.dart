@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/api_survice.dart';
 import 'package:mobile_app/screens/home.dart';
 import 'package:mobile_app/screens/login.dart';
 import 'package:mobile_app/screens/maps.dart';
@@ -7,6 +8,8 @@ import 'package:mobile_app/screens/med_cat.dart';
 import 'package:mobile_app/screens/signup.dart';
 import 'package:mobile_app/screens/user_profile.dart';
 import 'package:mobile_app/screens/user_health.dart';
+import 'package:mobile_app/constants.dart';
+
 // import 'package:mobile_app/screens/login.dart';
 // import 'package:mobile_app/screens/userProfile.dart';
 // import './screens/home.dart';
@@ -15,11 +18,12 @@ import 'package:mobile_app/screens/user_health.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  final ApiService apiService = ApiService(Constants.baseUrl);
 
   // This widget is the root of your application.
   @override
@@ -46,7 +50,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const HomeScreen(),
-      home: MedCatScreen(),
+      home: UserProfileScreen(apiService: apiService,),
       
     );
   }

@@ -17,7 +17,7 @@ class _UserHealthState extends State<UserHealth> {
 
   List<String> _selectedConditions = ['None'];
   List<List<TextEditingController>> _fieldControllers = [[]];
-  TextEditingController _newFieldController = TextEditingController();
+ 
 
   List<String> medicationEntries = [];
 

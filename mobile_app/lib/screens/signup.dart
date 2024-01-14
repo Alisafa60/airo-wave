@@ -40,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
       'lastName': lastName,
       'gender': gender,
       'unit': unitPreference,
-      't ype': userType,
+      'type': userType,
     };
     print(requestBody);
 

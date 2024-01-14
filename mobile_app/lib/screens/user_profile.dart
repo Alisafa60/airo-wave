@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/constants.dart';
@@ -9,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
 
 class UserProfileScreen extends StatefulWidget {
   final ApiService apiService;
@@ -78,7 +80,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 }
 
-
   Future<String?> _uploadImage(String imagePath) async {
     String? token = await getToken();
 
@@ -145,10 +146,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<String?> getImagePath() async {
-    final ImagePicker _picker = ImagePicker();
+    final ImagePicker picker = ImagePicker();
     
     try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
       return image?.path;
     } catch (e) {
       print('Error picking image: $e');
@@ -165,7 +166,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         setState(() {
           _imagePath = uploadedImagePath;
           print('Image Path: $_imagePath');
-
         });
       } else {
         print('Image upload failed');
@@ -219,12 +219,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   },
                   child: ClipOval(
                     child: Container(
+                      
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
                         image: _imagePath != null
                             ? DecorationImage(
-                                image: NetworkImage('http://172.25.135.58:3000/$_imagePath'),
+                                image: NetworkImage('/172.25.135.58:3000/$_imagePath'),
                                 fit: BoxFit.cover,
                               )
                             : const DecorationImage(
@@ -321,11 +322,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 onPressed: updateProfile,
             )
           ],
+          
         ),
       ),
     );
   }
-
+  
   void showPopupMenu(BuildContext context) {
     PopupMenu menu = PopupMenu(
       context: context,
