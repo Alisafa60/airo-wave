@@ -40,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
       'lastName': lastName,
       'gender': gender,
       'unit': unitPreference,
-      'type': userType,
+      't ype': userType,
     };
     print(requestBody);
 
@@ -62,7 +62,6 @@ class _SignupScreenState extends State<SignupScreen> {
       print('Error during login: $error');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

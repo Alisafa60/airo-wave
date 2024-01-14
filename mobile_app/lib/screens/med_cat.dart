@@ -198,7 +198,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
               height: isExpanded ? MediaQuery.of(context).size.height * 0.67 : 245,
               width: 400,
               decoration: BoxDecoration(
-                color: Color.fromARGB(159, 19, 19, 27),
+                color: Color.fromARGB(232, 3, 4, 6),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Padding(
@@ -231,7 +231,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           height: 70,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(95, 156, 247, 0.653),
+                            color: Color.fromRGBO(95, 156, 247, 1),
                           ),
                           child: Center(
                             child: Text(
@@ -255,7 +255,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           height: 70,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(95, 156, 247, 0.653),
+                            color: Color.fromRGBO(95, 156, 247, 1),
                           ),
                           child: Center(
                             child: Text(
