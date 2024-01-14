@@ -12,27 +12,24 @@ class BorderedInputField extends StatelessWidget {
   final String hintText;
   final IconData? customIcon;
   final String errorText;
+  final TextEditingController? controller;
 
   const BorderedInputField({
     Key? key,
     required this.hintText,
     this.customIcon,
     this.errorText = "",
+    this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: 60,
       width: double.infinity,
-      // padding: const EdgeInsets.all(5),
-      // decoration: BoxDecoration(
-      //   border: Border.all(
-      //     color: errorText.isNotEmpty ? Colors.red : Color.fromRGBO(74, 74, 74, 0.5),
-      //   ),
-      //   borderRadius: BorderRadius.circular(5),
-      // ),
+      padding: const EdgeInsets.all(5),
       child: TextField(
+        controller: controller, // Set the provided controller
         textAlign: TextAlign.start,
         textAlignVertical: TextAlignVertical.bottom,
         obscureText: hintText.toLowerCase().contains('password'),
@@ -59,7 +56,7 @@ class BorderedInputField extends StatelessWidget {
             borderRadius: BorderRadius.circular(7),
             borderSide: BorderSide(
               width: 2,
-              color: errorText.isNotEmpty ? Colors.red : myGray.withOpacity(0.2),
+              color: errorText.isNotEmpty ? Colors.red : Color.fromRGBO(74, 74, 74, 0.2),
             ),
           ),
         ),
@@ -68,29 +65,32 @@ class BorderedInputField extends StatelessWidget {
   }
 }
 
-
 class SaveButton extends StatelessWidget {
   final String buttonText;
+  final VoidCallback onPressed;
 
-  const SaveButton({Key? key, required this.buttonText}) : super(key: key);
+  const SaveButton({Key? key, required this.buttonText, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      width: double.infinity,
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: primaryColor,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Center(
-        child: Text(
-          buttonText,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: 50,
+        width: double.infinity,
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: primaryColor,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Center(
+          child: Text(
+            buttonText,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       ),
