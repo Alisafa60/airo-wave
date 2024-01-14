@@ -11,10 +11,10 @@ const hashPassword = async (password) => {
 const updateProfile = async (req, res) => {
     try {
       const userId = req.user.id;
-      const { firstName, lastName, gender, unit, profilePicture } = req.body;
-  
+      const { firstName, lastName, gender, unit, phone, adress } = req.body;
+      console.log('Incoming Update Profile Request:', req.body);
       const existingUser = await prisma.user.findUnique({ where: { id: userId } });
-  
+        
       if (!existingUser) {
         return res.status(404).json({ error: 'User not found' });
       }
@@ -26,10 +26,11 @@ const updateProfile = async (req, res) => {
           lastName: lastName || existingUser.lastName,
           gender: gender || existingUser.gender,
           unit: unit || existingUser.unit,
-          profilePicture: profilePicture || existingUser.profilePicture,
+          phone: phone || existingUser.phone,
+          address: adress || existingUser.address,
         },
       });
-  
+      console.log('Updated User:', updatedUser);
       return res.status(200).json({ user: updatedUser });
     } catch (e) {
         handleError(res, e, 'Error updating profile');
