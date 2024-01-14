@@ -1,17 +1,112 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:mobile_app/constants.dart';
 import 'package:popup_menu/popup_menu.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mobile_app/api_survice.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({Key? key}) : super(key: key);
+  final ApiService apiService;
+
+  const UserProfileScreen({super.key, required this.apiService});
 
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }
 
+
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final GlobalKey _containerKey = GlobalKey();
   bool _isMetric = true; 
+  String? _imagePath;
   String? _selectedGender;
+  String? uploadedImagePath;
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController adressController = TextEditingController();
+  
+  Future<String?> getToken() async {
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+    return await storage.read(key: 'jwtToken');
+  }
+
+ Future<String?> _uploadImage(String imagePath) async {
+  String? token = await getToken();
+
+  if (token != null) {
+    final Map<String, String> headers = {'Authorization': 'Bearer $token'};
+    final List<int> bytes = await File(imagePath).readAsBytes();
+    final http.MultipartFile file = http.MultipartFile.fromBytes(
+      'profilePicture',
+      bytes,
+      filename: 'filename.jpg',
+      contentType: MediaType.parse('image/jpeg'),
+    );
+
+    final Map<String, dynamic> body = {'profilePicture': file};
+
+    try {
+      final http.Response response = await widget.apiService.postMultipart(
+        '/api/user/profile-picture',
+        headers,
+        body,
+      );
+
+      print('Image upload response: ${response.statusCode}, Body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String uploadedImagePath = responseData['imageUrl'];
+        return uploadedImagePath;
+      } else {
+        print('Image upload failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        return null; 
+      }
+      } catch (error) {
+        print('Error during image upload: $error');
+        return null; 
+      }
+    }
+    return null; 
+  }
+
+  Future<String?> getImagePath() async {
+    final ImagePicker _picker = ImagePicker();
+    
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      return image?.path;
+    } catch (e) {
+      print('Error picking image: $e');
+      return null;
+    }
+  }
+
+  Future<void> _handleUpload() async {
+  String? imagePath = await getImagePath();
+  if (imagePath != null) {
+    String? uploadedImagePath = await _uploadImage(imagePath);
+
+    if (uploadedImagePath != null) {
+      setState(() {
+        _imagePath = uploadedImagePath;
+        print('Image Path: $_imagePath');
+
+      });
+    } else {
+      print('Image upload failed');
+    }
+  }
+}
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +156,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     child: Container(
                       width: 80,
                       height: 80,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('lib/assets/images/profile-picture.png'),
-                          fit: BoxFit.cover,
-                        ),
+                      decoration: BoxDecoration(
+                        image: _imagePath != null
+                            ? DecorationImage(
+                                image: NetworkImage('http://172.25.135.58/$_imagePath!'),
+                                fit: BoxFit.cover,
+                              )
+                            : DecorationImage(
+                                image: AssetImage('lib/assets/images/profile-picture.png') as ImageProvider,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                   ),
@@ -73,74 +173,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
             ),
             const SizedBox(height: 50,),
-            Container(
-              height: 40,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              child: const TextField(
-                textAlign: TextAlign.start,
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: InputDecoration(
-                  hintText: ' First name',
-                  hintStyle: TextStyle(
-                    color: Color.fromRGBO(74, 74, 74, 0.4),
-                  ),
-                  border: InputBorder.none,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color.fromRGBO(255, 115 , 29, 0.6)), 
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color.fromRGBO(74, 74, 74, 0.4)), 
-                  ),
-                ),
-              ),
-            ),
+            UnderlineInputField(controller: firstNameController, hintText: ' First name'),
             const SizedBox(height: 20,),
-            Container(
-              height: 40,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              child: const TextField(
-                textAlign: TextAlign.start,
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: InputDecoration(
-                  hintText: ' Last name',
-                  hintStyle: TextStyle(
-                    color: Color.fromRGBO(74, 74, 74, 0.4),
-                  ),
-                  border: InputBorder.none,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color.fromRGBO(255, 115 , 29, 0.6)), 
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color.fromRGBO(74, 74, 74, 0.4)), 
-                  ),
-                ),
-              ),
-            ),
+            UnderlineInputField(controller: lastNameController, hintText: ' Last name'),
             const SizedBox(height: 20,),
-            Container(
-              height: 40,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              child: const TextField(
-                textAlign: TextAlign.start,
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: InputDecoration(
-                  hintText: ' Phone number',
-                  hintStyle: TextStyle(
-                    color: Color.fromRGBO(74, 74, 74, 0.4),
-                  ),
-                  border: InputBorder.none,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color.fromRGBO(255, 115 , 29, 0.6)), 
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color.fromRGBO(74, 74, 74, 0.4)), 
-                  ),
-                ),
-              ),
-            ),
+            UnderlineInputField(controller: lastNameController, hintText: ' Phone number'),
             const SizedBox(height: 20,),
             Container(
               height: 40,
@@ -175,33 +212,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
             ),
             const SizedBox(height: 20,),
-            Container(
-              height: 40,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              child: const TextField(
-                textAlign: TextAlign.start,
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: InputDecoration(
-                  hintText: ' Address',
-                  hintStyle: TextStyle(
-                    color: Color.fromRGBO(74, 74, 74, 0.4),
-                  ),
-                  border: InputBorder.none,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color.fromRGBO(255, 115 , 29, 0.6)), 
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color.fromRGBO(74, 74, 74, 0.4)), 
-                  ),
-                ),
-              ),
-            ),
+            UnderlineInputField(controller: lastNameController, hintText: ' Adress'),
             const SizedBox(height: 20,),
              Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   ' Preferred Units',
                   style: TextStyle(
                     color: Color.fromRGBO(74, 74, 74, 1),
@@ -212,7 +228,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   children: [
                     Text(
                       _isMetric ? 'Metric' : 'Imperial',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color.fromRGBO(74, 74, 74, 0.8),
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -278,7 +294,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           image: const Icon(Icons.upload, color: Color.fromRGBO(95, 157, 247, 1)),
         ),
       ],
-      onClickMenu: (MenuItemProvider item) {
+      onClickMenu: (MenuItemProvider item) async {
+        if (item.menuTitle == 'Upload') {
+          await _handleUpload(); 
+        }
         print('Menu item clicked: ${item.menuTitle}');
       },
     );
