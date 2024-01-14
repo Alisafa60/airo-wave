@@ -1,9 +1,9 @@
-// const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('@prisma/client')
 
-// type MyPoint = {
-//   latitude: number;
-//   longitude: number;
-// };
+type MyPoint = {
+  latitude: number;
+  longitude: number;
+};
 
 type MyUserLocation = {
   location: MyPoint;
