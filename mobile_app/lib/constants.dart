@@ -15,12 +15,12 @@ class BorderedInputField extends StatelessWidget {
   final TextEditingController? controller;
 
   const BorderedInputField({
-    Key? key,
+    super.key,
     required this.hintText,
     this.customIcon,
     this.errorText = "",
     this.controller,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class BorderedInputField extends StatelessWidget {
             borderRadius: BorderRadius.circular(7),
             borderSide: BorderSide(
               width: 2,
-              color: errorText.isNotEmpty ? Colors.red : Color.fromRGBO(74, 74, 74, 0.2),
+              color: errorText.isNotEmpty ? Colors.red : myGray.withOpacity(0.2),
             ),
           ),
         ),
@@ -69,7 +69,7 @@ class SaveButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback onPressed;
 
-  const SaveButton({Key? key, required this.buttonText, required this.onPressed}) : super(key: key);
+  const SaveButton({super.key, required this.buttonText, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +126,40 @@ class UnderlineField extends StatelessWidget {
           ),
         ),
       ),
+      ),
+    );
+  }
+}
+
+class UnderlineInputField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+
+  const UnderlineInputField({super.key, required this.controller, required this.hintText});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      width: double.infinity,
+      padding: const EdgeInsets.all(5),
+      child: TextField(
+        controller: controller,
+        textAlign: TextAlign.start,
+        textAlignVertical: TextAlignVertical.bottom,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: myGray.withOpacity(0.4),
+          ),
+          border: InputBorder.none,
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(width: 2, color: primaryColor.withOpacity(0.6)),
+          ),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(width: 2, color: myGray.withOpacity(0.4)),
+          ),
+        ),
       ),
     );
   }
