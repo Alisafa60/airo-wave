@@ -65,7 +65,7 @@ class _UserHealthState extends State<UserHealth> {
             children: [
               Row(
                 children: [
-                  SizedBox(height: 80,),
+                  const SizedBox(height: 80,),
                   Expanded(
                     child: Container(
                       height: 40,
@@ -111,13 +111,13 @@ class _UserHealthState extends State<UserHealth> {
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               width: 2,
-                              color: isBloodTypeValid ? Color.fromRGBO(255, 115, 29, 0.6) : Colors.red,
+                              color: isBloodTypeValid ? const Color.fromRGBO(255, 115, 29, 0.6) : Colors.red,
                             ),
                           ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               width: 2,
-                              color: isBloodTypeValid ? Color.fromRGBO(74, 74, 74, 0.4) : Colors.red,
+                              color: isBloodTypeValid ? const Color.fromRGBO(74, 74, 74, 0.4) : Colors.red,
                             ),
                           ),
                         ),
@@ -140,10 +140,10 @@ class _UserHealthState extends State<UserHealth> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 14),
+              const SizedBox(height: 14),
               ExpansionPanelList(
                 elevation: 1,
-                expandedHeaderPadding: EdgeInsets.all(0),
+                expandedHeaderPadding: const EdgeInsets.all(0),
                 expansionCallback: (int index, bool isExpanded) {
                   setState(() {
                     _selectedConditions[index] = isExpanded ? 'None' : _selectedConditions[index];
@@ -181,7 +181,7 @@ class _UserHealthState extends State<UserHealth> {
                                 items: _conditionItems,
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete),
+                                icon: const Icon(Icons.delete),
                                 onPressed: () {
                                   setState(() {
                                     _selectedConditions.removeAt(index);
@@ -242,7 +242,7 @@ class _UserHealthState extends State<UserHealth> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(
@@ -269,7 +269,7 @@ class _UserHealthState extends State<UserHealth> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       InkWell(
                         onTap: () {
                           if (medicationEntries.isNotEmpty) {
@@ -300,7 +300,7 @@ class _UserHealthState extends State<UserHealth> {
                         ..._buildFieldsForMedication(medicationEntries[i], i),
                 ],
               ),
-              SizedBox(height: 40,),
+              const SizedBox(height: 40,),
               Container(
                 height: 50,
                 width: double.infinity,
@@ -409,10 +409,10 @@ Widget _buildHealthConditionDropdown(int index) {
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder:const UnderlineInputBorder(
             borderSide: BorderSide(width: 2, color: Color.fromRGBO(255, 115 , 29, 0.6)),
           ),
-          enabledBorder: UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(width: 2, color: Color.fromRGBO(74, 74, 74, 0.4)),
           ),
         ),
