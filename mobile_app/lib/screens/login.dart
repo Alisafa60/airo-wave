@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_app/api_survice.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mobile_app/constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -19,22 +19,39 @@ class _LoginScreenState extends State<LoginScreen> {
   String loginError = '';
   
   Future<void> loginUser(String email, String password) async {
-    final Map<String, String> requestBody = {'email': email, 'password': password};
+  final Map<String, String> requestBody = {'email': email, 'password': password};
 
-    try {
-      final http.Response response = await widget.apiService.post('/auth/login', requestBody);
+  try {
+    final http.Response response = await widget.apiService.post('/auth/login', requestBody);
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        print('Login successful: $data');
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      print('Login successful: $data');
+
+      final String? token = data['token'];
+      if (token != null && token.isNotEmpty) {
+        await saveToken(token);
       } else {
-        setState(() {
-          loginError = 'Invalid email/password';
-        });
-        print('Login failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        print('Invalid or empty token received.');
       }
+    } else {
+      setState(() {
+        loginError = 'Invalid email/password';
+      });
+      print('Login failed. Status code: ${response.statusCode}, Body: ${response.body}');
+    }
+  } catch (error) {
+    print('Error during login: $error');
+  }
+}
+  
+  Future<void> saveToken(String token) async {
+    try {
+      final FlutterSecureStorage storage = FlutterSecureStorage();
+      await storage.write(key: 'jwtToken', value: token);
+      print('Token saved successfully: $token');
     } catch (error) {
-      print('Error during login: $error');
+      print('Error saving token: $error');
     }
   }
 
