@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -35,45 +35,89 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return await storage.read(key: 'jwtToken');
   }
 
- Future<String?> _uploadImage(String imagePath) async {
+  Future<void> updateProfile() async {
   String? token = await getToken();
+  final String firstName = firstNameController.text;
+  final String lastName = lastNameController.text;
+  final String gender = _selectedGender??'';
+  final String phone = phoneNumberController.text;
+  final String address = adressController.text;
+  final String unitPreference = _isMetric ? 'Metric' : 'Imperial';
+  Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
+
+  print(decodedToken);
 
   if (token != null) {
-    final Map<String, String> headers = {'Authorization': 'Bearer $token'};
-    final List<int> bytes = await File(imagePath).readAsBytes();
-    final http.MultipartFile file = http.MultipartFile.fromBytes(
-      'profilePicture',
-      bytes,
-      filename: 'filename.jpg',
-      contentType: MediaType.parse('image/jpeg'),
-    );
-
-    final Map<String, dynamic> body = {'profilePicture': file};
+    final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+    final Map<String, dynamic> requestBody = {
+    'firstName': firstName,
+    'lastName': lastName,
+    'phone': phone,
+    'adress': address,
+    'gender': gender,
+    'unit': unitPreference,
+  };
 
     try {
-      final http.Response response = await widget.apiService.postMultipart(
-        '/api/user/profile-picture',
+      final http.Response response = await widget.apiService.put(
+        '/api/user/profile',
         headers,
-        body,
+        requestBody,
       );
 
-      print('Image upload response: ${response.statusCode}, Body: ${response.body}');
-
-      if (response.statusCode == 201) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        final String uploadedImagePath = responseData['imageUrl'];
-        return uploadedImagePath;
+      if (response.statusCode == 200) {
+        print('Profile update successful');
+        print(requestBody);
+        
       } else {
-        print('Image upload failed. Status code: ${response.statusCode}, Body: ${response.body}');
-        return null; 
+        print('Profile update failed. Status code: ${response.statusCode}, Body: ${response.body}');
       }
-      } catch (error) {
-        print('Error during image upload: $error');
-        return null; 
-      }
+    } catch (error) {
+      print('Error during profile update: $error');
     }
-    return null; 
   }
+}
+
+
+  Future<String?> _uploadImage(String imagePath) async {
+    String? token = await getToken();
+
+    if (token != null) {
+      final Map<String, String> headers = {'Authorization': 'Bearer $token'};
+      final List<int> bytes = await File(imagePath).readAsBytes();
+      final http.MultipartFile file = http.MultipartFile.fromBytes(
+        'profilePicture',
+        bytes,
+        filename: 'filename.jpg',
+        contentType: MediaType.parse('image/jpeg'),
+      );
+
+      final Map<String, dynamic> body = {'profilePicture': file};
+
+      try {
+        final http.Response response = await widget.apiService.postMultipart(
+          '/api/user/profile-picture',
+          headers,
+          body,
+        );
+
+        print('Image upload response: ${response.statusCode}, Body: ${response.body}');
+
+        if (response.statusCode == 201) {
+          final Map<String, dynamic> responseData = jsonDecode(response.body);
+          final String uploadedImagePath = responseData['imageUrl'];
+          return uploadedImagePath;
+        } else {
+            print('Image upload failed. Status code: ${response.statusCode}, Body: ${response.body}');
+            return null; 
+          }
+        } catch (error) {
+          print('Error during image upload: $error');
+          return null; 
+        }
+      }
+      return null; 
+    }
 
   Future<void> _handleDelete() async {
     String? token = await getToken();
@@ -181,10 +225,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         image: _imagePath != null
                             ? DecorationImage(
                                 image: NetworkImage('http://172.25.135.58:3000/$_imagePath'),
-                              
                                 fit: BoxFit.cover,
                               )
-                            : DecorationImage(
+                            : const DecorationImage(
                                 image: AssetImage('lib/assets/images/profile-picture.png'),
                                 fit: BoxFit.cover,
                               ),
@@ -199,7 +242,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             const SizedBox(height: 20,),
             UnderlineInputField(controller: lastNameController, hintText: ' Last name'),
             const SizedBox(height: 20,),
-            UnderlineInputField(controller: lastNameController, hintText: ' Phone number'),
+            UnderlineInputField(controller: phoneNumberController, hintText: ' Phone number'),
             const SizedBox(height: 20,),
             Container(
               height: 40,
@@ -234,7 +277,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
             ),
             const SizedBox(height: 20,),
-            UnderlineInputField(controller: lastNameController, hintText: ' Adress'),
+            UnderlineInputField(controller: adressController, hintText: ' Adress'),
             const SizedBox(height: 20,),
              Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -273,25 +316,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ],
             ),
             const SizedBox(height: 30,),
-            Container(
-              height: 50,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(255, 115, 19, 1),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: const Center(
-               child: Text(
-                'Save',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
-               )
-              ),
-            ),
+            SaveButton(
+                buttonText: 'Save',
+                onPressed: updateProfile,
+            )
           ],
         ),
       ),
