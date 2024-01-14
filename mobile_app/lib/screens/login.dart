@@ -3,6 +3,8 @@ import 'package:mobile_app/api_survice.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:mobile_app/constants.dart';
+
 class LoginScreen extends StatefulWidget {
   final ApiService apiService;
   LoginScreen({super.key, required this.apiService});
@@ -14,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  String errorText = '';
+  String loginError = '';
   
   Future<void> loginUser(String email, String password) async {
     final Map<String, String> requestBody = {'email': email, 'password': password};
@@ -27,14 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
         print('Login successful: $data');
       } else {
         setState(() {
-          errorText = 'Invalid email/password';
+          loginError = 'Invalid email/password';
         });
         print('Login failed. Status code: ${response.statusCode}, Body: ${response.body}');
       }
     } catch (error) {
-       setState(() {
-        errorText = 'Error during login: $error';
-      });
       print('Error during login: $error');
     }
   }
@@ -44,20 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(255, 252, 252, 1),
-        actions: [
-          Container(
-            decoration: BoxDecoration(
-              color: const Color.fromRGBO(74, 74, 74, 0.1),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.clear),
-              color: const Color.fromRGBO(74, 74, 74, 1),
-              onPressed: () {},
-              iconSize: 30,
-            ),
-          )
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -78,66 +63,25 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
-                color: Color.fromRGBO(74, 74, 74, 1),
+                color: myGray,
               ),
             ),
             const SizedBox(height: 10,),
-            Container(
-              height: 50,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                border: Border.all(color: errorText.isNotEmpty ? Colors.red : const Color.fromRGBO(74, 74, 74, 0.5)),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: TextField(
-                controller: emailController,
-                textAlign: TextAlign.start,
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  hintStyle: TextStyle(
-                    color: Color.fromRGBO(74, 74, 74, 0.4),
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
+            BorderedInputField(hintText: 'Email', controller: emailController,),
             const SizedBox(height: 20),
             const Text(
               'Password',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
-                color: Color.fromRGBO(74, 74, 74, 1),
+                color: myGray,
               ),
             ),
             const SizedBox(height: 10,),
-            Container(
-              height: 50,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                border: Border.all(color: errorText.isNotEmpty ? Colors.red : const Color.fromRGBO(74, 74, 74, 0.5)),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: TextField(
-                controller: passwordController,
-                textAlign: TextAlign.start,
-                textAlignVertical: TextAlignVertical.bottom,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                  hintStyle: TextStyle(
-                    color: Color.fromRGBO(74, 74, 74, 0.4),
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
+            BorderedInputField(hintText: 'Password', controller: passwordController,),
             const SizedBox(height: 5,),
             GestureDetector(
-              onTap: () async {
+              onTap: () {
                 
               },
               child: const Text(
@@ -149,36 +93,15 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 2,),
-            Text(errorText, style: TextStyle(color: Colors.red, fontSize: 15),),
+            Text(loginError, style: TextStyle(color: Colors.red, fontSize: 15),),
             const SizedBox(height: 30),
-            GestureDetector(
-              onTap: () async {
-                // Get the email and password from the TextFields
+            SaveButton(
+              buttonText: 'Log In',
+              onPressed: () async {
                 String email = emailController.text;
                 String password = passwordController.text;
-
-                // Call the loginUser function
                 await loginUser(email, password);
               },
-              child: Container(
-                height: 50,
-                width: double.infinity,
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(255, 115, 19, 1),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: const Center(
-                  child: Text(
-                    'Log In',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
             ),
             const SizedBox(height: 15),
             Row(
