@@ -75,6 +75,31 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return null; 
   }
 
+  Future<void> _handleDelete() async {
+    String? token = await getToken();
+
+    if (token != null) {
+      final Map<String, String> headers = {'Authorization': 'Bearer $token'};
+
+      try {
+        final http.Response response = await widget.apiService.delete(
+          '/api/user/profile-picture',
+          headers,
+        );
+
+        if (response.statusCode == 204) {
+          setState(() {
+            _imagePath = null;
+          });
+        } else {
+          print('Profile picture deletion failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        }
+      } catch (error) {
+        print('Error during profile picture deletion: $error');
+      }
+    }
+  }
+
   Future<String?> getImagePath() async {
     final ImagePicker _picker = ImagePicker();
     
@@ -155,7 +180,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       decoration: BoxDecoration(
                         image: _imagePath != null
                             ? DecorationImage(
-                                image: CachedNetworkImageProvider('http://172.25.135.58/Ubuntu/home/alisafa/aliProjects/airo-wave/backend/$_imagePath'),
+                                image: NetworkImage('http://172.25.135.58:3000/$_imagePath'),
                               
                                 fit: BoxFit.cover,
                               )
@@ -294,6 +319,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       onClickMenu: (MenuItemProvider item) async {
         if (item.menuTitle == 'Upload') {
           await _handleUpload(); 
+        } else if (item.menuTitle == 'Delete') {
+          await _handleDelete();
         }
         print('Menu item clicked: ${item.menuTitle}');
       },
