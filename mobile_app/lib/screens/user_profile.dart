@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:popup_menu/popup_menu.dart';
@@ -10,7 +10,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-
 class UserProfileScreen extends StatefulWidget {
   final ApiService apiService;
 
@@ -19,7 +18,6 @@ class UserProfileScreen extends StatefulWidget {
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }
-
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final GlobalKey _containerKey = GlobalKey();
@@ -90,23 +88,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<void> _handleUpload() async {
-  String? imagePath = await getImagePath();
-  if (imagePath != null) {
-    String? uploadedImagePath = await _uploadImage(imagePath);
+    String? imagePath = await getImagePath();
+    if (imagePath != null) {
+      String? uploadedImagePath = await _uploadImage(imagePath);
 
-    if (uploadedImagePath != null) {
-      setState(() {
-        _imagePath = uploadedImagePath;
-        print('Image Path: $_imagePath');
+      if (uploadedImagePath != null) {
+        setState(() {
+          _imagePath = uploadedImagePath;
+          print('Image Path: $_imagePath');
 
-      });
-    } else {
-      print('Image upload failed');
+        });
+      } else {
+        print('Image upload failed');
+      }
     }
   }
-}
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -159,11 +155,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       decoration: BoxDecoration(
                         image: _imagePath != null
                             ? DecorationImage(
-                                image: NetworkImage('http://172.25.135.58/$_imagePath!'),
+                                image: CachedNetworkImageProvider('http://172.25.135.58/Ubuntu/home/alisafa/aliProjects/airo-wave/backend/$_imagePath'),
+                              
                                 fit: BoxFit.cover,
                               )
                             : DecorationImage(
-                                image: AssetImage('lib/assets/images/profile-picture.png') as ImageProvider,
+                                image: AssetImage('lib/assets/images/profile-picture.png'),
                                 fit: BoxFit.cover,
                               ),
                       ),
