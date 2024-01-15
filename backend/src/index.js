@@ -1,14 +1,29 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const {authMiddleware} = require('./middlewares/auth.middleware');
+const fs = require('fs/promises'); 
 require("dotenv").config();
 const path = require('path');
 const prisma = new PrismaClient();
 const app = express();
 
-app.use(express.json());
+// Define a middleware function to serve files from the parent directory
+// Middleware to serve files from the 'uploads' folder
+const serveFilesFromUploads = async (req, res, next) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', req.url.replace(/^\/a\/uploads\//, ''));
+    const stats = await fs.stat(filePath);
 
-app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+    if (stats.isFile()) {
+      res.sendFile(filePath);
+    } else {
+      next();
+    }
+  } catch (error) {
+    next();
+  }
+};
+
 const authRoutes = require('./routes/auth.routes');
 const imageRoutes = require('./routes/image.routes');
 const allergyRoutes = require('./routes/allergy.routes');
@@ -30,7 +45,7 @@ const stress = require('./routes/stress.routes');
 const userRoutes = require('./routes/createRoutes.controllers');
 const device = require('./routes/device.routes');
 
-
+app.use('/uploads', serveFilesFromUploads);
 app.use('/auth', authRoutes);
 app.use('/api', authMiddleware, imageRoutes);
 app.use('/api', authMiddleware, allergyRoutes);
