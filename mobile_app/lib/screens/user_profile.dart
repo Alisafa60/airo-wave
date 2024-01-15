@@ -24,7 +24,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final GlobalKey _containerKey = GlobalKey();
   bool _isMetric = true; 
   String? _imagePath;
-  String? _selectedGender;
+  String? selectedGender;
   String? uploadedImagePath;
   String? fileName;
   final TextEditingController firstNameController = TextEditingController();
@@ -41,7 +41,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     String? token = await getToken();
     final String firstName = firstNameController.text;
     final String lastName = lastNameController.text;
-    final String gender = _selectedGender??'';
+    final String gender = selectedGender??'';
     final String phone = phoneNumberController.text;
     final String address = adressController.text;
     final String unitPreference = _isMetric ? 'Metric' : 'Imperial';
@@ -164,9 +164,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       if (uploadedImagePath != null) {
         setState(() {
           _imagePath = uploadedImagePath;
+          fileName = basename(uploadedImagePath);
           print('Image Path: $_imagePath');
         });
-        String fileName = basename(uploadedImagePath!);
+        
         print(fileName);
       } else {
         print('Image upload failed');
@@ -223,9 +224,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        image: _imagePath != null
+                        image: fileName != null
                             ?  DecorationImage(
-                                image: NetworkImage('/172.25.135.58:3000/uploads/$fileName'),
+                                image: NetworkImage('http://172.25.135.58:3000/uploads/$fileName'),
                                 fit: BoxFit.cover,
                               )
                             : const DecorationImage(
@@ -247,11 +248,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             UnderlineInputField(controller: phoneNumberController, hintText: ' Phone number'),
             const SizedBox(height: 20,),
             GenderDropdownFormField(
-              selectedGender: _selectedGender,
+              selectedGender: selectedGender,
               onChanged: (String? value) {
                 print('selected gender: $value');
                 setState(() {
-                  _selectedGender = value;
+                  selectedGender = value;
                 });
               },
             ),
