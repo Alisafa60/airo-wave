@@ -246,77 +246,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             const SizedBox(height: 20,),
             UnderlineInputField(controller: phoneNumberController, hintText: ' Phone number'),
             const SizedBox(height: 20,),
-            Container(
-              height: 40,
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              child: DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  hintText: 'Select gender',
-                  hintStyle: TextStyle(
-                    color: Color.fromRGBO(74, 74, 74, 0.4),
-                  ),
-                  border: InputBorder.none,
-                    focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color.fromRGBO(255, 115 , 29, 0.6)), 
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color.fromRGBO(74, 74, 74, 0.4)), 
-                  ),
-                ),
-                value: _selectedGender,
-                items: ['Male', 'Female', 'Other'].map((String gender) {
-                  return DropdownMenuItem<String>(
-                    value: gender,
-                    child: Text(gender,),
-                  );
-                }).toList(),
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedGender = value;
-                  });
-                  print(' file name is $fileName');
-                },
-              ),
+            GenderDropdownFormField(
+              selectedGender: _selectedGender,
+              onChanged: (String? value) {
+                print('selected gender: $value');
+                setState(() {
+                  _selectedGender = value;
+                });
+              },
             ),
             const SizedBox(height: 20,),
             UnderlineInputField(controller: adressController, hintText: ' Adress'),
             const SizedBox(height: 20,),
-             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  ' Preferred Units',
-                  style: TextStyle(
-                    color: Color.fromRGBO(74, 74, 74, 1),
-                    fontSize: 16,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      _isMetric ? 'Metric' : 'Imperial',
-                      style: const TextStyle(
-                        color: Color.fromRGBO(74, 74, 74, 0.8),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Switch(
-                      value: _isMetric,
-                      onChanged: (value) {
-                        setState(() {
-                          _isMetric = value;
-                        });
-                      },
-                      activeColor: Color.fromRGBO(255, 115, 29, 0.6),
-                      inactiveThumbColor: Color.fromRGBO(95, 157, 247, 0.8),
-                      activeTrackColor: Color.fromRGBO(255, 115, 29, 0.2),
-                      inactiveTrackColor: Color.fromRGBO(95, 157, 247, 0.4),
-                    ),
-                  ],
-                ),
-              ],
+            PreferredUnitsSwitch(
+              isMetric: _isMetric,
+              onChanged: (value) {
+                setState(() {
+                  _isMetric = value;
+                });
+              },
             ),
             const SizedBox(height: 30,),
             SaveButton(
@@ -324,7 +272,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 onPressed: updateProfile,
             )
           ],
-          
         ),
       ),
     );
