@@ -4,7 +4,6 @@ import 'package:mobile_app/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
 class SignupScreen extends StatefulWidget {
   final ApiService apiService;
   SignupScreen({super.key, required this.apiService});
@@ -145,79 +144,23 @@ class _SignupScreenState extends State<SignupScreen> {
                 ]
             ),
             SizedBox(height: 20,),
-            Container(
-              height: 40,
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              child: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState){
-                  return DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                      hintText: 'Select gender',
-                      hintStyle: TextStyle(
-                        color: myGray.withOpacity(0.6),
-                      ),
-                      border: InputBorder.none,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(width: 2, color: primaryColor.withOpacity(0.6)),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(width: 2, color: myGray.withOpacity(0.4)),
-                      ),
-                    ),
-                    value: _selectedGender,
-                    items: ['Male', 'Female', 'Other'].map((String gender) {
-                      return DropdownMenuItem<String>(
-                        value: gender,
-                        child: Text(gender),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
-                      print('selected gender: $value');
-                      setState(() {
-                        _selectedGender = value;
-                      });
-                    },
-                  );
-                }
-              )
+            GenderDropdownFormField(
+              selectedGender: _selectedGender,
+              onChanged: (String? value) {
+                print('selected gender: $value');
+                setState(() {
+                  _selectedGender = value;
+                });
+              },
             ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  ' Preferred Units',
-                  style: TextStyle(
-                    color: myGray,
-                    fontSize: 16,
-                  ),
-                ),
-                Row(
-                  children: [
-                     Text(
-                       _isMetric ? 'Metric' : 'Imperial',
-                      style: const TextStyle(
-                        color: Color.fromRGBO(74, 74, 74, 0.8),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Switch(
-                      value: _isMetric,
-                      onChanged: (value) {
-                        setState(() {
-                          _isMetric = value;
-                        });
-                      },
-                      activeColor: primaryColor.withOpacity(0.6),
-                      inactiveThumbColor: secondaryColor.withOpacity(0.8),
-                      activeTrackColor: primaryColor.withOpacity(0.2),
-                      inactiveTrackColor: secondaryColor.withOpacity(0.4),
-                    ),
-                  ],
-                ),
-              ],
+            PreferredUnitsSwitch(
+              isMetric: _isMetric,
+              onChanged: (value) {
+                setState(() {
+                  _isMetric = value;
+                });
+              },
             ),
             Row(
               children: [
