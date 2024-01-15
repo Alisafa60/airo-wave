@@ -164,3 +164,97 @@ class UnderlineInputField extends StatelessWidget {
     );
   }
 }
+
+class GenderDropdownFormField extends StatelessWidget {
+  final String? selectedGender;
+  final ValueChanged<String?> onChanged;
+
+  const GenderDropdownFormField({
+    super.key,
+    required this.selectedGender,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      child: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              hintText: 'Select gender',
+              hintStyle: TextStyle(
+                color: myGray.withOpacity(0.4),
+              ),
+              border: InputBorder.none,
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(width: 2, color: primaryColor.withOpacity(0.6)),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(width: 2, color: myGray.withOpacity(0.4)),
+              ),
+            ),
+            value: selectedGender,
+            items: ['Male', 'Female', 'Other'].map((String gender) {
+              return DropdownMenuItem<String>(
+                value: gender,
+                child: Text(gender),
+              );
+            }).toList(),
+            onChanged: onChanged,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class PreferredUnitsSwitch extends StatelessWidget {
+  final bool isMetric;
+  final ValueChanged<bool> onChanged;
+
+  const PreferredUnitsSwitch({
+    super.key,
+    required this.isMetric,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          ' Preferred Units',
+          style: TextStyle(
+            color: myGray,
+            fontSize: 16,
+          ),
+        ),
+        Row(
+          children: [
+            Text(
+              isMetric ? 'Metric' : 'Imperial',
+              style: const TextStyle(
+                color: Color.fromRGBO(74, 74, 74, 0.8),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Switch(
+              value: isMetric,
+              onChanged: onChanged,
+              activeColor: primaryColor.withOpacity(0.6),
+              inactiveThumbColor: secondaryColor.withOpacity(0.8),
+              activeTrackColor: primaryColor.withOpacity(0.2),
+              inactiveTrackColor: secondaryColor.withOpacity(0.4),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
