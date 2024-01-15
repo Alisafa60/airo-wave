@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/constants.dart';
@@ -10,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+import 'package:path/path.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final ApiService apiService;
@@ -27,6 +26,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   String? _imagePath;
   String? _selectedGender;
   String? uploadedImagePath;
+  String? fileName;
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
@@ -38,47 +38,46 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<void> updateProfile() async {
-  String? token = await getToken();
-  final String firstName = firstNameController.text;
-  final String lastName = lastNameController.text;
-  final String gender = _selectedGender??'';
-  final String phone = phoneNumberController.text;
-  final String address = adressController.text;
-  final String unitPreference = _isMetric ? 'Metric' : 'Imperial';
-  Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
+    String? token = await getToken();
+    final String firstName = firstNameController.text;
+    final String lastName = lastNameController.text;
+    final String gender = _selectedGender??'';
+    final String phone = phoneNumberController.text;
+    final String address = adressController.text;
+    final String unitPreference = _isMetric ? 'Metric' : 'Imperial';
+    // Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
 
-  print(decodedToken);
+    // print(decodedToken);
+    if (token != null) {
+      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+      final Map<String, dynamic> requestBody = {
+      'firstName': firstName,
+      'lastName': lastName,
+      'phone': phone,
+      'adress': address,
+      'gender': gender,
+      'unit': unitPreference,
+    };
 
-  if (token != null) {
-    final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
-    final Map<String, dynamic> requestBody = {
-    'firstName': firstName,
-    'lastName': lastName,
-    'phone': phone,
-    'adress': address,
-    'gender': gender,
-    'unit': unitPreference,
-  };
+      try {
+        final http.Response response = await widget.apiService.put(
+          '/api/user/profile',
+          headers,
+          requestBody,
+        );
 
-    try {
-      final http.Response response = await widget.apiService.put(
-        '/api/user/profile',
-        headers,
-        requestBody,
-      );
-
-      if (response.statusCode == 200) {
-        print('Profile update successful');
-        print(requestBody);
-        
-      } else {
-        print('Profile update failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        if (response.statusCode == 200) {
+          print('Profile update successful');
+          print(requestBody);
+          
+        } else {
+          print('Profile update failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        }
+      } catch (error) {
+        print('Error during profile update: $error');
       }
-    } catch (error) {
-      print('Error during profile update: $error');
     }
   }
-}
 
   Future<String?> _uploadImage(String imagePath) async {
     String? token = await getToken();
@@ -89,7 +88,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       final http.MultipartFile file = http.MultipartFile.fromBytes(
         'profilePicture',
         bytes,
-        filename: 'filename.jpg',
+        filename: 'image.jpg',
         contentType: MediaType.parse('image/jpeg'),
       );
 
@@ -167,12 +166,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           _imagePath = uploadedImagePath;
           print('Image Path: $_imagePath');
         });
+        String fileName = basename(uploadedImagePath!);
+        print(fileName);
       } else {
         print('Image upload failed');
       }
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     
@@ -219,19 +220,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   },
                   child: ClipOval(
                     child: Container(
-                      
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
                         image: _imagePath != null
-                            ? DecorationImage(
-                                image: NetworkImage('/172.25.135.58:3000/$_imagePath'),
+                            ?  DecorationImage(
+                                image: NetworkImage('/172.25.135.58:3000/uploads/$fileName'),
                                 fit: BoxFit.cover,
                               )
                             : const DecorationImage(
                                 image: AssetImage('lib/assets/images/profile-picture.png'),
                                 fit: BoxFit.cover,
                               ),
+                              
                       ),
                     ),
                   ),
@@ -274,6 +275,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   setState(() {
                     _selectedGender = value;
                   });
+                  print(' file name is $fileName');
                 },
               ),
             ),
