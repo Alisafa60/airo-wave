@@ -39,44 +39,53 @@ class RecordActivityScreen extends StatelessWidget{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      height: 30, 
-                      width: 70, 
+               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 40,
                       decoration: BoxDecoration(
-                        color: myGray.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(10),
+                        border: Border(right: BorderSide(color: myGray.withOpacity(0.2), width: 2)),
                       ),
-                      child: const Center(
-                        child: Text('Routes', style: TextStyle(color: myGray, fontSize: 12),),
+                      child: Center(
+                        child: SvgPicture.asset('lib/assets/icons/environment.svg', height: 40, width: 40,),
                       ),
                     ),
-                    Container(
-                      height: 30, 
-                      width: 70, 
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 40,
                       decoration: BoxDecoration(
-                        color: myGray.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(10),
+                        border: Border(right: BorderSide(color: myGray.withOpacity(0.4), width: 2)),
                       ),
                       child: const Center(
-                        child: Text('Env. Data', style: TextStyle(color: myGray, fontSize: 12)),
+                        child: Icon(Icons.run_circle_outlined, color: myGray, size: 30,),
                       ),
                     ),
-                   Container(
-                      height: 30, 
-                      width: 70, 
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 40,
                       decoration: BoxDecoration(
-                        color: myGray.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(10),
+                        border: Border(right: BorderSide(color: myGray.withOpacity(0.4), width: 2)),
                       ),
                       child: const Center(
-                        child: Text('HR', style: TextStyle(color: myGray, fontSize: 12)),
+                        child: Icon(Icons.monitor_heart, color: myGray, size: 30,),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 40,
+                      child: const Center(
+                        child: Icon(Icons.route_outlined, color: myGray, size: 30,),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
                 SizedBox(height: 20), 
                 Container(
                   height: 70,
