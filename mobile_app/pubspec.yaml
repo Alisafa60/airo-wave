@@ -51,6 +51,7 @@ dependencies:
   image_picker: ^1.0.7
   cached_network_image: ^3.3.1
   jwt_decoder: ^2.0.1
+  path: ^1.8.3
   
 
 dev_dependencies:
@@ -89,7 +90,11 @@ flutter:
       - lib/assets/icons/home-filled-gray.svg
       - lib/assets/icons/MedCat-white.svg
       - lib/assets/icons/rectangle-filled.png
-
+      - lib/assets/icons/play-button.svg
+      - lib/assets/icons/start-button.png
+      - lib/assets/icons/environment.svg
+      - lib/assets/icons/finish-button.png
+      - lib/assets/icons/resume-button.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
