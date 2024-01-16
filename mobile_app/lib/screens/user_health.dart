@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/widgets/health_conditions.dart';
 import 'package:mobile_app/widgets/medications.dart';
-
+import 'package:mobile_app/api_survice.dart';
+import 'package:http/http.dart' as http;
 
 class UserHealthScreen extends StatefulWidget {
-  const UserHealthScreen({super.key});
+  final ApiService apiService;
+  const UserHealthScreen({super.key, required this.apiService});
 
   @override
   State<UserHealthScreen> createState() => _UserHealthState();
@@ -19,20 +23,61 @@ class _UserHealthState extends State<UserHealthScreen> {
     const DropdownMenuItem(value: 'Other', child: Text('Other')),
   ];
 
-  List<String> _selectedConditions = ['None'];
-  List<List<TextEditingController>> _fieldControllers = [[]];
+  final List<String> _selectedConditions = ['None'];
+  final List<List<TextEditingController>> _fieldControllers = [[]];
   final TextEditingController weightController = TextEditingController();
   final TextEditingController bloodTypeController = TextEditingController();
   List<String> medicationEntries = [];
 
   bool isBloodTypeValid = true;
   List<String> validBloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-
+  int getWeight() {
+  return int.tryParse(weightController.text) ?? 0;
+}
   bool isValidBloodType(String bloodType) {
     return validBloodTypes.contains(bloodType.toUpperCase());
   }
 
-  Future<void> addHealthCondition() async {}
+  Future<String?> getToken() async {
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+    return await storage.read(key: 'jwtToken');
+  }
+
+  Future<void> addHealthCondition() async {
+    String? token = await getToken();
+    final String weight = getWeight().toString();
+    final String bloodType = bloodTypeController.text;
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
+
+    print(decodedToken);
+
+    if (token!=null){
+      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+      final Map<String, String> requestBody = {
+        'weight': weight,
+        'bloodType': bloodType,
+      };
+      print(requestBody);
+      print(headers);
+
+      try {
+        final http.Response response = await widget.apiService.post(
+          '/api/user/health',
+          requestBody,
+          headers
+        );
+        if (response.statusCode == 200) {
+          print('Profile update successful');
+          print(requestBody);
+          
+        } else {
+          print('Profile update failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        }
+      } catch (error) {
+        print('Error during profile update: $error');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
