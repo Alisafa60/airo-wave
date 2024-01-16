@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/widgets/health_conditions.dart';
+import 'package:mobile_app/widgets/medications.dart';
 
-class UserHealth extends StatefulWidget {
-  const UserHealth({Key? key}) : super(key: key);
+
+class UserHealthScreen extends StatefulWidget {
+  const UserHealthScreen({super.key});
 
   @override
-  _UserHealthState createState() => _UserHealthState();
+  State<UserHealthScreen> createState() => _UserHealthState();
 }
 
-class _UserHealthState extends State<UserHealth> {
-  List<DropdownMenuItem<String>> _conditionItems = [
-    DropdownMenuItem(value: 'None', child: Text('None')),
-    DropdownMenuItem(value: 'Allergy', child: Text('Allergy')),
-    DropdownMenuItem(value: 'Respiratory Condition', child: Text('Respiratory Condition')),
-    DropdownMenuItem(value: 'Other', child: Text('Other')),
+class _UserHealthState extends State<UserHealthScreen> {
+  final List<DropdownMenuItem<String>> _conditionItems = [
+    const DropdownMenuItem(value: 'None', child: Text('None')),
+    const DropdownMenuItem(value: 'Allergy', child: Text('Allergy')),
+    const DropdownMenuItem(value: 'Respiratory Condition', child: Text('Respiratory Condition')),
+    const DropdownMenuItem(value: 'Other', child: Text('Other')),
   ];
 
   List<String> _selectedConditions = ['None'];
   List<List<TextEditingController>> _fieldControllers = [[]];
- 
-
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController bloodTypeController = TextEditingController();
   List<String> medicationEntries = [];
 
-  TextEditingController bloodTypeController = TextEditingController();
   bool isBloodTypeValid = true;
   List<String> validBloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-  
+
   bool isValidBloodType(String bloodType) {
     return validBloodTypes.contains(bloodType.toUpperCase());
   }
+
+  Future<void> addHealthCondition() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -67,66 +72,18 @@ class _UserHealthState extends State<UserHealth> {
                 children: [
                   const SizedBox(height: 80,),
                   Expanded(
-                    child: Container(
-                      height: 40,
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(5),
-                      child: const TextField(
-                        textAlign: TextAlign.start,
-                        textAlignVertical: TextAlignVertical.bottom,
-                        decoration: InputDecoration(
-                          hintText: ' Weight',
-                          hintStyle: TextStyle(
-                            color: Color.fromRGBO(74, 74, 74, 0.4),
-                          ),
-                          border: InputBorder.none,
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 2, color: Color.fromRGBO(255, 115, 29, 0.6)),
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 2, color: Color.fromRGBO(74, 74, 74, 0.4)),
-                          ),
-                        ),
-                      ),
-                    ),
+                   child: UnderlineInputField(hintText: 'Weight', controller: weightController,)
                   ),
                   const SizedBox(width: 7),
                   Expanded(
-                    child: Container(
-                      height: 40,
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(5),
-                      child: TextField(
-                        controller: bloodTypeController,
-                        textAlign: TextAlign.start,
-                        textAlignVertical: TextAlignVertical.bottom,
-                        decoration: InputDecoration(
-                          hintText: ' Blood Type',
-                          hintStyle: const TextStyle(
-                            color: Color.fromRGBO(74, 74, 74, 0.4),
-                          ),
-                          border: InputBorder.none,
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: isBloodTypeValid ? const Color.fromRGBO(255, 115, 29, 0.6) : Colors.red,
-                            ),
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: isBloodTypeValid ? const Color.fromRGBO(74, 74, 74, 0.4) : Colors.red,
-                            ),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            isBloodTypeValid = isValidBloodType(value);
-                          });
-                        },
-                      ),
+                    child: UnderlineInputField(
+                      controller: bloodTypeController,
+                      hintText: ' Blood Type',
+                      onChanged: (value) {
+                        setState(() {
+                          isBloodTypeValid = isValidBloodType(value);
+                        });
+                      },
                     ),
                   ),
                 ],
@@ -152,7 +109,7 @@ class _UserHealthState extends State<UserHealth> {
                 children: _selectedConditions.asMap().entries.map((entry) {
                   int index = entry.key;
                   String condition = entry.value;
-                  
+
                   return ExpansionPanel(
                     headerBuilder: (BuildContext context, bool isExpanded) {
                       return InkWell(
@@ -194,12 +151,7 @@ class _UserHealthState extends State<UserHealth> {
                         ),
                       );
                     },
-                    body: Column(
-                      children: [
-                        if (condition != 'None')
-                          ..._buildFieldsForCondition(condition, index),
-                      ],
-                    ),
+                    body: HealthConditionFieldsWidget(condition: condition, index: index),
                     isExpanded: condition != 'None',
                   );
                 }).toList(),
@@ -274,7 +226,7 @@ class _UserHealthState extends State<UserHealth> {
                         onTap: () {
                           if (medicationEntries.isNotEmpty) {
                             setState(() {
-                              medicationEntries.removeLast(); // Remove the last medication entry
+                              medicationEntries.removeLast();
                             });
                           }
                         },
@@ -297,123 +249,15 @@ class _UserHealthState extends State<UserHealth> {
                     ],
                   ),
                   for (int i = 0; i < medicationEntries.length; i++)
-                        ..._buildFieldsForMedication(medicationEntries[i], i),
+                    MedicationFieldsWidget(medicationEntry: medicationEntries[i], index: i),
                 ],
               ),
               const SizedBox(height: 40,),
-              Container(
-                height: 50,
-                width: double.infinity,
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(255, 115, 19, 1),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: const Center(
-                  child: Text(
-                    'Save and Exit',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  )
-                ),
-              ),
+              SaveButton(
+                  buttonText: 'Save',
+                  onPressed: addHealthCondition,
+              )
             ],  
-          ),
-        ),
-      ),
-    );
-  }
-
-  List<Widget> _buildFieldsForCondition(String condition, int index) {
-    switch (condition) {
-      case 'Allergy':
-        return [
-          _buildTextField('Allergen', index, 0),
-          _buildTextField('Severity', index, 1),
-          _buildTextField('Duration', index, 2),
-          _buildTextField('Triggers', index, 3),
-        ];
-      case 'Respiratory Condition':
-        return [
-          _buildTextField('Condition', index, 0),
-          _buildTextField('Diagnosis', index, 1),
-          _buildTextField('Symptoms Frequency', index, 2),
-          _buildTextField('Triggers', index, 3),
-        ];
-      case 'Other':
-        return [_buildTextField('Other', index, 0)];
-      default:
-        return [];
-    }
-  }
-
-  List<Widget> _buildFieldsForMedication(String medicationEntry, int index) {
-  return [
-    _buildTextField('Medication', index, 0),
-    _buildTextField('Dosage', index, 1),
-    _buildTextField('Frequency', index, 2),
-    _buildTextField('Start Date', index, 3),
-    _buildHealthConditionDropdown(index),
-  ];
-}
-
-Widget _buildHealthConditionDropdown(int index) {
-  List<String> healthConditions = [' Allergy', ' Respiratory Condition', ' Other'];
-
-  String selectedHealthCondition = healthConditions[0];
-
-  return DropdownButtonFormField<String>(
-    value: selectedHealthCondition,
-    onChanged: (newValue) {
-      setState(() {
-        selectedHealthCondition = newValue!;
-      });
-    },
-    items: healthConditions.map((condition) {
-      return DropdownMenuItem(
-        value: condition,
-        child: Text(condition),
-      );
-    }).toList(),
-    decoration: const InputDecoration(labelText: ' Medication for'),
-  );
-}
-
-  Widget _buildTextField(String hintText, int index, int fieldIndex) {
-    TextEditingController controller;
-    while (_fieldControllers.length <= index) {
-      _fieldControllers.add([]);
-    }
-
-    if (fieldIndex >= _fieldControllers[index].length) {
-      controller = TextEditingController();
-      _fieldControllers[index].add(controller);
-    } else {
-      controller = _fieldControllers[index][fieldIndex];
-    }
-
-    return Container(
-      height: 50,
-      width: double.infinity,
-      padding: const EdgeInsets.all(5),
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-        // border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: InputBorder.none,
-          focusedBorder:const UnderlineInputBorder(
-            borderSide: BorderSide(width: 2, color: Color.fromRGBO(255, 115 , 29, 0.6)),
-          ),
-          enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(width: 2, color: Color.fromRGBO(74, 74, 74, 0.4)),
           ),
         ),
       ),
