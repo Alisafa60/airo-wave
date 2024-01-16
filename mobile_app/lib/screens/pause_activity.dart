@@ -45,7 +45,7 @@ class _PauseActivityScreenState extends State<PauseActivityScreen> {
             height: 50,
             width: double.infinity,
             color: primaryColor,
-            child: Center(
+            child: const Center(
               child: Text('STOPPED', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
             ),
           ),

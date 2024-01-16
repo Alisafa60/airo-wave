@@ -7,10 +7,10 @@ import 'package:mobile_app/constants.dart';
 
 class LoginScreen extends StatefulWidget {
   final ApiService apiService;
-  LoginScreen({super.key, required this.apiService});
+  const LoginScreen({super.key, required this.apiService});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -18,32 +18,36 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   String loginError = '';
   
-  Future<void> loginUser(String email, String password) async {
-  final Map<String, String> requestBody = {'email': email, 'password': password};
 
-  try {
-    final http.Response response = await widget.apiService.post('/auth/login', requestBody);
+  Future<void> loginUser() async {
+    final String email = emailController.text;
+    final String password = passwordController.text;
+    
+    final Map<String, String> requestBody = {'email': email, 'password': password};
+    print(requestBody);
+    try {
+      final http.Response response = await widget.apiService.post1('/auth/login', requestBody);
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      print('Login successful: $data');
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        print('Login successful: $data');
 
-      final String? token = data['token'];
-      if (token != null && token.isNotEmpty) {
-        await saveToken(token);
+        final String? token = data['token'];
+        if (token != null && token.isNotEmpty) {
+          await saveToken(token);
+        } else {
+          print('Invalid or empty token received.');
+        }
       } else {
-        print('Invalid or empty token received.');
+        setState(() {
+          loginError = 'Invalid email/password';
+        });
+        print('Login failed. Status code: ${response.statusCode}, Body: ${response.body}');
       }
-    } else {
-      setState(() {
-        loginError = 'Invalid email/password';
-      });
-      print('Login failed. Status code: ${response.statusCode}, Body: ${response.body}');
+    } catch (error) {
+      print('Error during login: $error');
     }
-  } catch (error) {
-    print('Error during login: $error');
   }
-}
   
   Future<void> saveToken(String token) async {
     try {
@@ -114,11 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 30),
             SaveButton(
               buttonText: 'Log In',
-              onPressed: () async {
-                String email = emailController.text;
-                String password = passwordController.text;
-                await loginUser(email, password);
-              },
+              onPressed: loginUser,
             ),
             const SizedBox(height: 15),
             Row(

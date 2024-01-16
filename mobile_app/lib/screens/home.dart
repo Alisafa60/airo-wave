@@ -32,6 +32,7 @@ class HomeScreen extends StatelessWidget{
             IconButton(
               icon: SvgPicture.asset('lib/assets/icons/notification-bell.svg', height: 40, width: 40,), 
               onPressed: () { 
+                _showNotificationOverlay(context);
               },
               )
           ],
@@ -223,6 +224,36 @@ class HomeScreen extends StatelessWidget{
           ),
         ]),
 
+    );
+  }
+   void _showNotificationOverlay(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 200, // Adjust the height as needed
+          child: Column(
+            children: [
+              // Add your notification content here
+              ListTile(
+                title: const Text('Notification 1'),
+                onTap: () {
+                  // Handle the tap on the first notification
+                  Navigator.pop(context); // Close the overlay
+                },
+              ),
+              ListTile(
+                title: const Text('Notification 2'),
+                onTap: () {
+                  // Handle the tap on the second notification
+                  Navigator.pop(context); // Close the overlay
+                },
+              ),
+              // Add more notifications as needed
+            ],
+          ),
+        );
+      },
     );
   }
 }

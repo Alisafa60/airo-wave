@@ -6,11 +6,11 @@ import 'dart:convert';
 
 class SignupScreen extends StatefulWidget {
   final ApiService apiService;
-  SignupScreen({super.key, required this.apiService});
+  const SignupScreen({super.key, required this.apiService});
   
 
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends State<SignupScreen> {
@@ -20,7 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController lastNameController = TextEditingController();
   String errorText = '';
   bool _isMetric = true;
-  String? _selectedGender;
+  String? selectedGender;
   bool isHealthProfessional = false;
 
    Future<void> signupUser() async {
@@ -28,7 +28,7 @@ class _SignupScreenState extends State<SignupScreen> {
     final String password = passwordController.text;
     final String firstName = firstNameController.text;
     final String lastName = lastNameController.text;
-    final String gender = _selectedGender??'';
+    final String gender = selectedGender??'';
     final String unitPreference = _isMetric ? 'Metric' : 'Imperial';
     final String userType = isHealthProfessional ? 'healthProfessional' : 'user';
     print(userType);
@@ -44,7 +44,7 @@ class _SignupScreenState extends State<SignupScreen> {
     print(requestBody);
 
     try{
-      final http.Response response = await widget.apiService.post('/auth/register', requestBody);
+      final http.Response response = await widget.apiService.post1('/auth/register', requestBody);
       if (response.statusCode == 200){
         final Map<String, dynamic>data = jsonDecode(response.body);
         print('Login successful: $data');
@@ -145,11 +145,11 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             SizedBox(height: 20,),
             GenderDropdownFormField(
-              selectedGender: _selectedGender,
+              selectedGender: selectedGender,
               onChanged: (String? value) {
                 print('selected gender: $value');
                 setState(() {
-                  _selectedGender = value;
+                  selectedGender = value;
                 });
               },
             ),

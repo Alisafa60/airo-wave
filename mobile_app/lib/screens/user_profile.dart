@@ -17,7 +17,7 @@ class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key, required this.apiService});
 
   @override
-  _UserProfileScreenState createState() => _UserProfileScreenState();
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
