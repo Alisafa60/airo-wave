@@ -66,7 +66,7 @@ class _UserHealthState extends State<UserHealthScreen> {
           headers,
           requestBody
         );
-        if (response.statusCode == 200) {
+        if (response.statusCode == 201) {
           print('Profile update successful');
           print(requestBody);
           
@@ -80,46 +80,42 @@ class _UserHealthState extends State<UserHealthScreen> {
   }
  
   Future<void> addAllergyCondition() async {
-  String? token = await getToken();
-  Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
+    String? token = await getToken();
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
 
-  if (token != null) {
-    final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+    if (token != null) {
+      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
 
-    // Create a list to store allergy data for each dynamically created field
-    List<Map<String, dynamic>> allergyDataList = [];
+      // Assuming you have only one set of allergy data
+      AllergyData allergyData = AllergyFields(index: 0).getAllergyData();
 
-    // Iterate through the dynamically created AllergyFields
-    for (int i = 0; i < _fieldControllers.length; i++) {
-      AllergyData allergyData = AllergyFields(index: i).getAllergyData();
-      allergyDataList.add(allergyData.toJson());
-    }
+      final Map<String, dynamic> requestBody = {
+        'allergen': allergyData.allergen,
+        'severity': allergyData.severity,
+        'duration': allergyData.duration,
+        'triggers': allergyData.triggers,
+      };
 
-    print('Allergy Data List: $allergyDataList'); // Add this line
+      try {
+        final http.Response response = await widget.apiService.post(
+          '/api/user/health/allergy',
+          headers,
+          requestBody,
+        );
 
-    final Map<String, dynamic> requestBody = {
-      'allergyDataList': allergyDataList,
-    };
-
-    try {
-      final http.Response response = await widget.apiService.post(
-        '/api/user/health/allergy',
-        headers,
-        requestBody,
-      );
-      print('API Response: $response'); // Add this line
-
-      if (response.statusCode == 200) {
-        print('Allergy conditions added successfully');
         print(requestBody);
-      } else {
-        print('Allergy condition addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+
+        if (response.statusCode == 201) {
+          print('Allergy conditions added successfully');
+          print(requestBody);
+        } else {
+          print('Allergy condition addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        }
+      } catch (error) {
+        print('Error during allergy condition addition: $error');
       }
-    } catch (error) {
-      print('Error during allergy condition addition: $error');
     }
   }
-}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
