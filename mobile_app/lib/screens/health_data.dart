@@ -29,7 +29,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
         centerTitle: true,
         leading: IconButton(
           padding: EdgeInsets.all(15),
-          icon: Icon(Icons.arrow_back_ios, color: primaryColor,),
+          icon: Icon(Icons.arrow_back_ios, color: myGray),
           onPressed: () {},
         ),
         bottom: PreferredSize(
@@ -72,15 +72,13 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                           top: 5,
                           right: 5,
                           child: GestureDetector(
-                            onTap: () {
-
-                            },
+                            onTap: () {},
                             child: Container(
                               padding: EdgeInsets.all(10),
-                              child:  Icon(
+                              child: Icon(
                                 Icons.edit_note,
                                 size: 25,
-                                color: myGray.withOpacity(0.4)
+                                color: myGray.withOpacity(0.4),
                               ),
                             ),
                           ),
@@ -114,32 +112,27 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         Container(
                           height: 110,
                           decoration: BoxDecoration(
-                            color: myGray.withOpacity(0.2),
                             border: Border.all(
-                              color: selectedContainerIndex == 0
-                                  ? primaryColor
-                                  : Colors.transparent,
+                              color: myGray.withOpacity(0.4),
                             ),
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                       Positioned(
-                        top: 5,
-                        right: 5,
-                        child: GestureDetector(
-                          onTap: () {
-
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            child:  Icon(
-                              Icons.edit_note,
-                              size: 25,
-                              color: myGray.withOpacity(0.4)
+                        Positioned(
+                          top: 5,
+                          right: 5,
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              child: Icon(
+                                Icons.edit_note,
+                                size: 25,
+                                color: myGray.withOpacity(0.4),
+                              ),
                             ),
                           ),
                         ),
-                      ),
                       ],
                     ),
                   ),
@@ -157,32 +150,27 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         Container(
                           height: 110,
                           decoration: BoxDecoration(
-                            color: myGray.withOpacity(0.2),
                             border: Border.all(
-                              color: selectedContainerIndex == 1
-                                  ? primaryColor 
-                                  : Colors.transparent,
+                              color: myGray.withOpacity(0.4),
                             ),
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                       Positioned(
-                    top: 5,
-                    right: 5,
-                    child: GestureDetector(
-                      onTap: () {
-
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        child:  Icon(
-                          Icons.edit_note,
-                          size: 25,
-                          color: myGray.withOpacity(0.4)
+                        Positioned(
+                          top: 5,
+                          right: 5,
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              child: Icon(
+                                Icons.edit_note,
+                                size: 25,
+                                color: myGray.withOpacity(0.4),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                       ],
                     ),
                   ),
@@ -201,28 +189,23 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                   Container(
                     height: 120,
                     decoration: BoxDecoration(
-                      color: myGray.withOpacity(0.2),
                       border: Border.all(
-                        color: selectedContainerIndex == 2
-                            ? primaryColor 
-                            : Colors.transparent,
+                        color: myGray.withOpacity(0.4),
                       ),
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                 Positioned(
+                  Positioned(
                     top: 5,
                     right: 5,
                     child: GestureDetector(
-                      onTap: () {
-
-                      },
+                      onTap: () {},
                       child: Container(
                         padding: EdgeInsets.all(10),
-                        child:  Icon(
+                        child: Icon(
                           Icons.edit_note,
                           size: 25,
-                          color: myGray.withOpacity(0.4)
+                          color: myGray.withOpacity(0.4),
                         ),
                       ),
                     ),
@@ -242,11 +225,8 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                   Container(
                     height: 120,
                     decoration: BoxDecoration(
-                      color: myGray.withOpacity(0.2),
                       border: Border.all(
-                        color: selectedContainerIndex == 3
-                            ? primaryColor
-                            : Colors.transparent,
+                        color: myGray.withOpacity(0.4),
                       ),
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -255,15 +235,13 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     top: 5,
                     right: 5,
                     child: GestureDetector(
-                      onTap: () {
-
-                      },
+                      onTap: () {},
                       child: Container(
                         padding: EdgeInsets.all(10),
-                        child:  Icon(
+                        child: Icon(
                           Icons.edit_note,
                           size: 25,
-                          color: myGray.withOpacity(0.4)
+                          color: myGray.withOpacity(0.4),
                         ),
                       ),
                     ),
@@ -283,11 +261,8 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                   Container(
                     height: 120,
                     decoration: BoxDecoration(
-                      color: myGray.withOpacity(0.2),
                       border: Border.all(
-                        color: selectedContainerIndex == 4
-                            ? primaryColor 
-                            : Colors.transparent,
+                        color: myGray.withOpacity(0.4),
                       ),
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -296,15 +271,13 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     top: 5,
                     right: 5,
                     child: GestureDetector(
-                      onTap: () {
-
-                      },
+                      onTap: () {},
                       child: Container(
                         padding: EdgeInsets.all(10),
-                        child:  Icon(
+                        child: Icon(
                           Icons.edit_note,
                           size: 25,
-                          color: myGray.withOpacity(0.4)
+                          color: myGray.withOpacity(0.4),
                         ),
                       ),
                     ),
