@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/models/medication.model.dart';
 
-class MedicationFields extends StatelessWidget {
+class MedicationFields extends StatefulWidget {
   final int index;
 
-  static final List<List<TextEditingController>> _fieldControllers = [[]];
+  const MedicationFields({super.key, required this.index});
+
+  @override
+  State<MedicationFields> createState() => MedicationFieldsState();
+}
+
+class MedicationFieldsState extends State<MedicationFields> {
+  final List<List<TextEditingController>> _fieldControllers = [[]];
   late String selectedHealthCondition;
 
-   MedicationFields({super.key, required this.index}) : selectedHealthCondition = 'Allergy';
+  @override
+  void initState() {
+    super.initState();
+    while (_fieldControllers.length <= widget.index) {
+      _fieldControllers.add([]);
+    }
+    selectedHealthCondition = 'Allergy';
+  }
 
   MedicationData getMedicationData() {
     return MedicationData(
-      medication: _fieldControllers[index][0].text,
-      dosage: _fieldControllers[index][1].text,
-      frequency: _fieldControllers[index][2].text,
-      startDate: _fieldControllers[index][3].text,
+      medication: _fieldControllers[widget.index][0].text,
+      dosage: _fieldControllers[widget.index][1].text,
+      frequency: _fieldControllers[widget.index][2].text,
+      startDate: _fieldControllers[widget.index][3].text,
       healthCondition: selectedHealthCondition,
     );
   }
@@ -23,11 +37,11 @@ class MedicationFields extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildTextField('Medication', index, 0),
-        _buildTextField('Dosage', index, 1),
-        _buildTextField('Frequency', index, 2),
-        _buildTextField('Start Date', index, 3),
-        _buildHealthConditionDropdown(index),
+        _buildTextField('Medication', widget.index, 0),
+        _buildTextField('Dosage', widget.index, 1),
+        _buildTextField('Frequency', widget.index, 2),
+        _buildTextField('Start Date', widget.index, 3),
+        _buildHealthConditionDropdown(widget.index),
       ],
     );
   }
@@ -75,7 +89,9 @@ class MedicationFields extends StatelessWidget {
     return DropdownButtonFormField<String>(
       value: selectedHealthCondition,
       onChanged: (newValue) {
-        selectedHealthCondition = newValue!;
+        setState(() {
+          selectedHealthCondition = newValue!;
+        });
       },
       items: healthConditions.map((condition) {
         return DropdownMenuItem(
@@ -87,6 +103,7 @@ class MedicationFields extends StatelessWidget {
     );
   }
 }
+
 
 
 
