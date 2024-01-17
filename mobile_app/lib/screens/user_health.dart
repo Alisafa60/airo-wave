@@ -3,11 +3,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/models/allergy.model.dart';
+import 'package:mobile_app/models/respiratory_condition.model.dart';
 import 'package:mobile_app/widgets/allergy_fields.dart';
 import 'package:mobile_app/widgets/health_conditions.dart';
 import 'package:mobile_app/widgets/medications.dart';
 import 'package:mobile_app/api_survice.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile_app/widgets/respiratory_fields.dart';
 
 class UserHealthScreen extends StatefulWidget {
   final ApiService apiService;
@@ -82,11 +84,9 @@ class _UserHealthState extends State<UserHealthScreen> {
   Future<void> addAllergyCondition() async {
     String? token = await getToken();
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
-
+    
     if (token != null) {
       final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
-
-      // Assuming you have only one set of allergy data
       AllergyData allergyData = AllergyFields(index: 0).getAllergyData();
 
       final Map<String, dynamic> requestBody = {
@@ -116,6 +116,42 @@ class _UserHealthState extends State<UserHealthScreen> {
       }
     }
   }
+  Future<void> addRespiratoryCondition() async {
+    String? token = await getToken();
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
+    print(decodedToken);
+    if (token != null) {
+      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+      RespiratoryConditionData respiratoryConditionData = RespiratoryConditionFields(index: 0).getRespiratoryConditionData();
+      
+      final Map<String, dynamic> requestBody = {
+        'condition': respiratoryConditionData.condition,
+        'diagnosis': respiratoryConditionData.diagnosis,
+        'symptomsFrequency': respiratoryConditionData.symptomsFrequency,
+        'triggers': respiratoryConditionData.triggers,
+      };
+
+      try {
+        final http.Response response = await widget.apiService.post(
+          '/api/user/health/respiratoryCondition',
+          headers,
+          requestBody,
+        );
+
+        print(requestBody);
+
+        if (response.statusCode == 201) {
+          print('Respiratory conditions added successfully');
+          print(requestBody);
+        } else {
+          print('Respiratory condition addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        }
+      } catch (error) {
+        print('Error during respiratory condition addition: $error');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -337,7 +373,7 @@ class _UserHealthState extends State<UserHealthScreen> {
               const SizedBox(height: 40,),
               SaveButton(
                   buttonText: 'Save',
-                  onPressed: addAllergyCondition,
+                  onPressed: addRespiratoryCondition,
               )
             ],  
           ),
