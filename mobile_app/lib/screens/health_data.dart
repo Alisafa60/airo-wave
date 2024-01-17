@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mobile_app/constants.dart';
 
 class ShowHealthScreen extends StatefulWidget {
-  const ShowHealthScreen({super.key});
+  const ShowHealthScreen({Key? key}) : super(key: key);
 
   @override
   State<ShowHealthScreen> createState() => _ShowHealthScreenState();
@@ -54,17 +54,38 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     onTap: () {
                       //route for user profile
                     },
-                    child: ClipOval(
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('lib/assets/images/profile-picture.png'),
-                            fit: BoxFit.cover,
+                    child: Stack(
+                      children: [
+                        ClipOval(
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('lib/assets/images/profile-picture.png'),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        Positioned(
+                          top: 5,
+                          right: 5,
+                          child: GestureDetector(
+                            onTap: () {
+
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              child:  Icon(
+                                Icons.edit_note,
+                                size: 25,
+                                color: myGray.withOpacity(0.4)
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 5,),
@@ -88,17 +109,38 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         selectedContainerIndex = 0;
                       });
                     },
-                    child: Container(
-                      height: 110,
-                      decoration: BoxDecoration(
-                        color: myGray.withOpacity(0.2),
-                        border: Border.all(
-                          color: selectedContainerIndex == 0
-                              ? primaryColor
-                              : Colors.transparent,
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: 110,
+                          decoration: BoxDecoration(
+                            color: myGray.withOpacity(0.2),
+                            border: Border.all(
+                              color: selectedContainerIndex == 0
+                                  ? primaryColor
+                                  : Colors.transparent,
+                            ),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(15),
+                       Positioned(
+                        top: 5,
+                        right: 5,
+                        child: GestureDetector(
+                          onTap: () {
+
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child:  Icon(
+                              Icons.edit_note,
+                              size: 25,
+                              color: myGray.withOpacity(0.4)
+                            ),
+                          ),
+                        ),
                       ),
+                      ],
                     ),
                   ),
                 ),
@@ -110,17 +152,38 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         selectedContainerIndex = 1;
                       });
                     },
-                    child: Container(
-                      height: 110,
-                      decoration: BoxDecoration(
-                        color: myGray.withOpacity(0.2),
-                        border: Border.all(
-                          color: selectedContainerIndex == 1
-                              ? primaryColor 
-                              : Colors.transparent,
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: 110,
+                          decoration: BoxDecoration(
+                            color: myGray.withOpacity(0.2),
+                            border: Border.all(
+                              color: selectedContainerIndex == 1
+                                  ? primaryColor 
+                                  : Colors.transparent,
+                            ),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(15),
+                       Positioned(
+                    top: 5,
+                    right: 5,
+                    child: GestureDetector(
+                      onTap: () {
+
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child:  Icon(
+                          Icons.edit_note,
+                          size: 25,
+                          color: myGray.withOpacity(0.4)
+                        ),
                       ),
+                    ),
+                  ),
+                      ],
                     ),
                   ),
                 ),
@@ -133,18 +196,38 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                   selectedContainerIndex = 2;
                 });
               },
-              child: Container(
-                height: 120,
-                
-                decoration: BoxDecoration(
-                  color: myGray.withOpacity(0.2),
-                  border: Border.all(
-                    color: selectedContainerIndex == 2
-                        ? primaryColor 
-                        : Colors.transparent,
+              child: Stack(
+                children: [
+                  Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: myGray.withOpacity(0.2),
+                      border: Border.all(
+                        color: selectedContainerIndex == 2
+                            ? primaryColor 
+                            : Colors.transparent,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
+                 Positioned(
+                    top: 5,
+                    right: 5,
+                    child: GestureDetector(
+                      onTap: () {
+
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child:  Icon(
+                          Icons.edit_note,
+                          size: 25,
+                          color: myGray.withOpacity(0.4)
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 10,),
@@ -154,18 +237,38 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                   selectedContainerIndex = 3;
                 });
               },
-              child: Container(
-                height: 120,
-                
-                decoration: BoxDecoration(
-                  color: myGray.withOpacity(0.2),
-                  border: Border.all(
-                    color: selectedContainerIndex == 3
-                        ? primaryColor
-                        : Colors.transparent,
+              child: Stack(
+                children: [
+                  Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: myGray.withOpacity(0.2),
+                      border: Border.all(
+                        color: selectedContainerIndex == 3
+                            ? primaryColor
+                            : Colors.transparent,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
+                  Positioned(
+                    top: 5,
+                    right: 5,
+                    child: GestureDetector(
+                      onTap: () {
+
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child:  Icon(
+                          Icons.edit_note,
+                          size: 25,
+                          color: myGray.withOpacity(0.4)
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 10,),
@@ -175,18 +278,38 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                   selectedContainerIndex = 4;
                 });
               },
-              child: Container(
-                height: 120,
-                
-                decoration: BoxDecoration(
-                  color: myGray.withOpacity(0.2),
-                  border: Border.all(
-                    color: selectedContainerIndex == 4
-                        ? primaryColor 
-                        : Colors.transparent,
+              child: Stack(
+                children: [
+                  Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: myGray.withOpacity(0.2),
+                      border: Border.all(
+                        color: selectedContainerIndex == 4
+                            ? primaryColor 
+                            : Colors.transparent,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
+                  Positioned(
+                    top: 5,
+                    right: 5,
+                    child: GestureDetector(
+                      onTap: () {
+
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child:  Icon(
+                          Icons.edit_note,
+                          size: 25,
+                          color: myGray.withOpacity(0.4)
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
