@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/models/allergy.model.dart';
+import 'package:mobile_app/models/medication.model.dart';
 import 'package:mobile_app/models/respiratory_condition.model.dart';
 import 'package:mobile_app/widgets/allergy_fields.dart';
 import 'package:mobile_app/widgets/health_conditions.dart';
@@ -10,6 +11,8 @@ import 'package:mobile_app/widgets/medications.dart';
 import 'package:mobile_app/api_survice.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_app/widgets/respiratory_fields.dart';
+
+
 
 class UserHealthScreen extends StatefulWidget {
   final ApiService apiService;
@@ -54,7 +57,10 @@ class _UserHealthState extends State<UserHealthScreen> {
     // print(decodedToken);
 
     if (token!=null){
-      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+      final Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+         'Content-Type': 'application/json'
+        };
       final Map<String, dynamic> requestBody = {
         'weight': weight,
         'bloodType': bloodType,
@@ -86,8 +92,11 @@ class _UserHealthState extends State<UserHealthScreen> {
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
     
     if (token != null) {
-      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
-      AllergyData allergyData = AllergyFields(index: 0).getAllergyData();
+      final Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+         'Content-Type': 'application/json'
+        };
+      AllergyData allergyData = const AllergyFields(index: 0).getAllergyData();
 
       final Map<String, dynamic> requestBody = {
         'allergen': allergyData.allergen,
@@ -116,6 +125,44 @@ class _UserHealthState extends State<UserHealthScreen> {
       }
     }
   }
+  Future<void> addMedication() async {
+    String? token = await getToken();
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
+
+    if (token != null) {
+      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+
+      MedicationData medicationData = MedicationFields(index: 0).getMedicationData();
+
+      final Map<String, dynamic> requestBody = {
+        'name': medicationData.medication,
+        'dosage': medicationData.dosage,
+        'frequency': medicationData.frequency,
+        'startDate': medicationData.startDate,
+        'context': medicationData.healthCondition,
+      };
+
+      try {
+        final http.Response response = await widget.apiService.post(
+          '/api/user/health/medication',
+          headers,
+          requestBody,
+        );
+
+        print(requestBody);
+
+        if (response.statusCode == 201) {
+          print('Medication added successfully');
+          print(requestBody);
+        } else {
+          print('Medication addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        }
+      } catch (error) {
+        print('Error during medication addition: $error');
+      }
+    }
+  }
+
   Future<void> addRespiratoryCondition() async {
     String? token = await getToken();
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
@@ -367,13 +414,13 @@ class _UserHealthState extends State<UserHealthScreen> {
                     ],
                   ),
                   for (int i = 0; i < medicationEntries.length; i++)
-                    MedicationFieldsWidget(medicationEntry: medicationEntries[i], index: i),
+                    MedicationFields(index: i),
                 ],
               ),
               const SizedBox(height: 40,),
               SaveButton(
                   buttonText: 'Save',
-                  onPressed: addRespiratoryCondition,
+                  onPressed: addMedication,
               )
             ],  
           ),
