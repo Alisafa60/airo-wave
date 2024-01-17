@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/models/allergy.model.dart';
+import 'package:mobile_app/widgets/allergy_fields.dart';
 import 'package:mobile_app/widgets/health_conditions.dart';
 import 'package:mobile_app/widgets/medications.dart';
 import 'package:mobile_app/api_survice.dart';
@@ -31,9 +33,7 @@ class _UserHealthState extends State<UserHealthScreen> {
 
   bool isBloodTypeValid = true;
   List<String> validBloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-  int getWeight() {
-  return int.tryParse(weightController.text) ?? 0;
-}
+
   bool isValidBloodType(String bloodType) {
     return validBloodTypes.contains(bloodType.toUpperCase());
   }
@@ -45,15 +45,15 @@ class _UserHealthState extends State<UserHealthScreen> {
 
   Future<void> addHealthCondition() async {
     String? token = await getToken();
-    final String weight = getWeight().toString();
+    final int weight = int.tryParse(weightController.text) ?? 0;
     final String bloodType = bloodTypeController.text;
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
 
-    print(decodedToken);
+    // print(decodedToken);
 
     if (token!=null){
       final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
-      final Map<String, String> requestBody = {
+      final Map<String, dynamic> requestBody = {
         'weight': weight,
         'bloodType': bloodType,
       };
@@ -63,8 +63,8 @@ class _UserHealthState extends State<UserHealthScreen> {
       try {
         final http.Response response = await widget.apiService.post(
           '/api/user/health',
-          requestBody,
-          headers
+          headers,
+          requestBody
         );
         if (response.statusCode == 200) {
           print('Profile update successful');
@@ -78,7 +78,48 @@ class _UserHealthState extends State<UserHealthScreen> {
       }
     }
   }
+ 
+  Future<void> addAllergyCondition() async {
+  String? token = await getToken();
+  Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
 
+  if (token != null) {
+    final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+
+    // Create a list to store allergy data for each dynamically created field
+    List<Map<String, dynamic>> allergyDataList = [];
+
+    // Iterate through the dynamically created AllergyFields
+    for (int i = 0; i < _fieldControllers.length; i++) {
+      AllergyData allergyData = AllergyFields(index: i).getAllergyData();
+      allergyDataList.add(allergyData.toJson());
+    }
+
+    print('Allergy Data List: $allergyDataList'); // Add this line
+
+    final Map<String, dynamic> requestBody = {
+      'allergyDataList': allergyDataList,
+    };
+
+    try {
+      final http.Response response = await widget.apiService.post(
+        '/api/user/health/allergy',
+        headers,
+        requestBody,
+      );
+      print('API Response: $response'); // Add this line
+
+      if (response.statusCode == 200) {
+        print('Allergy conditions added successfully');
+        print(requestBody);
+      } else {
+        print('Allergy condition addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+      }
+    } catch (error) {
+      print('Error during allergy condition addition: $error');
+    }
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -300,7 +341,7 @@ class _UserHealthState extends State<UserHealthScreen> {
               const SizedBox(height: 40,),
               SaveButton(
                   buttonText: 'Save',
-                  onPressed: addHealthCondition,
+                  onPressed: addAllergyCondition,
               )
             ],  
           ),
