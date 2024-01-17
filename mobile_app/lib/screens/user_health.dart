@@ -17,12 +17,16 @@ import 'package:mobile_app/widgets/respiratory_fields.dart';
 class UserHealthScreen extends StatefulWidget {
   final ApiService apiService;
   const UserHealthScreen({super.key, required this.apiService});
-
+  
   @override
   State<UserHealthScreen> createState() => _UserHealthState();
+  
 }
 
 class _UserHealthState extends State<UserHealthScreen> {
+  GlobalKey<MedicationFieldsState> medicationFieldsKey = GlobalKey<MedicationFieldsState>();
+
+
   final List<DropdownMenuItem<String>> _conditionItems = [
     const DropdownMenuItem(value: 'None', child: Text('None')),
     const DropdownMenuItem(value: 'Allergy', child: Text('Allergy')),
@@ -132,7 +136,9 @@ class _UserHealthState extends State<UserHealthScreen> {
     if (token != null) {
       final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
 
-      MedicationData medicationData = MedicationFields(index: 0).getMedicationData();
+      MedicationFieldsState medicationFieldsState = medicationFieldsKey.currentState!;
+      MedicationData medicationData = medicationFieldsState.getMedicationData();
+
 
       final Map<String, dynamic> requestBody = {
         'name': medicationData.medication,
@@ -414,7 +420,10 @@ class _UserHealthState extends State<UserHealthScreen> {
                     ],
                   ),
                   for (int i = 0; i < medicationEntries.length; i++)
-                    MedicationFields(index: i),
+                    MedicationFields(
+                      key: medicationFieldsKey, // Pass the GlobalKey here
+                      index: i,
+                    ),
                 ],
               ),
               const SizedBox(height: 40,),
