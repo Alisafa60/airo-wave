@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/models/respiratory_condition.model.dart';
 
 class RespiratoryConditionFields extends StatelessWidget {
   final int index;
-
+  static final List<List<TextEditingController>> _fieldControllers = [[]];
   RespiratoryConditionFields({super.key, required this.index});
-  final List<List<TextEditingController>> _fieldControllers = [[]];
+
+  RespiratoryConditionData getRespiratoryConditionData() {
+    print('Condition: ${_fieldControllers[index][0].text}');
+    print('Diagnosis: ${_fieldControllers[index][1].text}');
+    print('Symptoms Frequency: ${_fieldControllers[index][2].text}');
+    print('Triggers: ${_fieldControllers[index][3].text}');
+
+    return RespiratoryConditionData(
+      condition: _fieldControllers[index][0].text,
+      diagnosis: _fieldControllers[index][1].text,
+      symptomsFrequency: _fieldControllers[index][2].text,
+      triggers: _fieldControllers[index][3].text,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -17,8 +32,9 @@ class RespiratoryConditionFields extends StatelessWidget {
     );
   }
 
- Widget _buildTextField(String hintText, int index, int fieldIndex) {
+  Widget _buildTextField(String hintText, int index, int fieldIndex) {
     TextEditingController controller;
+
     while (_fieldControllers.length <= index) {
       _fieldControllers.add([]);
     }
@@ -36,7 +52,6 @@ class RespiratoryConditionFields extends StatelessWidget {
       padding: const EdgeInsets.all(5),
       margin: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        // border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
         borderRadius: BorderRadius.circular(5),
       ),
       child: TextField(
@@ -44,7 +59,7 @@ class RespiratoryConditionFields extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,
-          focusedBorder:const UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(width: 2, color: Color.fromRGBO(255, 115 , 29, 0.6)),
           ),
           enabledBorder: const UnderlineInputBorder(
