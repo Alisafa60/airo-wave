@@ -95,6 +95,11 @@ flutter:
       - lib/assets/icons/environment.svg
       - lib/assets/icons/finish-button.png
       - lib/assets/icons/resume-button.png
+      - lib/assets/icons/lungs.svg
+      - lib/assets/icons/leaf.svg
+      - lib/assets/icons/pill.svg
+      - lib/assets/icons/weight.svg
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
