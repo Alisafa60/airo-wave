@@ -5,8 +5,10 @@ import 'package:http/http.dart';
 import 'package:mobile_app/api_survice.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/models/allergy.model.dart';
+import 'package:mobile_app/models/respiratory_condition.model.dart';
 import 'package:mobile_app/requests/allergy_survice.dart';
 import 'package:mobile_app/requests/health_survice.dart';
+import 'package:mobile_app/requests/respiratory_condition_survice.dart';
 
 class ShowHealthScreen extends StatefulWidget {
   const ShowHealthScreen({super.key, required this.apiService});
@@ -21,18 +23,21 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
   int selectedContainerIndex = -1;
   late HealthService healthService;
   late AllergySurvice allergySurvice;
+  late RespiratoryConditionSurvice respiratorySurvice;
   Map<String, dynamic>? healthData;
   Map<String, dynamic>? allergyData;
+  Map<String, dynamic>? respiratoryData;
 
   @override
   void initState() {
     super.initState();
     healthService = HealthService(widget.apiService);
     allergySurvice = AllergySurvice(widget.apiService); 
+    respiratorySurvice = RespiratoryConditionSurvice(widget.apiService);
     _loadHealthData();
     _loadAllergy();
+    _loadRespiratory();
   }
-
 
   Future<void> _loadHealthData() async {
     try {
@@ -57,6 +62,19 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       print('Error loading health data: $error');
     }
   }
+
+  Future<void> _loadRespiratory() async {
+    try {
+      final Map<String, dynamic> data = await respiratorySurvice.getRespiratoryCondition();
+      setState(() {
+        respiratoryData = data;
+      });
+      print(healthData);
+    } catch (error) {
+      print('Error loading health data: $error');
+    }
+  }
+
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,7 +114,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
               child: Column(
                 children: [
                   ElevatedButton(
-              onPressed: _loadAllergy,
+              onPressed: _loadRespiratory,
               child: const Text('Load Health Data'),
             ),
                   GestureDetector(
