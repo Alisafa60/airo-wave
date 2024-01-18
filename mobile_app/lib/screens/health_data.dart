@@ -1,18 +1,45 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart';
+import 'package:mobile_app/api_survice.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/requests/get_health.dart';
 
 class ShowHealthScreen extends StatefulWidget {
-  const ShowHealthScreen({Key? key}) : super(key: key);
-
+  const ShowHealthScreen({super.key, required this.apiService});
+  final ApiService apiService;
+  
   @override
+
   State<ShowHealthScreen> createState() => _ShowHealthScreenState();
 }
-
+ 
 class _ShowHealthScreenState extends State<ShowHealthScreen> {
   int selectedContainerIndex = -1;
+  late HealthService healthService;
+  Map<String, dynamic>? healthData;
 
   @override
+  void initState() {
+    super.initState();
+    healthService = HealthService(widget.apiService);
+    _loadHealthData();
+  }
+
+
+  Future<void> _loadHealthData() async {
+    try {
+      final Map<String, dynamic> data = await healthService.getUserHealthData();
+      setState(() {
+        healthData = data;
+      });
+      print(healthData);
+    } catch (error) {
+      print('Error loading health data: $error');
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -50,6 +77,10 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
               color: const Color.fromRGBO(255, 252, 252, 1),
               child: Column(
                 children: [
+                  ElevatedButton(
+              onPressed: _loadHealthData,
+              child: const Text('Load Health Data'),
+            ),
                   GestureDetector(
                     onTap: () {
                       //route for user profile
