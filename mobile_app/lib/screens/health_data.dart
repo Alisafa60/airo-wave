@@ -117,6 +117,17 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                             ),
                             borderRadius: BorderRadius.circular(15),
                           ),
+                            child: Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Icon(
+                                Icons.bloodtype_outlined,
+                                size: 25,
+                                color: Colors.red.withOpacity(0.6),
+                              ),
+                            ),
+                          ),
                         ),
                         Positioned(
                           top: 5,
@@ -154,6 +165,17 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                               color: myGray.withOpacity(0.4),
                             ),
                             borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: SvgPicture.asset(
+                                'lib/assets/icons/weight.svg',
+                                height: 25,
+                                width: 25,
+                              ),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -194,6 +216,18 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                       ),
                       borderRadius: BorderRadius.circular(15),
                     ),
+                    child: 
+                    Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: SvgPicture.asset(
+                          'lib/assets/icons/leaf.svg',
+                          height: 25,
+                          width: 25,
+                        ),
+                      ),
+                    ),
                   ),
                   Positioned(
                     top: 5,
@@ -230,6 +264,18 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                       ),
                       borderRadius: BorderRadius.circular(15),
                     ),
+                    child: 
+                    Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: SvgPicture.asset(
+                          'lib/assets/icons/lungs.svg',
+                          height: 30,
+                          width: 30,
+                        ),
+                      ),
+                    ),
                   ),
                   Positioned(
                     top: 5,
@@ -265,6 +311,18 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         color: myGray.withOpacity(0.4),
                       ),
                       borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: 
+                    Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: SvgPicture.asset(
+                          'lib/assets/icons/pill.svg',
+                          height: 23,
+                          width: 23,
+                        ),
+                      ),
                     ),
                   ),
                   Positioned(
