@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mobile_app/api_survice.dart';
+import 'package:mobile_app/api_service.dart';
 
 class HealthService {
   final ApiService apiService;
