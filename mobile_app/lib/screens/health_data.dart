@@ -4,7 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart';
 import 'package:mobile_app/api_survice.dart';
 import 'package:mobile_app/constants.dart';
-import 'package:mobile_app/requests/get_health.dart';
+import 'package:mobile_app/models/allergy.model.dart';
+import 'package:mobile_app/requests/allergy_survice.dart';
+import 'package:mobile_app/requests/health_survice.dart';
 
 class ShowHealthScreen extends StatefulWidget {
   const ShowHealthScreen({super.key, required this.apiService});
@@ -18,19 +20,35 @@ class ShowHealthScreen extends StatefulWidget {
 class _ShowHealthScreenState extends State<ShowHealthScreen> {
   int selectedContainerIndex = -1;
   late HealthService healthService;
+  late AllergySurvice allergySurvice;
   Map<String, dynamic>? healthData;
+  Map<String, dynamic>? allergyData;
 
   @override
   void initState() {
     super.initState();
     healthService = HealthService(widget.apiService);
+    allergySurvice = AllergySurvice(widget.apiService); 
     _loadHealthData();
+    _loadAllergy();
   }
 
 
   Future<void> _loadHealthData() async {
     try {
       final Map<String, dynamic> data = await healthService.getUserHealthData();
+      setState(() {
+        allergyData = data;
+      });
+      print(healthData);
+    } catch (error) {
+      print('Error loading health data: $error');
+    }
+  }
+
+  Future<void> _loadAllergy() async {
+    try {
+      final Map<String, dynamic> data = await allergySurvice.getAllergy();
       setState(() {
         healthData = data;
       });
@@ -78,7 +96,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
               child: Column(
                 children: [
                   ElevatedButton(
-              onPressed: _loadHealthData,
+              onPressed: _loadAllergy,
               child: const Text('Load Health Data'),
             ),
                   GestureDetector(
