@@ -22,20 +22,19 @@ class ApiService {
   }
   
   Future<http.Response> post(String path, Map<String, String> headers, Map<String, dynamic> body) async {
-    final Uri uri = Uri.parse('$baseUrl$path');
+  final Uri uri = Uri.parse('$baseUrl$path');
 
-    try {
-      final http.Response response = await http.post(
-        uri,
-        headers: headers,
-        body: jsonEncode(body),
-      );
-      return response;
-    } catch (error) {
-      throw Exception('Error during API call: $error');
-    }
+  try {
+    final http.Response response = await http.post(
+      uri,
+      headers: headers,
+      body: jsonEncode(body),
+    );
+    return response;
+  } catch (error) {
+    throw Exception('Error during API call: $error');
   }
-  
+}
    Future<http.Response> postMultipart(String path, Map<String, String> headers, Map<String, dynamic> body) async {
     final Uri uri = Uri.parse('$baseUrl$path');
 
@@ -81,6 +80,20 @@ class ApiService {
         uri,
         headers: headers,
         body: jsonEncode(body),
+      );
+      return response;
+    } catch (error) {
+      throw Exception('Error during API call: $error');
+    }
+  }
+
+  Future<http.Response> get(String path, Map<String, String> headers) async {
+    final Uri uri = Uri.parse('$baseUrl$path');
+
+    try {
+      final http.Response response = await http.get(
+        uri,
+        headers: headers,
       );
       return response;
     } catch (error) {
