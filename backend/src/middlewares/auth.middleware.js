@@ -33,6 +33,22 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
+const adminMiddleware = async (req, res, next) => {
+  try {
+    
+    const userType = req.user.userType;
+    
+    if (userType === 'admin') {
+      next();
+    } else {
+      res.status(403).send('Forbidden: Admin access required');
+    }
+  } catch (error) {
+    console.error('Error checking admin privileges:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
 module.exports = {
   authMiddleware,
+  adminMiddleware,
 };
