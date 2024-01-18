@@ -8,6 +8,7 @@ import 'package:mobile_app/models/allergy.model.dart';
 import 'package:mobile_app/models/respiratory_condition.model.dart';
 import 'package:mobile_app/requests/allergy_survice.dart';
 import 'package:mobile_app/requests/health_survice.dart';
+import 'package:mobile_app/requests/medication_survice.dart';
 import 'package:mobile_app/requests/respiratory_condition_survice.dart';
 
 class ShowHealthScreen extends StatefulWidget {
@@ -24,9 +25,11 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
   late HealthService healthService;
   late AllergySurvice allergySurvice;
   late RespiratoryConditionSurvice respiratorySurvice;
+  late MedicationSurvice medicationSurvice;
   Map<String, dynamic>? healthData;
   Map<String, dynamic>? allergyData;
   Map<String, dynamic>? respiratoryData;
+  Map<String, dynamic>? medicationData;
 
   @override
   void initState() {
@@ -34,9 +37,11 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
     healthService = HealthService(widget.apiService);
     allergySurvice = AllergySurvice(widget.apiService); 
     respiratorySurvice = RespiratoryConditionSurvice(widget.apiService);
+    medicationSurvice = MedicationSurvice(widget.apiService);
     _loadHealthData();
     _loadAllergy();
     _loadRespiratory();
+    _loadMedicaiton();
   }
 
   Future<void> _loadHealthData() async {
@@ -66,6 +71,18 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
   Future<void> _loadRespiratory() async {
     try {
       final Map<String, dynamic> data = await respiratorySurvice.getRespiratoryCondition();
+      setState(() {
+        respiratoryData = data;
+      });
+      print(healthData);
+    } catch (error) {
+      print('Error loading health data: $error');
+    }
+  }
+
+  Future<void> _loadMedicaiton() async {
+    try {
+      final Map<String, dynamic> data = await medicationSurvice.getMedication();
       setState(() {
         respiratoryData = data;
       });
