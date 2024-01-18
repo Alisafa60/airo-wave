@@ -4,10 +4,9 @@ import 'package:mobile_app/models/allergy.model.dart';
 class AllergyFields extends StatelessWidget {
   final int index;
 
-  // Move _fieldControllers outside the widget
   static final List<List<TextEditingController>> _fieldControllers = [[]];
 
-  AllergyFields({super.key, required this.index});
+  const AllergyFields({super.key, required this.index});
   AllergyData getAllergyData() {
     print('Allergen: ${_fieldControllers[index][0].text}');
     print('Severity: ${_fieldControllers[index][1].text}');
