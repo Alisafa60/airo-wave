@@ -14,7 +14,7 @@ class RespiratoryConditionSurvice {
 
       try {
         final http.Response response = await apiService.get(
-          '/api/user/health',
+          '/api/user/health/respiratoryConditions',
           headers,
         );
 
