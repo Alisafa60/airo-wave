@@ -9,7 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class MapsScreen extends StatefulWidget {
-  const MapsScreen({Key? key}) : super(key: key);
+  const MapsScreen({super.key});
 
   @override
   State<MapsScreen> createState() => _MapsScreenState();
@@ -18,7 +18,7 @@ class MapsScreen extends StatefulWidget {
 class _MapsScreenState extends State<MapsScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPageIndex = 0;
-
+  bool _showHeatmap = false; 
   Future<Uint8List?> fetchHeatmapTile(int zoom, double latitude, double longitude, String mapType) async {
   final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
   final x = calculateX(longitude, zoom);
@@ -99,7 +99,8 @@ class _MapsScreenState extends State<MapsScreen> {
                       infoWindow: InfoWindow(title: 'Marker Title'),
                     ),
                   },
-                  tileOverlays: {
+                 tileOverlays: {
+                  if (_showHeatmap)
                     TileOverlay(
                       tileOverlayId: TileOverlayId("heatmapTile"),
                       tileProvider: customTileProvider,
@@ -114,11 +115,13 @@ class _MapsScreenState extends State<MapsScreen> {
                         children: [
                           Container(
                             height: 45,
+                            
                             width: double.infinity,
                             child: TextField(
                               textAlign: TextAlign.start,
                               textAlignVertical: TextAlignVertical.bottom,
                               decoration: InputDecoration(
+                                filled: true,
                                 fillColor: Colors.white,
                                 hintText: ' Search',
                                 hintStyle: TextStyle(
@@ -139,7 +142,44 @@ class _MapsScreenState extends State<MapsScreen> {
                                 ),
                               ),
                             ),
-                          )
+                          ),
+                          SizedBox(height: 20,),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16, right: 10),
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  setState(() {
+                                    _showHeatmap = !_showHeatmap; 
+                                  });
+                                  if (_showHeatmap) {
+                                    final Uint8List? imageBytes = await fetchHeatmapTile(8, 40.7128, -74.0060, 'US_AQI');
+                                    if (imageBytes != null) {
+                                      customTileProvider.updateImageBytes(imageBytes);
+                                    }
+                                  }
+                                },
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _showHeatmap ? Colors.blue : Colors.white,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'AQI',
+                                      style: TextStyle(
+                                        color: _showHeatmap ? Colors.white : Colors.blue,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -285,14 +325,19 @@ class _MapsScreenState extends State<MapsScreen> {
 }
 
 class CustomTileProvider extends TileProvider {
-  final Uint8List imageBytes;
-  final double longitude;
-  final double latitude;
-  final int zoom;
+  Uint8List imageBytes;
+  double longitude;
+  double latitude;
+  int zoom;
 
   CustomTileProvider(this.imageBytes, this.longitude, this.latitude, this.zoom) {
     print('CustomTileProvider created with imageBytes length: ${imageBytes.length}');
   }
+
+  void updateImageBytes(Uint8List newImageBytes) {
+    imageBytes = newImageBytes;
+  }
+
 
   @override
   Future<Tile> getTile(int x, int y, int? zoom) async {
