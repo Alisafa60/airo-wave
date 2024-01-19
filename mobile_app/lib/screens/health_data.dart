@@ -59,7 +59,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       setState(() {
         allergyData = data;
       });
-      
+      print(allergyData);
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -71,7 +71,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       setState(() {
         respiratoryData = data;
       });
-    
+      print(respiratoryData);
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -86,6 +86,70 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       
     } catch (error) {
       print('Error loading health data: $error');
+    }
+  }
+
+  List<Widget> buildAllergenWidgets(Map<String, dynamic>? allergyData) {
+    if (allergyData!.containsKey('allergies') && allergyData!['allergies'] is List) {
+      List<Map<String, dynamic>> allergies = List<Map<String, dynamic>>.from(allergyData['allergies']);
+
+      return allergies.map((allergy) {
+        return Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Container(
+            height: 30,
+            width: 100,
+            decoration: BoxDecoration(
+              border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+              borderRadius: BorderRadius.circular(15)
+            ),
+           child: Center(
+              child: Text(
+              '${allergy['allergen']}',
+              style: TextStyle(
+                fontSize: 16,
+                color: myGray.withOpacity(0.8),
+                fontWeight: FontWeight.w400,
+            ),
+              ),
+          ),
+          )
+        );
+      }).toList();
+    } else {
+      return [];
+    }
+  }
+  
+  List<Widget> buildRespiratoryWidgets(Map<String, dynamic>? respiratoryData) {
+    if (respiratoryData!.containsKey('respiratoryConditions') && respiratoryData!['condition'] is List) {
+      List<Map<String, dynamic>> respiratoryConditions = List<Map<String, dynamic>>.from(respiratoryData['condition']);
+
+      return respiratoryConditions.map((respiratoryCondition) {
+        return Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Container(
+            height: 30,
+            width: 100,
+            decoration: BoxDecoration(
+              border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+              borderRadius: BorderRadius.circular(15)
+            ),
+           child: Center(
+              child: Text(
+              '${respiratoryCondition['condition']}',
+              style: TextStyle(
+                fontSize: 16,
+                color: myGray.withOpacity(0.8),
+                fontWeight: FontWeight.w400,
+            ),
+              ),
+          ),
+          )
+        );
+      }).toList();
+    } else {
+      return [];
     }
   }
 
@@ -187,7 +251,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     child: Stack(
                       children: [
                         Container(
-                          height: 110,
+                          height: 100,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: myGray.withOpacity(0.4),
@@ -225,13 +289,13 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                           healthData!.containsKey('userHealth') &&
                           healthData!['userHealth']!.containsKey('bloodType'))
                         Positioned(
-                          bottom: 30,
+                          bottom: 20,
                           left: 20,
                           child: Text(
                             'Blood Type ${healthData!['userHealth']!['bloodType']}',
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                               color: myGray.withOpacity(0.8),
                             ),
                           ),
@@ -251,7 +315,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     child: Stack(
                       children: [
                         Container(
-                          height: 110,
+                          height: 100,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: myGray.withOpacity(0.4),
@@ -289,7 +353,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                           healthData!.containsKey('userHealth') &&
                           healthData!['userHealth']!.containsKey('weight'))
                         Positioned(
-                          bottom: 30,
+                          bottom: 20,
                           left: 20,
                           child: Text(
                             'Weight ${healthData!['userHealth']!['weight']}Kg',
@@ -316,7 +380,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
               child: Stack(
                 children: [
                   Container(
-                    height: 120,
+                    height: 124,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: myGray.withOpacity(0.4),
@@ -325,7 +389,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     ),
                     child: 
                     Padding(
-                      padding: const EdgeInsets.all(14),
+                      padding: const EdgeInsets.all(10),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: SvgPicture.asset(
@@ -351,6 +415,28 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                       ),
                     ),
                   ),
+                  Positioned(
+                    bottom: 15,
+                    left: 15,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          ' Allergy',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: myGray.withOpacity(0.8),
+                          ),
+                        ),
+                        SizedBox(height: 6,),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: buildAllergenWidgets(allergyData),
+                        ),
+                      ],
+                    )
+                  ),
                 ],
               ),
             ),
@@ -364,7 +450,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
               child: Stack(
                 children: [
                   Container(
-                    height: 120,
+                    height: 124,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: myGray.withOpacity(0.4),
@@ -373,7 +459,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     ),
                     child: 
                     Padding(
-                      padding: const EdgeInsets.all(14),
+                      padding: const EdgeInsets.all(10),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: SvgPicture.asset(
