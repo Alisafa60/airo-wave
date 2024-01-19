@@ -1,4 +1,5 @@
 
+import 'dart:math' show cos, log, tan;
 import 'dart:typed_data';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
@@ -18,23 +19,39 @@ class _MapsScreenState extends State<MapsScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPageIndex = 0;
 
-  Future<Uint8List?> fetchHeatmapTile(int zoom, int x, int y, String mapType) async {
-    final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
-    final apiUrl = "https://airquality.googleapis.com/v1/mapTypes/$mapType/heatmapTiles/$zoom/$x/$y?key=$apiKey";
+  Future<Uint8List?> fetchHeatmapTile(int zoom, double latitude, double longitude, String mapType) async {
+  final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
+  final x = calculateX(longitude, zoom);
+  final y = calculateY(latitude, zoom);
 
-    try {
-      final response = await http.get(Uri.parse(apiUrl));
+  final apiUrl = "https://airquality.googleapis.com/v1/mapTypes/$mapType/heatmapTiles/$zoom/$x/$y?key=$apiKey";
+  try {
+    final response = await http.get(Uri.parse(apiUrl));
 
-      if (response.statusCode == 200) {
-        return response.bodyBytes;
-      } else {
-        print('Failed to fetch heatmap tile. Status code: ${response.statusCode}');
-        return null;
-      }
-    } catch (error) {
-      print('Error fetching heatmap tile: $error');
+    if (response.statusCode == 200) {
+      return response.bodyBytes;
+      
+    } else {
+      print('Failed to fetch heatmap tile. Status code: ${response.statusCode}');
       return null;
     }
+  } catch (error) {
+    print('Error fetching heatmap tile: $error');
+    return null;
+  }
+}
+
+  int calculateX(double longitude, int zoom) {
+    final x = ((longitude + 180) / 360 * (1 << zoom)).floor();
+    print('calculated X: $x');
+    return x;
+  }
+
+  int calculateY(double latitude, int zoom) {
+    double latRad = latitude * (3.141592653589793 / 180);
+    final y = ((1 - log(tan(latRad) + 1 / cos(latRad)) / 3.141592653589793) / 2 * (1 << zoom)).floor();
+     print('Calculated Y: $y');
+     return y;
   }
 
   @override
@@ -59,21 +76,21 @@ class _MapsScreenState extends State<MapsScreen> {
         ),
       ),
       body: FutureBuilder(
-        future: fetchHeatmapTile(2, 0, 1, 'US_AQI'),
+        future: fetchHeatmapTile(8, 40.7128, -74.0060, 'US_AQI'),
         builder: (context, AsyncSnapshot<Uint8List?> snapshot) {
           if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
             final Uint8List? imageBytes = snapshot.data;
-            final CustomTileProvider customTileProvider = CustomTileProvider(imageBytes!);
+            final CustomTileProvider customTileProvider = CustomTileProvider(imageBytes!, -74.0060, 40.7128, 2);
 
             return Stack(
               children: [
                 GoogleMap(
                   onMapCreated: (GoogleMapController controller) {
-                    // Initialize your GoogleMapController
+                    
                   },
                   initialCameraPosition: CameraPosition(
                     target: LatLng(40.7128, -74.0060),
-                    zoom: 4,
+                    zoom: 8,
                   ),
                   markers: {
                     Marker(
@@ -269,14 +286,37 @@ class _MapsScreenState extends State<MapsScreen> {
 
 class CustomTileProvider extends TileProvider {
   final Uint8List imageBytes;
+  final double longitude;
+  final double latitude;
+  final int zoom;
 
-  CustomTileProvider(this.imageBytes) {
+  CustomTileProvider(this.imageBytes, this.longitude, this.latitude, this.zoom) {
     print('CustomTileProvider created with imageBytes length: ${imageBytes.length}');
   }
 
   @override
   Future<Tile> getTile(int x, int y, int? zoom) async {
-    print('getTile called with x: $x, y: $y, zoom: $zoom');
-    return Tile(x, y, imageBytes);
+    final calculatedX = calculateX(longitude, zoom!);
+    final calculatedY = calculateY(latitude, zoom);
+   
+    if (x != calculatedX || y != calculatedY) {
+      print('Mismatched x or y values. Expected: x=$calculatedX, y=$calculatedY. Actual: x=$x, y=$y. Skipping fetch.');
+      return Tile(calculatedX, calculatedY, Uint8List(0)); 
+    }
+
+    print('getTile called with x: $x, y: $y, zoom: $zoom, longitude: $longitude, latitude: $latitude');
+    print('Calculated X: $calculatedX, Calculated Y: $calculatedY');
+
+    // Create the tile
+    return Tile(calculatedX, calculatedY, imageBytes);
+  }
+
+  int calculateX(double longitude, int zoom) {
+    return ((longitude + 180) / 360 * (1 << zoom)).floor();
+  }
+
+  int calculateY(double latitude, int zoom) {
+    double latRad = latitude * (3.141592653589793 / 180);
+    return ((1 - log(tan(latRad) + 1 / cos(latRad)) / 3.141592653589793) / 2 * (1 << zoom)).floor();
   }
 }
