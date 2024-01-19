@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart';
-import 'package:mobile_app/api_survice.dart';
+import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
-import 'package:mobile_app/models/allergy.model.dart';
-import 'package:mobile_app/models/respiratory_condition.model.dart';
 import 'package:mobile_app/requests/allergy_survice.dart';
 import 'package:mobile_app/requests/health_survice.dart';
 import 'package:mobile_app/requests/medication_survice.dart';
@@ -42,15 +38,16 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
     _loadAllergy();
     _loadRespiratory();
     _loadMedicaiton();
+    
   }
 
   Future<void> _loadHealthData() async {
     try {
       final Map<String, dynamic> data = await healthService.getUserHealthData();
       setState(() {
-        allergyData = data;
+        healthData = data;
       });
-      print(healthData);
+     print(healthData);
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -60,9 +57,9 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
     try {
       final Map<String, dynamic> data = await allergySurvice.getAllergy();
       setState(() {
-        healthData = data;
+        allergyData = data;
       });
-      print(healthData);
+      
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -74,7 +71,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       setState(() {
         respiratoryData = data;
       });
-      print(healthData);
+    
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -84,14 +81,13 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
     try {
       final Map<String, dynamic> data = await medicationSurvice.getMedication();
       setState(() {
-        respiratoryData = data;
+        medicationData = data;
       });
-      print(healthData);
+      
     } catch (error) {
       print('Error loading health data: $error');
     }
   }
-
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,10 +126,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
               color: const Color.fromRGBO(255, 252, 252, 1),
               child: Column(
                 children: [
-                  ElevatedButton(
-              onPressed: _loadRespiratory,
-              child: const Text('Load Health Data'),
-            ),
+               
                   GestureDetector(
                     onTap: () {
                       //route for user profile
@@ -207,7 +200,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                               alignment: Alignment.topLeft,
                               child: Icon(
                                 Icons.bloodtype_outlined,
-                                size: 25,
+                                size: 30,
                                 color: Colors.red.withOpacity(0.6),
                               ),
                             ),
@@ -222,9 +215,24 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                               padding: EdgeInsets.all(10),
                               child: Icon(
                                 Icons.edit_note,
-                                size: 25,
+                                size: 30,
                                 color: myGray.withOpacity(0.4),
                               ),
+                            ),
+                          ),
+                        ),
+                        if (healthData != null &&
+                          healthData!.containsKey('userHealth') &&
+                          healthData!['userHealth']!.containsKey('bloodType'))
+                        Positioned(
+                          bottom: 30,
+                          left: 20,
+                          child: Text(
+                            'Blood Type ${healthData!['userHealth']!['bloodType']}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: myGray.withOpacity(0.8),
                             ),
                           ),
                         ),
@@ -256,8 +264,8 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                               alignment: Alignment.topLeft,
                               child: SvgPicture.asset(
                                 'lib/assets/icons/weight.svg',
-                                height: 25,
-                                width: 25,
+                                height: 27,
+                                width: 27,
                               ),
                             ),
                           ),
@@ -271,9 +279,24 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                               padding: EdgeInsets.all(10),
                               child: Icon(
                                 Icons.edit_note,
-                                size: 25,
+                                size: 30,
                                 color: myGray.withOpacity(0.4),
                               ),
+                            ),
+                          ),
+                        ),
+                        if (healthData != null &&
+                          healthData!.containsKey('userHealth') &&
+                          healthData!['userHealth']!.containsKey('weight'))
+                        Positioned(
+                          bottom: 30,
+                          left: 20,
+                          child: Text(
+                            'Weight ${healthData!['userHealth']!['weight']}Kg',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: myGray.withOpacity(0.8),
                             ),
                           ),
                         ),
@@ -307,8 +330,8 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         alignment: Alignment.topLeft,
                         child: SvgPicture.asset(
                           'lib/assets/icons/leaf.svg',
-                          height: 25,
-                          width: 25,
+                          height: 32,
+                          width: 32,
                         ),
                       ),
                     ),
@@ -322,7 +345,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         padding: EdgeInsets.all(10),
                         child: Icon(
                           Icons.edit_note,
-                          size: 25,
+                          size: 30,
                           color: myGray.withOpacity(0.4),
                         ),
                       ),
@@ -355,8 +378,8 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         alignment: Alignment.topLeft,
                         child: SvgPicture.asset(
                           'lib/assets/icons/lungs.svg',
-                          height: 30,
-                          width: 30,
+                          height: 38,
+                          width: 38,
                         ),
                       ),
                     ),
