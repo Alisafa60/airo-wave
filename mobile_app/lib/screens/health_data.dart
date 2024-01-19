@@ -122,8 +122,8 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
   }
   
   List<Widget> buildRespiratoryWidgets(Map<String, dynamic>? respiratoryData) {
-    if (respiratoryData!.containsKey('respiratoryConditions') && respiratoryData!['condition'] is List) {
-      List<Map<String, dynamic>> respiratoryConditions = List<Map<String, dynamic>>.from(respiratoryData['condition']);
+    if (respiratoryData!.containsKey('respiratoryConditions') && respiratoryData!['respiratoryConditions'] is List) {
+      List<Map<String, dynamic>> respiratoryConditions = List<Map<String, dynamic>>.from(respiratoryData['respiratoryConditions']);
 
       return respiratoryConditions.map((respiratoryCondition) {
         return Padding(
@@ -464,7 +464,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         alignment: Alignment.topLeft,
                         child: SvgPicture.asset(
                           'lib/assets/icons/lungs.svg',
-                          height: 38,
+                          height: 37,
                           width: 38,
                         ),
                       ),
@@ -479,11 +479,33 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         padding: EdgeInsets.all(10),
                         child: Icon(
                           Icons.edit_note,
-                          size: 25,
+                          size: 30,
                           color: myGray.withOpacity(0.4),
                         ),
                       ),
                     ),
+                  ),
+                   Positioned(
+                    bottom: 15,
+                    left: 15,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          ' Respiratory Condition',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: myGray.withOpacity(0.8),
+                          ),
+                        ),
+                        SizedBox(height: 6,),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: buildRespiratoryWidgets(respiratoryData),
+                        ),
+                      ],
+                    )
                   ),
                 ],
               ),
@@ -498,7 +520,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
               child: Stack(
                 children: [
                   Container(
-                    height: 120,
+                    height: 124,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: myGray.withOpacity(0.4),
