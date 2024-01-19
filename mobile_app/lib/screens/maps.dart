@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,12 +16,72 @@ class MapsScreen extends StatefulWidget {
 
 class _MapsScreenState extends State<MapsScreen> {
   final PageController _pageController = PageController(initialPage: 0);
+  TileOverlay? _heatmapTileOverlay;
+  late GoogleMapController _googleMapController;
   int _currentPageIndex = 0;
+  Image? heatmapTile;
+  Uint8List? _imageBytes;
+  final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
+  Future<void> fetchAndDisplayHeatmapTile(int zoom, int x, int y, String mapType) async {
+    final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
+    final apiUrl = "https://airquality.googleapis.com/v1/mapTypes/$mapType/heatmapTiles/$zoom/$x/$y?key=$apiKey";
 
-  
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final imageBytes = response.bodyBytes;
+        _heatmapTileOverlay = _buildTileOverlay(imageBytes);
+        _addHeatmapTileOverlay(imageBytes);
+
+        setState(() {});
+
+        print('Response status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      } else {
+        print('Failed to fetch heatmap tile. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching heatmap tile: $error');
+    }
+  }
+
+  TileOverlay _buildTileOverlay(Uint8List imageBytes) {
+    final customTileProvider = CustomTileProvider(imageBytes);
+
+    return TileOverlay(
+      tileOverlayId: const TileOverlayId("heatmapTile"),
+      tileProvider: customTileProvider,
+      fadeIn: true,
+      transparency: 0.0,
+      zIndex: 0,
+      visible: true,
+      tileSize: 256,
+    );
+  }
+
+  void _addHeatmapTileOverlay(Uint8List imageBytes) {
+  final TileOverlay heatmapOverlay = TileOverlay(
+    tileOverlayId: TileOverlayId('your_unique_tile_overlay_id'),
+    tileProvider: CustomTileProvider(imageBytes),
+    fadeIn: true,
+    transparency: 0.0,
+    zIndex: 0,
+    visible: true,
+    tileSize: 256,
+  );
+
+  _googleMapController._
+}
+
+  @override
+   void initState() {
+    super.initState();
+    fetchAndDisplayHeatmapTile(12, 0, 1, 'US_AQI');
+  }
   @override
   Widget build(BuildContext context) {
-    
+  
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(255, 252, 252, 1),
@@ -44,18 +105,21 @@ class _MapsScreenState extends State<MapsScreen> {
         children: [
           GoogleMap(
             initialCameraPosition: CameraPosition(
-              target: LatLng(33.888630, 35.495480),
-              zoom: 12.0,
+              target: LatLng(40.7128, -74.0060),
+              zoom: 4.0,
             ),
-            onMapCreated: (GoogleMapController controller) {},
+            onMapCreated: (GoogleMapController controller) {
+              _googleMapController = controller;
+            },
             markers: {
               Marker(
                 markerId: MarkerId('markerId'),
-                position: LatLng(33.888630, 35.495480),
+                position: LatLng(40.7128, -74.0060),
                 infoWindow: InfoWindow(title: 'Marker Title'),
               ),
             },
           ),
+    
           Column(
             children: [
               Padding(
@@ -226,5 +290,15 @@ class _MapsScreenState extends State<MapsScreen> {
         ],
       ),
     );
+  }
+}
+class CustomTileProvider extends TileProvider {
+  final Uint8List imageBytes;
+
+  CustomTileProvider(this.imageBytes);
+
+  @override
+  Future<Tile> getTile(int x, int y, int? zoom) async {
+    return Tile(x, y, imageBytes);
   }
 }
