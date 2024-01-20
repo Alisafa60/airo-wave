@@ -83,7 +83,6 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       setState(() {
         medicationData = data;
       });
-      
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -138,6 +137,38 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
            child: Center(
               child: Text(
               '${respiratoryCondition['condition']}',
+              style: TextStyle(
+                fontSize: 16,
+                color: myGray.withOpacity(0.8),
+                fontWeight: FontWeight.w400,
+            ),
+              ),
+          ),
+          )
+        );
+      }).toList();
+    } else {
+      return [];
+    }
+  }
+
+  List<Widget> buildMedicationWidgets(Map<String, dynamic>? medicationData) {
+    if (medicationData!.containsKey('medications') && medicationData!['medications'] is List) {
+      List<Map<String, dynamic>> medications = List<Map<String, dynamic>>.from(medicationData['medications']);
+
+      return medications.map((medication) {
+        return Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Container(
+            height: 30,
+            width: 100,
+            decoration: BoxDecoration(
+              border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+              borderRadius: BorderRadius.circular(15)
+            ),
+           child: Center(
+              child: Text(
+              '${medication['name']}',
               style: TextStyle(
                 fontSize: 16,
                 color: myGray.withOpacity(0.8),
@@ -554,6 +585,28 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                         ),
                       ),
                     ),
+                  ),
+                   Positioned(
+                    bottom: 15,
+                    left: 15,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          ' Medications',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: myGray.withOpacity(0.8),
+                          ),
+                        ),
+                        SizedBox(height: 6,),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: buildMedicationWidgets(medicationData),
+                        ),
+                      ],
+                    )
                   ),
                 ],
               ),
