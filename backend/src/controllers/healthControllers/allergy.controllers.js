@@ -113,6 +113,41 @@ const updateAllergyById = async (req, res) => {
   }
 };
 
+const updateAllergyByName = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, severity, duration, triggers } = req.body;
+
+    const existingAllergy = await prisma.allergy.findUnique({
+      where: {
+        name: name,
+        healthCondition: {
+          userId: userId,
+        },
+      },
+    });
+
+    if (!existingAllergy) {
+      return res.status(404).json({ error: 'Allergy not found for the logged-in user.' });
+    }
+
+    const updatedAllergy = await prisma.allergy.update({
+      where: {
+        id: existingAllergy.id,
+      },
+      data: {
+        severity: severity || existingAllergy.severity,
+        duration: duration || existingAllergy.duration,
+        triggers: triggers || existingAllergy.triggers,
+      },
+    });
+
+    res.json({ updatedAllergy });
+  } catch (e) {
+    handleError(res, e, 'Error updating allergy');
+  }
+};
+
 const deleteAllergyById = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -143,10 +178,41 @@ const deleteAllergyById = async (req, res) => {
   }
 };
 
+const deleteAllergyByName = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name } = req.body;
+
+    const existingAllergy = await prisma.allergy.findUnique({
+      where: {
+        name: name,
+        healthCondition: {
+          userId: userId,
+        },
+      },
+    });
+
+    if (!existingAllergy) {
+      return res.status(404).json({ error: 'Allergy not found for the logged-in user.' });
+    }
+
+    await prisma.allergy.delete({
+      where: {
+        id: existingAllergy.id,
+      },
+    });
+
+    res.json({ message: 'Allergy deleted successfully' });
+  } catch (e) {
+    handleError(res, e, 'Error deleting allergy');
+  }
+};
+
 module.exports = {
   addAllergy,
   getAllAllergies,
   getAllergyById,
   updateAllergyById,
   deleteAllergyById,
+  deleteAllergyByName,
 };
