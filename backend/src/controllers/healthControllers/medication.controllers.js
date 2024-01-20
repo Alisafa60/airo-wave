@@ -162,13 +162,15 @@ const updateMedicationByName = async (req, res) => {
     const userId = req.user.id;
     const { name, frequency, dosage, startDate } = req.body;
 
-    // Find the user's medication by name
+    const healthCondition = await prisma.healthCondition.findUnique({
+      where: {
+        userId:userId,
+      }
+    })
     const existingMedication = await prisma.medication.findFirst({
       where: {
-        name: name,
-        healthCondition: {
-          userId: userId,
-        },
+        name:name,
+        healthConditionId: healthCondition.id,
       },
     });
 
@@ -189,6 +191,7 @@ const updateMedicationByName = async (req, res) => {
     });
 
     res.json({ updatedMedication });
+    console.log(req.body);
   } catch (e) {
     handleError(res, e, 'Error updating medication');
   }
