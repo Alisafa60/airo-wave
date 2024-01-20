@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/constants.dart';
 
-void showEditOverlay(BuildContext context, int selectedContainerIndex, void Function() link) {
+void showEditOverlay(
+  BuildContext context,
+  int selectedContainerIndex,
+  TextEditingController allergenController,
+  TextEditingController severityController,
+  TextEditingController durationController,
+  TextEditingController triggersController,
+  TextEditingController medicationController,
+  TextEditingController dosageController,
+  TextEditingController frequencyController,
+  TextEditingController startDateController,
+  TextEditingController conditionController,
+  TextEditingController diagnosisController,
+  TextEditingController symptomsFrequencyController,
+  void Function() link,
+) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -19,7 +34,9 @@ void showEditOverlay(BuildContext context, int selectedContainerIndex, void Func
                           ? 'Edit Allergy'
                           : selectedContainerIndex == 3
                               ? 'Edit Medication'
-                              : 'Edit Respiratory Condition',
+                              : selectedContainerIndex == 4
+                                  ? 'Edit Respiratory Condition'
+                                  : 'Invalid Option',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -35,67 +52,75 @@ void showEditOverlay(BuildContext context, int selectedContainerIndex, void Func
               Column(
                 children: [
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: allergenController,
                     hintText: 'Allergen',
                   ),
+                  SizedBox(height: 10,),
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: severityController,
                     hintText: 'Severity',
                   ),
+                  SizedBox(height: 10,),
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: durationController,
                     hintText: 'Duration',
                   ),
+                  SizedBox(height: 10,),
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: triggersController,
                     hintText: 'Triggers',
                   ),
+                  SizedBox(height: 10,),
                 ],
               ),
             if (selectedContainerIndex == 3)
               Column(
                 children: [
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: medicationController,
                     hintText: 'Medication',
                   ),
+                  SizedBox(height: 10,),
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: dosageController,
                     hintText: 'Dosage',
                   ),
+                  SizedBox(height: 10,),
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: frequencyController,
                     hintText: 'Frequency',
                   ),
+                  SizedBox(height: 10,),
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: startDateController,
                     hintText: 'Start Date',
                   ),
-                  UnderlineInputField(
-                    controller: TextEditingController(),
-                    hintText: 'Health Condition',
-                  ),
+                  SizedBox(height: 10,),
                 ],
               ),
             if (selectedContainerIndex == 4)
               Column(
                 children: [
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: conditionController,
                     hintText: 'Condition',
                   ),
+                  SizedBox(height: 10,),
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: diagnosisController,
                     hintText: 'Diagnosis',
                   ),
+                  SizedBox(height: 10,),
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: symptomsFrequencyController,
                     hintText: 'Symptoms Frequency',
                   ),
+                  SizedBox(height: 10,),
                   UnderlineInputField(
-                    controller: TextEditingController(),
+                    controller: triggersController,
                     hintText: 'Triggers',
                   ),
+                  SizedBox(height: 10,),
                 ],
               ),
             SizedBox(height: 20),
