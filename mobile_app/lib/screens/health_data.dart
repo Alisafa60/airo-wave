@@ -6,6 +6,7 @@ import 'package:mobile_app/requests/allergy_survice.dart';
 import 'package:mobile_app/requests/health_survice.dart';
 import 'package:mobile_app/requests/medication_survice.dart';
 import 'package:mobile_app/requests/respiratory_condition_survice.dart';
+import 'package:mobile_app/widgets/overlay_sheet.dart';
 
 class ShowHealthScreen extends StatefulWidget {
   const ShowHealthScreen({super.key, required this.apiService});
@@ -305,7 +306,11 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                           top: 5,
                           right: 5,
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              showEditOverlay(context, 0, () {
+
+                               });
+                            },
                             child: Container(
                               padding: EdgeInsets.all(10),
                               child: Icon(
@@ -369,7 +374,11 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                           top: 5,
                           right: 5,
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              showEditOverlay(context, 1, () {
+
+                               });
+                            },
                             child: Container(
                               padding: EdgeInsets.all(10),
                               child: Icon(
@@ -435,7 +444,10 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     top: 5,
                     right: 5,
                     child: GestureDetector(
-                      onTap: () {},
+                       onTap: () {
+                        showEditOverlay(context, 2, () {
+                         });
+                      },
                       child: Container(
                         padding: EdgeInsets.all(10),
                         child: Icon(
@@ -505,7 +517,11 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     top: 5,
                     right: 5,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        showEditOverlay(context, 4, () { 
+
+                        });
+                      },
                       child: Container(
                         padding: EdgeInsets.all(10),
                         child: Icon(
@@ -575,12 +591,16 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     top: 5,
                     right: 5,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        showEditOverlay(context, 3, () { 
+
+                        });
+                      },
                       child: Container(
                         padding: EdgeInsets.all(10),
                         child: Icon(
                           Icons.edit_note,
-                          size: 25,
+                          size: 30,
                           color: myGray.withOpacity(0.4),
                         ),
                       ),
