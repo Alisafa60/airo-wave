@@ -6,7 +6,8 @@ import 'package:mobile_app/requests/allergy_survice.dart';
 import 'package:mobile_app/requests/health_survice.dart';
 import 'package:mobile_app/requests/medication_survice.dart';
 import 'package:mobile_app/requests/respiratory_condition_survice.dart';
-import 'package:mobile_app/widgets/overlay_sheet.dart';
+import 'package:mobile_app/widgets/allergy_overlay.dart';
+import 'package:mobile_app/widgets/medication_overlay.dart';
 
 class ShowHealthScreen extends StatefulWidget {
   const ShowHealthScreen({super.key, required this.apiService});
@@ -23,10 +24,17 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
   late AllergySurvice allergySurvice;
   late RespiratoryConditionSurvice respiratorySurvice;
   late MedicationSurvice medicationSurvice;
+
   TextEditingController allergyNameController = TextEditingController();
   TextEditingController allergySeverityController = TextEditingController();
   TextEditingController allergyDurationController = TextEditingController();
   TextEditingController allergyTriggersController = TextEditingController();
+
+  TextEditingController medicationController = TextEditingController();
+  TextEditingController dosageController = TextEditingController();
+  TextEditingController frequencyController = TextEditingController();
+  TextEditingController startDateController = TextEditingController();
+
   Map<String, dynamic>? healthData;
   Map<String, dynamic>? allergyData;
   Map<String, dynamic>? respiratoryData;
@@ -42,7 +50,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
     _loadHealthData();
     _loadAllergy();
     _loadRespiratory();
-    _loadMedicaiton();
+    _loadMedication();
     
   }
 
@@ -82,7 +90,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
     }
   }
 
-  Future<void> _loadMedicaiton() async {
+  Future<void> _loadMedication() async {
     try {
       final Map<String, dynamic> data = await medicationSurvice.getMedication();
       setState(() {
@@ -208,6 +216,28 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       await _loadAllergy();
     } catch (error) {
       print('Error updating allergy: $error');
+    }
+  }
+
+  Future<void> updateMedication({
+    required String name,
+    String? dosage,
+    String? frequency,
+    String? startDate,
+  }) async {
+    try {
+      final Map<String, dynamic> updatedMedication = await medicationSurvice.updateMedication(
+        name: name,
+        dosage: dosage,
+        frequency: frequency,
+        startDate: startDate,
+      );
+
+      print('Medication Updated: $updatedMedication');
+
+      await _loadMedication();
+    } catch (error) {
+      print('Error updating medication: $error');
     }
   }
   
@@ -468,10 +498,9 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     top: 5,
                     right: 5,
                     child: GestureDetector(
-                       onTap: () {
-                          showEditOverlay(
+                      onTap: () {
+                        showEditAllergyOverlay(
                           context,
-                          2,
                           allergyNameController,
                           allergySeverityController,
                           allergyDurationController,
@@ -634,7 +663,26 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     right: 5,
                     child: GestureDetector(
                       onTap: () {
-                     
+                        showEditMedicationOverlay(
+                          context,
+                          medicationController,
+                          dosageController,
+                          frequencyController,
+                          startDateController,
+                          () async {
+                            String name = medicationController.text;
+                            String dosage = dosageController.text;
+                            String frequency = frequencyController.text;
+                            String startDate = startDateController.text;
+
+                            await updateMedication(
+                              name: name,
+                              dosage: dosage,
+                              frequency: frequency,
+                              startDate: startDate,
+                            );
+                          },
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
