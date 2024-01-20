@@ -57,8 +57,8 @@ class MedicationSurvice {
           'startDate': startDate,
         };
 
-        final http.Response response = await apiService.put(
-          '/api/user/health/medication',
+        final http.Response response = await apiService.post(
+          '/api/user/health/medication/edit',
           headers,
           requestBody,
         );

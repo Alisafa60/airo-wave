@@ -56,8 +56,8 @@ class RespiratoryConditionSurvice {
           'triggers': triggers,
         };
 
-        final http.Response response = await apiService.put(
-          '/api/user/health/respiratoryCondition',
+        final http.Response response = await apiService.post(
+          '/api/user/health/respiratoryCondition/edit',
           headers,
           requestBody,
         );

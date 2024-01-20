@@ -56,8 +56,8 @@ class AllergySurvice {
           'triggers': triggers,
         };
 
-        final http.Response response = await apiService.put(
-          '/api/user/health/allergy',
+        final http.Response response = await apiService.post(
+          '/api/user/health/allergy/edit',
           headers,
           requestBody,
         );
