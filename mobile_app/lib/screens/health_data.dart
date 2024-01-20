@@ -23,6 +23,10 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
   late AllergySurvice allergySurvice;
   late RespiratoryConditionSurvice respiratorySurvice;
   late MedicationSurvice medicationSurvice;
+  TextEditingController allergyNameController = TextEditingController();
+  TextEditingController allergySeverityController = TextEditingController();
+  TextEditingController allergyDurationController = TextEditingController();
+  TextEditingController allergyTriggersController = TextEditingController();
   Map<String, dynamic>? healthData;
   Map<String, dynamic>? allergyData;
   Map<String, dynamic>? respiratoryData;
@@ -185,6 +189,29 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
     }
   }
 
+  Future<void> updateAllergy({
+    required String allergen,
+    String? severity,
+    String? duration,
+    String? triggers,
+  }) async {
+    try {
+      final Map<String, dynamic> updatedAllergy = await allergySurvice.updateAllergyByName(
+        allergen: allergen,
+        severity: severity,
+        duration: duration,
+        triggers: triggers,
+      );
+
+      print('Allergy Updated: $updatedAllergy');
+      
+      await _loadAllergy();
+    } catch (error) {
+      print('Error updating allergy: $error');
+    }
+  }
+  
+
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -307,9 +334,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                           right: 5,
                           child: GestureDetector(
                             onTap: () {
-                              showEditOverlay(context, 0, () {
-
-                               });
+                              
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
@@ -375,9 +400,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                           right: 5,
                           child: GestureDetector(
                             onTap: () {
-                              showEditOverlay(context, 1, () {
-
-                               });
+                             
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
@@ -416,6 +439,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                 setState(() {
                   selectedContainerIndex = 2;
                 });
+                
               },
               child: Stack(
                 children: [
@@ -445,8 +469,27 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     right: 5,
                     child: GestureDetector(
                        onTap: () {
-                        showEditOverlay(context, 2, () {
-                         });
+                          showEditOverlay(
+                          context,
+                          2,
+                          allergyNameController,
+                          allergySeverityController,
+                          allergyDurationController,
+                          allergyTriggersController,
+                          () async {
+                            String allergen = allergyNameController.text;
+                            String severity = allergySeverityController.text;
+                            String duration = allergyDurationController.text;
+                            String triggers = allergyTriggersController.text;
+
+                            await updateAllergy(
+                              allergen: allergen,
+                              severity: severity,
+                              duration: duration,
+                              triggers: triggers,
+                            );
+                          },
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -518,9 +561,8 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     right: 5,
                     child: GestureDetector(
                       onTap: () {
-                        showEditOverlay(context, 4, () { 
-
-                        });
+                    
+    
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -592,9 +634,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     right: 5,
                     child: GestureDetector(
                       onTap: () {
-                        showEditOverlay(context, 3, () { 
-
-                        });
+                     
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
