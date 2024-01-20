@@ -8,6 +8,7 @@ import 'package:mobile_app/requests/medication_survice.dart';
 import 'package:mobile_app/requests/respiratory_condition_survice.dart';
 import 'package:mobile_app/widgets/allergy_overlay.dart';
 import 'package:mobile_app/widgets/medication_overlay.dart';
+import 'package:mobile_app/widgets/respiratory_overlay.dart';
 
 class ShowHealthScreen extends StatefulWidget {
   const ShowHealthScreen({super.key, required this.apiService});
@@ -34,6 +35,11 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
   TextEditingController dosageController = TextEditingController();
   TextEditingController frequencyController = TextEditingController();
   TextEditingController startDateController = TextEditingController();
+
+  TextEditingController respiratoryConditionController = TextEditingController();
+  TextEditingController respiratoryDiagnosisController = TextEditingController();
+  TextEditingController respiratorySymptomsFrequencyController = TextEditingController();
+  TextEditingController respiratoryTriggersController = TextEditingController();
 
   Map<String, dynamic>? healthData;
   Map<String, dynamic>? allergyData;
@@ -240,6 +246,29 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       print('Error updating medication: $error');
     }
   }
+
+Future<void> updateRespiratoryCondition({
+    required String condition,
+    String? diagnosis,
+    String? symptomsFrequency,
+    String? triggers,
+  }) async {
+    try {
+      final Map<String, dynamic> updateRespiratoryCondition = await respiratorySurvice.updateRespiratoryCondition(
+        condition: condition,
+        diagnosis: diagnosis,
+        symptomsFrequency: symptomsFrequency,
+        triggers: triggers,
+      );
+
+      print('Medication Updated: $updateRespiratoryCondition');
+
+      await _loadMedication();
+    } catch (error) {
+      print('Error updating medication: $error');
+    }
+  }
+  
   
 
   Widget build(BuildContext context) {
@@ -591,7 +620,26 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
                     child: GestureDetector(
                       onTap: () {
                     
-    
+                        showEditRespiratoryConditionOverlay(
+                        context,
+                        respiratoryConditionController,
+                        respiratoryDiagnosisController,
+                        respiratorySymptomsFrequencyController,
+                        respiratoryTriggersController,
+                        () async {
+                          String condition = respiratoryConditionController.text;
+                          String diagnosis = respiratoryDiagnosisController.text;
+                          String symptomsFrequency = respiratorySymptomsFrequencyController.text;
+                          String triggers = respiratoryTriggersController.text;
+                          await updateRespiratoryCondition(
+                            condition: condition,
+                            diagnosis: diagnosis,
+                            symptomsFrequency: symptomsFrequency,
+                            triggers: triggers,
+                          );
+
+                        },
+                      );
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
