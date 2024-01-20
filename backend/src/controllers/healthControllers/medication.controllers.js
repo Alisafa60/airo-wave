@@ -157,6 +157,43 @@ const updateMedicationById = async (req, res) => {
     }
 };
 
+const updateMedicationByName = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, frequency, dosage, startDate } = req.body;
+
+    // Find the user's medication by name
+    const existingMedication = await prisma.medication.findFirst({
+      where: {
+        name: name,
+        healthCondition: {
+          userId: userId,
+        },
+      },
+    });
+
+    if (!existingMedication) {
+      return res.status(404).json({ error: 'Medication not found for the logged-in user.' });
+    }
+
+    // Update the medication
+    const updatedMedication = await prisma.medication.update({
+      where: {
+        id: existingMedication.id,
+      },
+      data: {
+        frequency: frequency || existingMedication.frequency,
+        dosage: dosage || existingMedication.dosage,
+        startDate: startDate || existingMedication.startDate,
+      },
+    });
+
+    res.json({ updatedMedication });
+  } catch (e) {
+    handleError(res, e, 'Error updating medication');
+  }
+};
+
 const deleteMedicationById = async (req, res) => {
   try {
       const userId = req.user.id;
@@ -193,4 +230,5 @@ module.exports = {
   getMedicationById,
   updateMedicationById,
   deleteMedicationById,
+  updateMedicationByName,
 };
