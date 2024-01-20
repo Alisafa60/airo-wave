@@ -118,12 +118,13 @@ const updateRespiratoryConditionByName = async (req, res) => {
       const userId = req.user.id;
       const { name, diagnosis, symptomsFrequency, triggers } = req.body;
   
-        const healthCondition = await prisma.healthCondition.findUnique({
+      const healthCondition = await prisma.healthCondition.findUnique({
         where: {
-          userId:userId,
+          userId: userId,
         }
-      })
-      const existingRespiratoryCondition = await prisma.respiratoryCondition.findFirst({
+      });
+  
+      let existingRespiratoryCondition = await prisma.respiratoryCondition.findFirst({
         where: {
           name: name,
           healthConditionId: healthCondition.id,
@@ -131,26 +132,36 @@ const updateRespiratoryConditionByName = async (req, res) => {
       });
   
       if (!existingRespiratoryCondition) {
-        return res.status(404).json({ error: 'Respiratory condition not found for the logged-in user.' });
+        // If the respiratory condition doesn't exist, create a new one
+        existingRespiratoryCondition = await prisma.respiratoryCondition.create({
+          data: {
+            name: name,
+            diangnosis: diagnosis,
+            symptomsFrequency: symptomsFrequency, 
+            triggers: triggers, 
+            healthConditionId: healthCondition.id,
+          },
+        });
+      } else {
+        // If the respiratory condition exists, update it
+        existingRespiratoryCondition = await prisma.respiratoryCondition.update({
+          where: {
+            id: existingRespiratoryCondition.id,
+          },
+          data: {
+            diangnosis: diagnosis || existingRespiratoryCondition.diangnosis,
+            symptomsFrequency: symptomsFrequency || existingRespiratoryCondition.symptomsFrequency,
+            triggers: triggers || existingRespiratoryCondition.triggers,
+          },
+        });
       }
   
-      const updatedRespiratoryCondition = await prisma.respiratoryCondition.update({
-        where: {
-          id: existingRespiratoryCondition.id,
-        },
-        data: {
-          diangnosis: diagnosis || existingRespiratoryCondition.diangnosis,
-          symptomsFrequency: symptomsFrequency || existingRespiratoryCondition.symptomsFrequency,
-          triggers: triggers || existingRespiratoryCondition.triggers,
-        },
-      });
-    
-      res.json({ updatedRespiratoryCondition });
+      res.json({ updatedRespiratoryCondition: existingRespiratoryCondition });
       console.log(req.body);
     } catch (e) {
       handleError(res, e, 'Error updating respiratory condition');
     }
-};
+  };
   
   
 
