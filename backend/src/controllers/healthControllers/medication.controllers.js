@@ -164,33 +164,43 @@ const updateMedicationByName = async (req, res) => {
 
     const healthCondition = await prisma.healthCondition.findUnique({
       where: {
-        userId:userId,
+        userId: userId,
       }
-    })
-    const existingMedication = await prisma.medication.findFirst({
+    });
+
+    let existingMedication = await prisma.medication.findFirst({
       where: {
-        name:name,
+        name: name,
         healthConditionId: healthCondition.id,
       },
     });
 
     if (!existingMedication) {
-      return res.status(404).json({ error: 'Medication not found for the logged-in user.' });
+      // If the medication doesn't exist, create a new one
+      existingMedication = await prisma.medication.create({
+        data: {
+          name: name,
+          frequency: frequency, 
+          dosage: dosage, 
+          startDate: startDate, 
+          healthConditionId: healthCondition.id,
+        },
+      });
+    } else {
+      // If the medication exists, update it
+      existingMedication = await prisma.medication.update({
+        where: {
+          id: existingMedication.id,
+        },
+        data: {
+          frequency: frequency || existingMedication.frequency,
+          dosage: dosage || existingMedication.dosage,
+          startDate: startDate || existingMedication.startDate,
+        },
+      });
     }
 
-    // Update the medication
-    const updatedMedication = await prisma.medication.update({
-      where: {
-        id: existingMedication.id,
-      },
-      data: {
-        frequency: frequency || existingMedication.frequency,
-        dosage: dosage || existingMedication.dosage,
-        startDate: startDate || existingMedication.startDate,
-      },
-    });
-
-    res.json({ updatedMedication });
+    res.json({ updatedMedication: existingMedication });
     console.log(req.body);
   } catch (e) {
     handleError(res, e, 'Error updating medication');
