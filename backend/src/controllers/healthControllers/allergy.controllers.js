@@ -116,14 +116,16 @@ const updateAllergyById = async (req, res) => {
 const updateAllergyByName = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { name, severity, duration, triggers } = req.body;
-
-    const existingAllergy = await prisma.allergy.findUnique({
+    const { allergen, severity, duration, triggers } = req.body;
+    const healthCondition = await prisma.healthCondition.findUnique({
+      where:{
+        userId:userId
+      }
+    });
+    const existingAllergy = await prisma.allergy.findFirst({
       where: {
-        name: name,
-        healthCondition: {
-          userId: userId,
-        },
+        allergen: allergen,
+        healthConditionId: healthCondition.id,
       },
     });
 
@@ -143,6 +145,7 @@ const updateAllergyByName = async (req, res) => {
     });
 
     res.json({ updatedAllergy });
+    console.log(req.body);
   } catch (e) {
     handleError(res, e, 'Error updating allergy');
   }
