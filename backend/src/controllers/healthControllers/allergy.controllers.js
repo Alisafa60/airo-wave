@@ -118,11 +118,12 @@ const updateAllergyByName = async (req, res) => {
     const userId = req.user.id;
     const { allergen, severity, duration, triggers } = req.body;
     const healthCondition = await prisma.healthCondition.findUnique({
-      where:{
-        userId:userId
-      }
+      where: {
+        userId: userId,
+      },
     });
-    const existingAllergy = await prisma.allergy.findFirst({
+
+    let existingAllergy = await prisma.allergy.findFirst({
       where: {
         allergen: allergen,
         healthConditionId: healthCondition.id,
@@ -130,27 +131,37 @@ const updateAllergyByName = async (req, res) => {
     });
 
     if (!existingAllergy) {
-      return res.status(404).json({ error: 'Allergy not found for the logged-in user.' });
+      // If the allergy doesn't exist, create a new one
+      existingAllergy = await prisma.allergy.create({
+        data: {
+          allergen: allergen,
+          severity: severity, 
+          duration: duration, 
+          triggers: triggers, 
+          healthConditionId: healthCondition.id,
+        },
+      });
+    } else {
+      // If the allergy exists, update it
+      existingAllergy = await prisma.allergy.update({
+        where: {
+          id: existingAllergy.id,
+        },
+        data: {
+          severity: severity || existingAllergy.severity,
+          duration: duration || existingAllergy.duration,
+          triggers: triggers || existingAllergy.triggers,
+        },
+      });
     }
 
-    const updatedAllergy = await prisma.allergy.update({
-      where: {
-        id: existingAllergy.id,
-      },
-      data: {
-        severity: severity || existingAllergy.severity,
-        duration: duration || existingAllergy.duration,
-        triggers: triggers || existingAllergy.triggers,
-      },
-    });
-
-    res.json({ updatedAllergy });
+    res.json({ updatedAllergy: existingAllergy });
     console.log(req.body);
   } catch (e) {
     handleError(res, e, 'Error updating allergy');
+    console.log(req.body);
   }
 };
-
 const deleteAllergyById = async (req, res) => {
   try {
     const userId = req.user.id;
