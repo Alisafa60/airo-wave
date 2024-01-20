@@ -36,4 +36,43 @@ class RespiratoryConditionSurvice {
     const FlutterSecureStorage storage = FlutterSecureStorage();
     return await storage.read(key: 'jwtToken');
   }
+
+  Future<Map<String, dynamic>> updateRespiratoryCondition({
+    required String condition,
+    String? diagnosis,
+    String? symptomsFrequency,
+    String? triggers,
+  }) async {
+    String? token = await _getToken();
+
+    if (token != null) {
+      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+      
+      try {
+        final Map<String, dynamic> requestBody = {
+          'condition': condition,
+          'diagnosis': diagnosis,
+          'symptomsFrequency': symptomsFrequency,
+          'triggers': triggers,
+        };
+
+        final http.Response response = await apiService.put(
+          '/api/user/health/respiratory-condition',
+          headers,
+          requestBody,
+        );
+        print(requestBody);
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> updatedRespiratoryCondition = json.decode(response.body) as Map<String, dynamic>;
+          return updatedRespiratoryCondition;
+        } else {
+          throw Exception('Failed to update respiratory condition. Status code: ${response.statusCode}, Body: ${response.body}, response: ${response}');
+        }
+      } catch (error) {
+        throw Exception('Error during respiratory condition update API call: $error');
+      }
+    } else {
+      throw Exception('Token is null. Unable to make the API request.');
+    }
+  }
 }
