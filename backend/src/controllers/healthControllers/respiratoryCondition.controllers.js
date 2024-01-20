@@ -118,12 +118,15 @@ const updateRespiratoryConditionByName = async (req, res) => {
       const userId = req.user.id;
       const { name, diagnosis, symptomsFrequency, triggers } = req.body;
   
-      const existingRespiratoryCondition = await prisma.respiratoryCondition.findUnique({
+        const healthCondition = await prisma.healthCondition.findUnique({
+        where: {
+          userId:userId,
+        }
+      })
+      const existingRespiratoryCondition = await prisma.respiratoryCondition.findFirst({
         where: {
           name: name,
-          healthCondition: {
-            userId: userId,
-          },
+          healthConditionId: healthCondition.id,
         },
       });
   
@@ -136,13 +139,14 @@ const updateRespiratoryConditionByName = async (req, res) => {
           id: existingRespiratoryCondition.id,
         },
         data: {
-          diagnosis: diagnosis || existingRespiratoryCondition.diagnosis,
+          diangnosis: diagnosis || existingRespiratoryCondition.diangnosis,
           symptomsFrequency: symptomsFrequency || existingRespiratoryCondition.symptomsFrequency,
           triggers: triggers || existingRespiratoryCondition.triggers,
         },
       });
-  
+    
       res.json({ updatedRespiratoryCondition });
+      console.log(req.body);
     } catch (e) {
       handleError(res, e, 'Error updating respiratory condition');
     }
@@ -184,13 +188,15 @@ const deleteRespiratoryConditionByName = async (req, res) => {
     try {
       const userId = req.user.id;
       const { name } = req.body;
-  
+      const healthCondition = await prisma.healthCondition.findUnique({
+        where: {
+          userId:userId,
+        }
+      })
       const existingRespiratoryCondition = await prisma.respiratoryCondition.findUnique({
         where: {
           name: name,
-          healthCondition: {
-            userId: userId,
-          },
+          healthConditionId: healthCondition.id,
         },
       });
   
