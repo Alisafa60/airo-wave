@@ -113,6 +113,43 @@ const updateRespiratoryConditionById = async (req, res) => {
     }
 };
 
+const updateRespiratoryConditionByName = async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { name, diagnosis, symptomsFrequency, triggers } = req.body;
+  
+      const existingRespiratoryCondition = await prisma.respiratoryCondition.findUnique({
+        where: {
+          name: name,
+          healthCondition: {
+            userId: userId,
+          },
+        },
+      });
+  
+      if (!existingRespiratoryCondition) {
+        return res.status(404).json({ error: 'Respiratory condition not found for the logged-in user.' });
+      }
+  
+      const updatedRespiratoryCondition = await prisma.respiratoryCondition.update({
+        where: {
+          id: existingRespiratoryCondition.id,
+        },
+        data: {
+          diagnosis: diagnosis || existingRespiratoryCondition.diagnosis,
+          symptomsFrequency: symptomsFrequency || existingRespiratoryCondition.symptomsFrequency,
+          triggers: triggers || existingRespiratoryCondition.triggers,
+        },
+      });
+  
+      res.json({ updatedRespiratoryCondition });
+    } catch (e) {
+      handleError(res, e, 'Error updating respiratory condition');
+    }
+};
+  
+  
+
 const deleteRespiratoryConditionById = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -143,10 +180,44 @@ const deleteRespiratoryConditionById = async (req, res) => {
     }
 };
 
+const deleteRespiratoryConditionByName = async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { name } = req.body;
+  
+      const existingRespiratoryCondition = await prisma.respiratoryCondition.findUnique({
+        where: {
+          name: name,
+          healthCondition: {
+            userId: userId,
+          },
+        },
+      });
+  
+      if (!existingRespiratoryCondition) {
+        return res.status(404).json({ error: 'Respiratory condition not found for the logged-in user.' });
+      }
+  
+      await prisma.respiratoryCondition.delete({
+        where: {
+          id: existingRespiratoryCondition.id,
+        },
+      });
+  
+      res.json({ message: 'Respiratory condition deleted successfully' });
+    } catch (e) {
+      handleError(res, e, 'Error deleting respiratory condition');
+    }
+};
+  
+  
+
 module.exports = {
     addRespiratoryCondition,
     getAllRespiratoryConditions,
     getRespiratoryConditionById,
     updateRespiratoryConditionById,
     deleteRespiratoryConditionById,
+    deleteRespiratoryConditionByName,
+    updateRespiratoryConditionByName,
 };

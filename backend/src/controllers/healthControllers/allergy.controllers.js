@@ -215,4 +215,5 @@ module.exports = {
   updateAllergyById,
   deleteAllergyById,
   deleteAllergyByName,
+  updateAllergyByName,
 };
