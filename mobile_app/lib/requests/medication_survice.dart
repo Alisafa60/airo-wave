@@ -39,7 +39,7 @@ class MedicationSurvice {
   }
 
   Future<Map<String, dynamic>> updateMedication({
-    required String medication,
+    required String name,
     String? dosage,
     String? frequency,
     String? startDate,
@@ -51,7 +51,7 @@ class MedicationSurvice {
       
       try {
         final Map<String, dynamic> requestBody = {
-          'medication': medication,
+          'name': name,
           'dosage': dosage,
           'frequency': frequency,
           'startDate': startDate,
