@@ -1,12 +1,28 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const { Serial } = require('serialport');
+const Readline = require('@serialport/parser-readline');
 const {authMiddleware} = require('./middlewares/auth.middleware');
 const fs = require('fs/promises'); 
 require("dotenv").config();
 const path = require('path');
+const bodyParser = require('body-parser');
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
+app.use(bodyParser.text());
+
+app.post('/savefile', async (req, res) => {
+  const filePath = './src/recievedEnviromentalFiles/response_data.txt';
+
+  try {
+    await fs.writeFile(filePath, req.body);
+    res.send('File saved successfully');
+  } catch (error) {
+    console.error('Error saving file:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 const serveFilesFromUploads = async (req, res, next) => {
   try {
