@@ -26,7 +26,7 @@ class _RecordActivityScreen extends State<RecordActivityScreen> {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.close, size: 30),
-          onPressed: () {},
+          onPressed: () { Navigator.pop(context);},
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),

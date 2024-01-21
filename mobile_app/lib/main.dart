@@ -40,18 +40,18 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(255, 115, 15, 1)),
         useMaterial3: true,
       ),
-      //  home: const HomeScreen(),
-      initialRoute: '/',
-      routes: {
-        '/signup': (context) => SignupScreen(apiService: apiService),
-        '/': (context) => LoginScreen(apiService: apiService),
-        '/home': (context) => HomeScreen(),
-        '/home/profile': (context) => UserProfileScreen(apiService: apiService),
-        '/home/health': (context) => UserHealthScreen(apiService: apiService),
-        '/medcat': (context) => MedCatScreen(),
-        '/maps': (context) => MapsScreen(),
-        '/record':(context) => RecordActivityScreen(),
-      },
+       home: UserHealthScreen(apiService: apiService,),
+      // initialRoute: '/',
+      // routes: {
+      //   '/signup': (context) => SignupScreen(apiService: apiService),
+      //   '/': (context) => LoginScreen(apiService: apiService),
+      //   '/home': (context) => HomeScreen(),
+      //   '/home/profile': (context) => UserProfileScreen(apiService: apiService),
+      //   '/home/health': (context) => UserHealthScreen(apiService: apiService),
+      //   '/medcat': (context) => MedCatScreen(),
+      //   '/maps': (context) => MapsScreen(),
+      //   '/record':(context) => RecordActivityScreen(),
+      // },
       
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -8,9 +10,12 @@ import 'package:mobile_app/models/respiratory_condition.model.dart';
 import 'package:mobile_app/widgets/allergy_fields.dart';
 import 'package:mobile_app/widgets/health_conditions.dart';
 import 'package:mobile_app/widgets/medications.dart';
-import 'package:mobile_app/api_survice.dart';
+import 'package:mobile_app/api_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_app/widgets/respiratory_fields.dart';
+ import 'dart:convert';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 
@@ -250,11 +255,11 @@ class _UserHealthState extends State<UserHealthScreen> {
                     child: UnderlineInputField(
                       controller: bloodTypeController,
                       hintText: ' Blood Type',
-                      onChanged: (value) {
-                        setState(() {
-                          isBloodTypeValid = isValidBloodType(value);
-                        });
-                      },
+                      // onChanged: (value) {
+                      //   setState(() {
+                      //     isBloodTypeValid = isValidBloodType(value);
+                      //   });
+                      // },
                     ),
                   ),
                 ],

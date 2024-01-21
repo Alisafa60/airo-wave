@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_app/widgets/bottom_bar.dart';
 
 class MedCatScreen extends StatefulWidget {
   const MedCatScreen({Key? key}) : super(key: key);
@@ -314,51 +315,9 @@ class _MedCatScreenState extends State<MedCatScreen> {
 
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'lib/assets/icons/home-filled-gray.svg',
-              height: 35,
-              width: 35,
-            ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'lib/assets/icons/MedCat-orange.svg',
-              height: 35,
-              width: 35,
-            ),
-            label: 'MedCat',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'lib/assets/icons/map-location.svg',
-              height: 35,
-              width: 35,
-            ),
-            label: 'Maps',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'lib/assets/icons/activity-waves.svg',
-              height: 35,
-              width: 35,
-            ),
-            label: 'Activities',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'lib/assets/icons/community.svg',
-              height: 35,
-              width: 35,
-            ),
-            label: 'Community',
-          ),
-        ],
-      ),
+    bottomNavigationBar: CustomBottomNavigationBar(
+        selectedIndex: 1, 
+     ),
     );
   }
 }

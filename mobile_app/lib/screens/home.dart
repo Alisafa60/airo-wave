@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobile_app/utils/handle_bar_tabbed.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 
 class HomeScreen extends StatelessWidget{
@@ -195,9 +194,8 @@ class HomeScreen extends StatelessWidget{
           ],
         ),
       ),
-
-     bottomNavigationBar: CustomBottomNavigationBar(
-        selectedIndex: 0, 
+       bottomNavigationBar: CustomBottomNavigationBar(
+        selectedIndex: 1, 
      ),
     );
   }
@@ -206,21 +204,25 @@ class HomeScreen extends StatelessWidget{
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 200, 
+          height: 200, // Adjust the height as needed
           child: Column(
             children: [
+              // Add your notification content here
               ListTile(
                 title: const Text('Notification 1'),
                 onTap: () {
-                  Navigator.pop(context); 
+                  // Handle the tap on the first notification
+                  Navigator.pop(context); // Close the overlay
                 },
               ),
               ListTile(
                 title: const Text('Notification 2'),
                 onTap: () {
-                  Navigator.pop(context); 
+                  // Handle the tap on the second notification
+                  Navigator.pop(context); // Close the overlay
                 },
               ),
+              // Add more notifications as needed
             ],
           ),
         );

@@ -4,7 +4,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mobile_app/api_survice.dart';
+import 'package:mobile_app/api_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';

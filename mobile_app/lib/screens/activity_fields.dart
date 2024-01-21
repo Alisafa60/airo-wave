@@ -101,7 +101,6 @@ class ActivityFieldsScreen  extends StatelessWidget{
                     ),
                   ),
                 ),
-               
               ],
             ),
           ],
