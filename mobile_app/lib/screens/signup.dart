@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/api_survice.dart';
+import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -42,12 +42,13 @@ class _SignupScreenState extends State<SignupScreen> {
       'type': userType,
     };
     print(requestBody);
-
+    final BuildContext currentContext = context;
     try{
       final http.Response response = await widget.apiService.post1('/auth/register', requestBody);
       if (response.statusCode == 200){
         final Map<String, dynamic>data = jsonDecode(response.body);
         print('Login successful: $data');
+        Navigator.pushReplacementNamed(currentContext, '/login');
       }else{
         setState(() {
           errorText = 'Invalid email/password';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/api_survice.dart';
+import 'package:mobile_app/api_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -20,21 +20,25 @@ class _LoginScreenState extends State<LoginScreen> {
   
 
   Future<void> loginUser() async {
+
     final String email = emailController.text;
     final String password = passwordController.text;
-    
     final Map<String, String> requestBody = {'email': email, 'password': password};
     print(requestBody);
+    final BuildContext currentContext = context;
+
     try {
       final http.Response response = await widget.apiService.post1('/auth/login', requestBody);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         print('Login successful: $data');
-
         final String? token = data['token'];
+
         if (token != null && token.isNotEmpty) {
           await saveToken(token);
+          Navigator.pushReplacementNamed(currentContext, '/home');
+
         } else {
           print('Invalid or empty token received.');
         }
@@ -54,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final FlutterSecureStorage storage = FlutterSecureStorage();
       await storage.write(key: 'jwtToken', value: token);
       print('Token saved successfully: $token');
+
     } catch (error) {
       print('Error saving token: $error');
     }

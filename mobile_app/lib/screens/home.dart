@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_app/utils/handle_bar_tabbed.dart';
+import 'package:mobile_app/widgets/bottom_bar.dart';
 
 class HomeScreen extends StatelessWidget{
   const HomeScreen({super.key});
@@ -194,36 +196,9 @@ class HomeScreen extends StatelessWidget{
         ),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/home-filled.svg',
-            height: 35, width: 35,),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/MedCat.svg',
-            height: 35, width: 35,),
-            label: 'MedCat',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/map-location.svg',
-            height: 35, width: 35,),
-            label: 'Maps',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/activity-waves.svg',
-            height: 35, width: 35,),
-            label: 'Activities',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/community.svg',
-            height: 35, width: 35,),
-            label: 'Community',
-          ),
-        ]),
-
+     bottomNavigationBar: CustomBottomNavigationBar(
+        selectedIndex: 0, 
+     ),
     );
   }
    void _showNotificationOverlay(BuildContext context) {
@@ -231,25 +206,21 @@ class HomeScreen extends StatelessWidget{
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 200, // Adjust the height as needed
+          height: 200, 
           child: Column(
             children: [
-              // Add your notification content here
               ListTile(
                 title: const Text('Notification 1'),
                 onTap: () {
-                  // Handle the tap on the first notification
-                  Navigator.pop(context); // Close the overlay
+                  Navigator.pop(context); 
                 },
               ),
               ListTile(
                 title: const Text('Notification 2'),
                 onTap: () {
-                  // Handle the tap on the second notification
-                  Navigator.pop(context); // Close the overlay
+                  Navigator.pop(context); 
                 },
               ),
-              // Add more notifications as needed
             ],
           ),
         );
