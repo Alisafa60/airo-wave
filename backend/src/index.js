@@ -1,7 +1,5 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const { Serial } = require('serialport');
-const Readline = require('@serialport/parser-readline');
 const {authMiddleware} = require('./middlewares/auth.middleware');
 const fs = require('fs/promises'); 
 require("dotenv").config();
@@ -61,9 +59,10 @@ const heartRate = require('./routes/heartRate.routes');
 const stress = require('./routes/stress.routes');
 const userRoutes = require('./routes/createRoutes.controllers');
 const device = require('./routes/device.routes');
-
+const sensorRoutes = require('./routes/sensor.routes');
 
 app.use('/auth', authRoutes);
+app.use('/api', sensorRoutes);
 app.use('/api', authMiddleware, imageRoutes);
 app.use('/api', authMiddleware, allergyRoutes);
 app.use('/api', authMiddleware, healtRoutes);
