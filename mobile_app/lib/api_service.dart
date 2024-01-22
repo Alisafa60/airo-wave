@@ -101,5 +101,18 @@ class ApiService {
     }
   }
 
+  Future<http.Response> getSensor(String path) async {
+    final Uri uri = Uri.parse('$baseUrl$path');
+
+    try {
+      final http.Response response = await http.get(
+        uri,
+      );
+      return response;
+    } catch (error) {
+      throw Exception('Error during API call: $error');
+    }
+  }
+
 }
 
