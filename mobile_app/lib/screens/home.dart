@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/requests/sensor_request.dart';
+import 'package:mobile_app/utils/co2_voc_color.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,6 +19,8 @@ class HomeScreen extends StatefulWidget {
 class _MyHomeScreen extends State<HomeScreen> {
   late SensorService sensorService;
   Map<String, dynamic>? healthData;
+  late Timer sensorUpdateTimer;
+
 
   @override
   void initState() {
@@ -41,7 +46,19 @@ class _MyHomeScreen extends State<HomeScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     double appBarHeight = AppBar().preferredSize.height;
     double bottomNavBarHeight = kBottomNavigationBarHeight;
-    
+    int co2Value = healthData?['lastSensorData']?['co2'] ?? 0;
+    int vocValue = healthData?['lastSensorData']?['voc'] ?? 0;
+
+    Color statusColor = getStatusColor(
+      co2Value > vocValue ? co2Value : vocValue,
+      co2Value > vocValue ? 'co2' : 'voc',
+    );
+
+    String statusText = getStatusText(
+      co2Value > vocValue ? co2Value : vocValue,
+      co2Value > vocValue ? 'co2' : 'voc',
+  );
+
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -264,18 +281,16 @@ class _MyHomeScreen extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-
-                             
-                              SizedBox(height: 10,),
-                              Text(
-                                'Good',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: secondaryColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            SizedBox(height: 10,),
+                            Text(
+                              statusText,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: statusColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
                               ),
+                            ),
                           ]),
                           ),
                         ),
