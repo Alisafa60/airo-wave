@@ -389,24 +389,24 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   
                                   SizedBox(width: 10,),
                                   Container(
-                                      height: 20,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                        color: secondaryColor,
-                                        border: Border.all(color: myGray.withOpacity(0.3), width: 1),
-                                        borderRadius: BorderRadius.circular(15)
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                        'Good',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
+                                  height: 20,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    color: secondaryColor,
+                                    border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                                    borderRadius: BorderRadius.circular(15)
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                    'Good',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
                                       ),
                                     ),
+                                  ),
+                                ),
                             ],
                               ),
                               SizedBox(height: 5,),
