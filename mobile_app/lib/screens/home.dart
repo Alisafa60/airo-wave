@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'package:mobile_app/requests/air_quality.dart';
+import 'package:mobile_app/requests/environmental_survice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_app/api_service.dart';
@@ -20,15 +21,21 @@ class _MyHomeScreen extends State<HomeScreen> {
   late SensorService sensorService;
   Map<String, dynamic>? healthData;
   late Timer sensorUpdateTimer;
+  late EnviromentalService enviromentalService;
+  double latitude = 48.8566;
+  double longitude = 2.3522;
+  
 
   @override
   void initState() {
     super.initState();
-    sensorService = SensorService(widget.apiService);
-    _loadSensor();
-    sensorUpdateTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
-      _loadSensor();
-    });
+    // sensorService = SensorService(widget.apiService);
+    // _loadSensor();
+    // sensorUpdateTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
+    //   _loadSensor();
+    // });
+    enviromentalService = EnviromentalService(widget.apiService);
+    _fetchAndPostAirQualityData();
   }
 
   @override
@@ -48,6 +55,19 @@ class _MyHomeScreen extends State<HomeScreen> {
       print('Error loading health data: $error');
     }
   }
+   Future<void> _fetchAndPostAirQualityData() async {
+    try {
+
+      await enviromentalService.fetchAirQualityDataAndPost(
+        latitude,
+        longitude,
+      );
+    } catch (error) {
+      print('Error fetching and posting air quality data: $error');
+    }
+  }
+
+  
 
   @override
   Widget build(BuildContext context){
@@ -66,8 +86,7 @@ class _MyHomeScreen extends State<HomeScreen> {
       co2Value > vocValue ? co2Value : vocValue,
       co2Value > vocValue ? 'co2' : 'voc',
   );
-
-
+  
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar:  PreferredSize(
@@ -378,7 +397,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       ),
                                       SizedBox(width: 10,),
                                       Text(
-                                      '78',
+                                      '',
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -437,14 +456,11 @@ class _MyHomeScreen extends State<HomeScreen> {
                                         ),
                                       SizedBox(height: 17,),
                                       Text(
-                                      '${healthData?['lastSensorData']?['co2'] ?? ''}',
+                                      '',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
-                                        color: getStatusColor(
-                                          healthData?['lastSensorData']?['co2'] ?? 0,
-                                          'co2',
-                                        ),
+                                        
                                       ),
                                     ),
                                   ],
@@ -495,14 +511,11 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        '${healthData?['lastSensorData']?['voc'] ?? ''}', 
+                                        '', 
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          color: getStatusColor(
-                                          healthData?['lastSensorData']?['voc'] ?? 0,
-                                          'voc',
-                                          )
+                                          
                                         ),
                                       ),
                                     ],
@@ -536,14 +549,11 @@ class _MyHomeScreen extends State<HomeScreen> {
                                         ),
                                       SizedBox(height: 17,),
                                       Text(
-                                      '${healthData?['lastSensorData']?['co2'] ?? ''}',
+                                      '',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
-                                        color: getStatusColor(
-                                          healthData?['lastSensorData']?['co2'] ?? 0,
-                                          'co2',
-                                        ),
+                                        
                                       ),
                                     ),
                                   ],
@@ -594,14 +604,11 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        '${healthData?['lastSensorData']?['voc'] ?? ''}', 
+                                        '', 
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          color: getStatusColor(
-                                          healthData?['lastSensorData']?['voc'] ?? 0,
-                                          'voc',
-                                          )
+                                          
                                         ),
                                       ),
                                     ],
@@ -611,16 +618,24 @@ class _MyHomeScreen extends State<HomeScreen> {
                             ),
                             
                             SizedBox(height: 14,),
-                            Row(
+                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   'Dominant Polutant',
-                                
                                   style: TextStyle(
                                     color: myGray,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  '', 
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    
                                   ),
                                 ),
                               ],
