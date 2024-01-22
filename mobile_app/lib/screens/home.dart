@@ -11,7 +11,7 @@ import 'package:mobile_app/widgets/bottom_bar.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.apiService});
   final ApiService apiService;
-
+  
   @override
   State<HomeScreen> createState() => _MyHomeScreen();
 }
@@ -21,12 +21,20 @@ class _MyHomeScreen extends State<HomeScreen> {
   Map<String, dynamic>? healthData;
   late Timer sensorUpdateTimer;
 
-
   @override
   void initState() {
     super.initState();
     sensorService = SensorService(widget.apiService);
     _loadSensor();
+    sensorUpdateTimer = Timer.periodic(Duration(minutes: 10), (Timer timer) {
+      _loadSensor();
+    });
+  }
+
+  @override
+  void dispose() {
+    sensorUpdateTimer.cancel();
+    super.dispose();
   }
 
   Future<void> _loadSensor() async {
@@ -99,7 +107,9 @@ class _MyHomeScreen extends State<HomeScreen> {
               color: const Color.fromRGBO(255, 252, 252, 1),
               child: Column(
                 children: [
+                  SizedBox(height: 12,),
                   Container(
+                    
                     color: const Color.fromARGB(255, 211, 211, 211),
                     height: 1.5,
                   ),
@@ -167,19 +177,19 @@ class _MyHomeScreen extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 15,),
                   Container(
-                    width: 330,
+                    width: 360,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(131, 148, 171, 0.16),
+                      color: Color.fromRGBO(189, 193, 198, 0.5),
                       borderRadius: BorderRadius.circular(10), 
                     ),
                   ),
                   const SizedBox(height: 10,),
                   Container(
-                    width: 330,
+                    width: 360,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(131, 148, 171, 0.16),
+                      color: Color.fromRGBO(189, 193, 198, 0.5),
                       borderRadius: BorderRadius.circular(10), 
                     ),
                   )
@@ -198,7 +208,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                         child: Container(
                           height: 179,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(131, 148, 171, 0.16),
+                            color: Color.fromRGBO(189, 193, 198, 0.5),
                             borderRadius: BorderRadius.circular(15), 
                           ),
                           child: Padding(
@@ -229,14 +239,17 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       SvgPicture.asset('lib/assets/icons/carbon-dioxide.svg', height: 50, width: 50,),
                                       SizedBox(height: 10,),
                                       Text(
-                                        '${healthData?['lastSensorData']?['co2'] ?? ''}',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          color: myGray.withOpacity(0.95),
+                                      '${healthData?['lastSensorData']?['co2'] ?? ''}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: getStatusColor(
+                                          healthData?['lastSensorData']?['co2'] ?? 0,
+                                          'co2',
                                         ),
                                       ),
-                                    ],
+                                    ),
+                                  ],
                                   ),
                                 ),
                                 Container(
@@ -257,14 +270,29 @@ class _MyHomeScreen extends State<HomeScreen> {
                                         ),
                                       child: Padding( 
                                         padding: EdgeInsets.all(7),
-                                        child: Text(
-                                        'VoC',
-                                          style: TextStyle(
-                                            fontSize: 14,
+                                       child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                          'V',
+                                            style: TextStyle(
+                                            fontSize: 16,
                                             fontWeight: FontWeight.w600,
-                                            color: myGray.withOpacity(0.95),
+                                            color: myGray.withOpacity(1),
+                                            ),
                                           ),
-                                        ),
+                                          SizedBox(width: 0,),
+                                          SvgPicture.asset('lib/assets/icons/molecule.svg', height: 25, width: 25,),
+                                          Text(
+                                          'C',
+                                            style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: myGray.withOpacity(1),
+                                            ),
+                                          ),
+                                        ],
+                                       ),
                                         ),
                                       ),
                                       SizedBox(height: 14),
@@ -273,7 +301,10 @@ class _MyHomeScreen extends State<HomeScreen> {
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          color: myGray.withOpacity(0.95),
+                                          color: getStatusColor(
+                                          healthData?['lastSensorData']?['voc'] ?? 0,
+                                          'voc',
+                                          )
                                         ),
                                       ),
                                     ],
@@ -300,7 +331,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                         child: Container(
                           height: 179,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(131, 148, 171, 0.16),
+                            color: Color.fromRGBO(189, 193, 198, 0.5),
                             borderRadius: BorderRadius.circular(15), 
                           ),
                         ),
@@ -314,23 +345,12 @@ class _MyHomeScreen extends State<HomeScreen> {
                         child: Container(
                           height: 179,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(131, 148, 171, 0.16),
+                            color: Color.fromRGBO(189, 193, 198, 0.5),
                             borderRadius: BorderRadius.circular(15), 
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Container(
-                          height: 179,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(131, 148, 171, 0.16),
-                            borderRadius: BorderRadius.circular(15), 
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                    ])
                 ],
               )
             ),
