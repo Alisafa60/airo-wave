@@ -120,7 +120,6 @@ model Device{
   sleepData               SleepData[]
   stressData              StressData[]
   userLocations           UserLocation[]
-  enviromentalHealthData  EnviromentalHealthData[]
   userId                  Int
   user                    User                   @relation(fields: [userId], references: [id])
   heartRateData           HeartRateData[]
@@ -193,7 +192,6 @@ model UserLocation {
   stress                  StressData[]
   sleep                   SleepData[]
   createdAt               DateTime                                 @default(now())
-  enviromentalHealthData  EnviromentalHealthData[]
 }
 
 model EnviromentalHealthData{
@@ -204,6 +202,8 @@ model EnviromentalHealthData{
   treePollen              Float?
   grassPollen             Float?
   weedPollen              Float?
+  olivePollen             Float?
+  birchPollen             Float?
   co2Level                Float?
   ozoneLevel              Float?
   coLevel                 Float?
@@ -211,17 +211,15 @@ model EnviromentalHealthData{
   so2Level                Float?
   no2Level                Float?
   pm1_0                   Float?
-  pm2_5                   Float?
+  pm25                    Float?
   pm10                    Float?
   windSpeed               Float?
   bloodO2Level            String?
+  dominantPollutant       String?
+  location                Json
   heartRate               HeartRateData[]
   createdAt               DateTime     @default(now())
   updatedAt               DateTime     @updatedAt
-  deviceId                Int
-  device                  Device       @relation(fields: [deviceId], references: [id])
-  userLocationId          Int       
-  userLocation            UserLocation @relation(fields: [userLocationId], references: [id])
   userId                  Int
   user                    User         @relation(fields: [userId], references: [id])
 }
