@@ -26,7 +26,7 @@ class _MyHomeScreen extends State<HomeScreen> {
     super.initState();
     sensorService = SensorService(widget.apiService);
     _loadSensor();
-    sensorUpdateTimer = Timer.periodic(Duration(minutes: 10), (Timer timer) {
+    sensorUpdateTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
       _loadSensor();
     });
   }
@@ -180,18 +180,18 @@ class _MyHomeScreen extends State<HomeScreen> {
                     width: 360,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(189, 193, 198, 0.5),
-                      borderRadius: BorderRadius.circular(10), 
+                      border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                      borderRadius: BorderRadius.circular(15)
                     ),
                   ),
                   const SizedBox(height: 10,),
                   Container(
                     width: 360,
                     height: 50,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(189, 193, 198, 0.5),
-                      borderRadius: BorderRadius.circular(10), 
-                    ),
+                   decoration: BoxDecoration(
+                    border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                    borderRadius: BorderRadius.circular(15)
+                  ),
                   )
                 ],
               ),
@@ -206,10 +206,10 @@ class _MyHomeScreen extends State<HomeScreen> {
                     children: [
                       Expanded(
                         child: Container(
-                          height: 179,
+                          height: 180,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(189, 193, 198, 0.5),
-                            borderRadius: BorderRadius.circular(15), 
+                            border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                            borderRadius: BorderRadius.circular(15)
                           ),
                           child: Padding(
                             padding: EdgeInsets.all(15),
@@ -313,13 +313,24 @@ class _MyHomeScreen extends State<HomeScreen> {
                               ],
                             ),
                             SizedBox(height: 10,),
-                            Text(
-                              statusText,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
+                            Container(
+                              height: 25,
+                              width: (statusText == 'Good' || statusText == 'High') ? 60 : 80,
+                              decoration: BoxDecoration(
                                 color: statusColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
+                                border: Border.all(color: statusColor, width: 1),
+                                borderRadius: BorderRadius.circular(15)
+                                ),
+                                child:  Center(
+                                  child: Text(
+                                  statusText,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ),
                           ]),
@@ -331,8 +342,8 @@ class _MyHomeScreen extends State<HomeScreen> {
                         child: Container(
                           height: 179,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(189, 193, 198, 0.5),
-                            borderRadius: BorderRadius.circular(15), 
+                            border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                            borderRadius: BorderRadius.circular(15)
                           ),
                         ),
                       )
@@ -345,8 +356,8 @@ class _MyHomeScreen extends State<HomeScreen> {
                         child: Container(
                           height: 179,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(189, 193, 198, 0.5),
-                            borderRadius: BorderRadius.circular(15), 
+                            border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                            borderRadius: BorderRadius.circular(15)
                           ),
                           child: Padding(
                             padding: EdgeInsets.all(15),
@@ -355,36 +366,48 @@ class _MyHomeScreen extends State<HomeScreen> {
                                Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                  '    Air Quality Index  78',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: myGray.withOpacity(0.95)
-                                  ),
-                                  ),
+                                  Row(
+                                    children: [
+                                    Text(
+                                      'Air Quality Index',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: myGray.withOpacity(0.95)
+                                      ),
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text(
+                                      '78',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: myGray.withOpacity(0.95)
+                                      ),
+                                      ),
+                                  ],),
                                   
                                   SizedBox(width: 10,),
                                   Container(
-                                          height: 20,
-                                          width: 40,
-                                          decoration: BoxDecoration(
-                                            color: secondaryColor,
-                                            border: Border.all(color: myGray.withOpacity(0.3), width: 1),
-                                            borderRadius: BorderRadius.circular(15)
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                            'Good',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
+                                      height: 20,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor,
+                                        border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                                        borderRadius: BorderRadius.circular(15)
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                        'Good',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                ],
+                                      ),
+                                    ),
+                            ],
                               ),
                               SizedBox(height: 5,),
                               Row(
@@ -588,15 +611,20 @@ class _MyHomeScreen extends State<HomeScreen> {
                             ),
                             
                             SizedBox(height: 14,),
-                            Text(
-                              'Dominant Polutant',
-                            
-                              style: TextStyle(
-                                color: myGray,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Dominant Polutant',
+                                
+                                  style: TextStyle(
+                                    color: myGray,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            )
                           ]),
                           ),
                         ),
