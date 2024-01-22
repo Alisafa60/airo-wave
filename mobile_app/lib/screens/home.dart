@@ -1,15 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_app/api_service.dart';
+import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/requests/sensor_request.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 
-class HomeScreen extends StatelessWidget{
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key, required this.apiService});
+  final ApiService apiService;
+
+  @override
+  State<HomeScreen> createState() => _MyHomeScreen();
+}
+
+class _MyHomeScreen extends State<HomeScreen> {
+  late SensorService sensorService;
+  Map<String, dynamic>? healthData;
+
+  @override
+  void initState() {
+    super.initState();
+    sensorService = SensorService(widget.apiService);
+    _loadSensor();
+  }
+
+  Future<void> _loadSensor() async {
+    try {
+      final Map<String, dynamic> data = await sensorService.getSensorData();
+      setState(() {
+        healthData = data;
+      });
+     print(healthData);
+    } catch (error) {
+      print('Error loading health data: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context){
     double screenHeight = MediaQuery.of(context).size.height;
     double appBarHeight = AppBar().preferredSize.height;
     double bottomNavBarHeight = kBottomNavigationBarHeight;
+    
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -39,6 +71,8 @@ class HomeScreen extends StatelessWidget{
           ],
         ),
       ),
+
+
       body: Padding(
         padding: EdgeInsets.all(5),
         child: Column(
@@ -119,7 +153,7 @@ class HomeScreen extends StatelessWidget{
                     width: 330,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(74, 74, 74, 0.2),
+                      color: Color.fromRGBO(131, 148, 171, 0.16),
                       borderRadius: BorderRadius.circular(10), 
                     ),
                   ),
@@ -128,7 +162,7 @@ class HomeScreen extends StatelessWidget{
                     width: 330,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(74, 74, 74, 0.2),
+                      color: Color.fromRGBO(131, 148, 171, 0.16),
                       borderRadius: BorderRadius.circular(10), 
                     ),
                   )
@@ -147,8 +181,102 @@ class HomeScreen extends StatelessWidget{
                         child: Container(
                           height: 179,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(74, 74, 74, 0.2),
+                            color: Color.fromRGBO(131, 148, 171, 0.16),
                             borderRadius: BorderRadius.circular(15), 
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Column(
+                            children: [
+                               Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                  'Indoor Air Quality',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: myGray.withOpacity(0.95)
+                                  ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 5,),
+                              Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      SvgPicture.asset('lib/assets/icons/carbon-dioxide.svg', height: 50, width: 50,),
+                                      SizedBox(height: 10,),
+                                      Text(
+                                          '${healthData?['lastSensorData']?['co2'] ?? ''}',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: myGray.withOpacity(0.95),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  color: myGray.withOpacity(0.15),  // Highlight the divider with a different color
+                                  width: 3,
+                                  height: 75,  // Ensure full height
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          // border: Border.all(
+                                          //   width: 2,
+                                          //   color: myGray.withOpacity(0.15)
+                                          // )
+                                        ),
+                                      child: Padding( 
+                                        padding: EdgeInsets.all(7),
+                                        child: Text(
+                                        'VoC',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: myGray.withOpacity(0.95),
+                                          ),
+                                        ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 14),
+                                      Text(
+                                        '4',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: myGray.withOpacity(0.95),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                             
+                              SizedBox(height: 10,),
+                              Text(
+                                'Good',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: secondaryColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                          ]),
                           ),
                         ),
                       ),
@@ -157,7 +285,7 @@ class HomeScreen extends StatelessWidget{
                         child: Container(
                           height: 179,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(74, 74, 74, 0.2),
+                            color: Color.fromRGBO(131, 148, 171, 0.16),
                             borderRadius: BorderRadius.circular(15), 
                           ),
                         ),
@@ -171,7 +299,7 @@ class HomeScreen extends StatelessWidget{
                         child: Container(
                           height: 179,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(74, 74, 74, 0.2),
+                            color: Color.fromRGBO(131, 148, 171, 0.16),
                             borderRadius: BorderRadius.circular(15), 
                           ),
                         ),
@@ -181,7 +309,7 @@ class HomeScreen extends StatelessWidget{
                         child: Container(
                           height: 179,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(74, 74, 74, 0.2),
+                            color: Color.fromRGBO(131, 148, 171, 0.16),
                             borderRadius: BorderRadius.circular(15), 
                           ),
                         ),
