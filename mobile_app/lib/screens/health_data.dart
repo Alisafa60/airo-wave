@@ -149,7 +149,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
           child: Container(
             height: 30,
             width: 100,
-            decoration: BoxDecoration(
+           decoration: BoxDecoration(
               border: Border.all(color: myGray.withOpacity(0.3), width: 1),
               borderRadius: BorderRadius.circular(15)
             ),
