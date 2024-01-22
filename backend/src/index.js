@@ -4,9 +4,23 @@ const {authMiddleware} = require('./middlewares/auth.middleware');
 const fs = require('fs/promises'); 
 require("dotenv").config();
 const path = require('path');
+const bodyParser = require('body-parser');
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
+app.use(bodyParser.text());
+
+app.post('/savefile', async (req, res) => {
+  const filePath = './src/recievedEnviromentalFiles/response_data.txt';
+
+  try {
+    await fs.writeFile(filePath, req.body);
+    res.send('File saved successfully');
+  } catch (error) {
+    console.error('Error saving file:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 const serveFilesFromUploads = async (req, res, next) => {
   try {
@@ -45,9 +59,10 @@ const heartRate = require('./routes/heartRate.routes');
 const stress = require('./routes/stress.routes');
 const userRoutes = require('./routes/createRoutes.controllers');
 const device = require('./routes/device.routes');
-
+const sensorRoutes = require('./routes/sensor.routes');
 
 app.use('/auth', authRoutes);
+app.use('/api', sensorRoutes);
 app.use('/api', authMiddleware, imageRoutes);
 app.use('/api', authMiddleware, allergyRoutes);
 app.use('/api', authMiddleware, healtRoutes);
