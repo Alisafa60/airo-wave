@@ -341,12 +341,263 @@ class _MyHomeScreen extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      Expanded(
+                       Expanded(
                         child: Container(
                           height: 179,
                           decoration: BoxDecoration(
                             color: Color.fromRGBO(189, 193, 198, 0.5),
                             borderRadius: BorderRadius.circular(15), 
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Column(
+                            children: [
+                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                  '    Air Quality Index  78',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: myGray.withOpacity(0.95)
+                                  ),
+                                  ),
+                                  
+                                  SizedBox(width: 10,),
+                                  Container(
+                                          height: 20,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                            color: secondaryColor,
+                                            border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                                            borderRadius: BorderRadius.circular(15)
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                            'Good',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                ],
+                              ),
+                              SizedBox(height: 5,),
+                              Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                        Container(
+                                          height: 30,
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                                            borderRadius: BorderRadius.circular(15)
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                            'CO',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: myGray,
+                                              fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      SizedBox(height: 17,),
+                                      Text(
+                                      '${healthData?['lastSensorData']?['co2'] ?? ''}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: getStatusColor(
+                                          healthData?['lastSensorData']?['co2'] ?? 0,
+                                          'co2',
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  ),
+                                ),
+                                Container(
+                                  color: myGray.withOpacity(0.15),
+                                  width: 3,
+                                  height: 75, 
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          // border: Border.all(
+                                          //   width: 2,
+                                          //   color: myGray.withOpacity(0.15)
+                                          // )
+                                        ),
+                                      child: Padding( 
+                                        padding: EdgeInsets.all(7),
+                                       child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                        Container(
+                                          height: 30,
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                                            borderRadius: BorderRadius.circular(15)
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                            'SO2',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: myGray,
+                                              fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        ],
+                                       ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        '${healthData?['lastSensorData']?['voc'] ?? ''}', 
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: getStatusColor(
+                                          healthData?['lastSensorData']?['voc'] ?? 0,
+                                          'voc',
+                                          )
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  color: myGray.withOpacity(0.15),
+                                  width: 3,
+                                  height: 75, 
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                          height: 30,
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                                            borderRadius: BorderRadius.circular(15)
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                            'NO2',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: myGray,
+                                              fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      SizedBox(height: 17,),
+                                      Text(
+                                      '${healthData?['lastSensorData']?['co2'] ?? ''}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: getStatusColor(
+                                          healthData?['lastSensorData']?['co2'] ?? 0,
+                                          'co2',
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  ),
+                                ),
+                                Container(
+                                  color: myGray.withOpacity(0.15),
+                                  width: 3,
+                                  height: 75, 
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          // border: Border.all(
+                                          //   width: 2,
+                                          //   color: myGray.withOpacity(0.15)
+                                          // )
+                                        ),
+                                      child: Padding( 
+                                        padding: EdgeInsets.all(7),
+                                       child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                         Container(
+                                          height: 30,
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                                            borderRadius: BorderRadius.circular(15)
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                            'PM10',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: myGray,
+                                              fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        ],
+                                       ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        '${healthData?['lastSensorData']?['voc'] ?? ''}', 
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: getStatusColor(
+                                          healthData?['lastSensorData']?['voc'] ?? 0,
+                                          'voc',
+                                          )
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            
+                            SizedBox(height: 14,),
+                            Text(
+                              'Dominant Polutant',
+                            
+                              style: TextStyle(
+                                color: myGray,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ]),
                           ),
                         ),
                       ),
