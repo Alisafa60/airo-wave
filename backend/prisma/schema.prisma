@@ -199,6 +199,7 @@ model EnviromentalHealthData{
   temperature             Float?
   humidity                Float?
   aqi                     Float?
+  aqiCategory             String?
   treePollen              Float?
   grassPollen             Float?
   weedPollen              Float?
@@ -207,6 +208,7 @@ model EnviromentalHealthData{
   co2Level                Float?
   ozoneLevel              Float?
   coLevel                 Float?
+  o3Level                 Float?
   vocLevel                Float?
   so2Level                Float?
   no2Level                Float?
