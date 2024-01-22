@@ -212,7 +212,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       SvgPicture.asset('lib/assets/icons/carbon-dioxide.svg', height: 50, width: 50,),
                                       SizedBox(height: 10,),
                                       Text(
-                                          '${healthData?['lastSensorData']?['co2'] ?? ''}',
+                                        '${healthData?['lastSensorData']?['co2'] ?? ''}',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
@@ -223,9 +223,9 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   ),
                                 ),
                                 Container(
-                                  color: myGray.withOpacity(0.15),  // Highlight the divider with a different color
+                                  color: myGray.withOpacity(0.15),
                                   width: 3,
-                                  height: 75,  // Ensure full height
+                                  height: 75, 
                                 ),
                                 Expanded(
                                   child: Column(
@@ -252,7 +252,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       ),
                                       SizedBox(height: 14),
                                       Text(
-                                        '4',
+                                        '${healthData?['lastSensorData']?['voc'] ?? ''}', 
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
