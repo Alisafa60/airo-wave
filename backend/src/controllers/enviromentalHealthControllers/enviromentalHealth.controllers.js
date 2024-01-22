@@ -31,6 +31,9 @@ const environmentalDataSchema = Joi.object({
   })).optional(),
   deviceId: Joi.number().optional(),
   userId: Joi.number().required(),
+  o3Level: Joi.number().allow(null),
+  aqiCategory: Joi.string().allow(null),
+  pm10: Joi.number().allow(null),
   location: Joi.object({
     latitude: Joi.number().required(),
     longitude: Joi.number().required(),
@@ -39,10 +42,10 @@ const environmentalDataSchema = Joi.object({
 
 const createEnvironmentalData = async (req, res) => {
   try {
-    const { temperature, humidity, aqi, treePollen, grassPollen, weedPollen, olivePollen, birchPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm25, pm10, windSpeed, bloodO2Level, dominantPollutant, heartRate, deviceId, location} = req.body;
+    const { temperature, humidity, aqi, aqiCategory, o3Level, treePollen, grassPollen, weedPollen, olivePollen, birchPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm25, pm10, windSpeed, bloodO2Level, dominantPollutant, heartRate, deviceId, location} = req.body;
     const userId = req.user.id;
     const { error, value } = environmentalDataSchema.validate({
-      temperature, humidity, aqi, treePollen, grassPollen, weedPollen, olivePollen, birchPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm25, pm10, windSpeed, bloodO2Level, dominantPollutant, heartRate, deviceId, userId, location
+      temperature, humidity, aqi, aqiCategory, o3Level, pm10, treePollen, grassPollen, weedPollen, olivePollen, birchPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm25, pm10, windSpeed, bloodO2Level, dominantPollutant, heartRate, deviceId, userId, location
     });
 
     if (error) {
