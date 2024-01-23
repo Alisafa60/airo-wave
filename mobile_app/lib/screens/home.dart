@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/requests/pollen_service.dart';
 import 'package:mobile_app/requests/sensor_request.dart';
 import 'package:mobile_app/utils/co2_voc_color.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
@@ -36,8 +37,8 @@ class _MyHomeScreen extends State<HomeScreen> {
     sensorUpdateTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
       _loadSensor();
     });
-    enviromentalService = EnviromentalService(widget.apiService);
-    _fetchAndPostAirQualityData();
+    // enviromentalService = EnviromentalService(widget.apiService);
+    // _fetchAndPostAirQualityData();
     enviromentalService = EnviromentalService(widget.apiService);
     _loadEnviromentalData();
   }
@@ -71,16 +72,16 @@ class _MyHomeScreen extends State<HomeScreen> {
       print('Error loading health data: $error');
     }
   }
-   Future<void> _fetchAndPostAirQualityData() async {
-    try {
-      await enviromentalService.fetchAirQualityDataAndPost(
-        latitude,
-        longitude,
-      );
-    } catch (error) {
-      print('Error fetching and posting air quality data: $error');
-    }
-  }
+  //  Future<void> _fetchAndPostAirQualityData() async {
+  //   try {
+  //     await enviromentalService.fetchAirQualityDataAndPost(
+  //       latitude,
+  //       longitude,
+  //     );
+  //   } catch (error) {
+  //     print('Error fetching and posting air quality data: $error');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context){
@@ -402,6 +403,72 @@ class _MyHomeScreen extends State<HomeScreen> {
                             border: Border.all(color: myGray.withOpacity(0.3), width: 1),
                             borderRadius: BorderRadius.circular(15)
                           ),
+                         child: Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              
+                              Row(
+                               
+                                children: [
+                                  SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 23, width: 23,),
+                                  SizedBox(width: 30,),
+                                  Text(
+                                    'Grass',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: secondaryColor,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 10,),
+                                Row(
+                                children: [
+                                  SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
+                                  SizedBox(width: 30,),
+                                  Text(
+                                    'Tree',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: primaryColor.withOpacity(0.7)
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 7,),
+                                Row(
+                                children: [
+                                  SvgPicture.asset('lib/assets/icons/leaf2.svg', height: 25, width: 25,),
+                                  SizedBox(width: 30,),
+                                  Text(
+                                    'Ragweed',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: secondaryColor.withOpacity(0.99)
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 7,),
+                                Row(
+                                children: [
+                                  SvgPicture.asset('lib/assets/icons/olive.svg', height: 25, width: 25,),
+                                  SizedBox(width: 30,),
+                                  Text(
+                                    'Olive',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: secondaryColor.withOpacity(0.99)
+                                    ),
+                                  )
+                                ],
+                              ),
+
+                            ],
+                           ),
+                          ),
                         ),
                       )
                     ],
@@ -420,61 +487,62 @@ class _MyHomeScreen extends State<HomeScreen> {
                             padding: EdgeInsets.all(15),
                             child: Column(
                             children: [
-                              
+                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                    Text(
+                                      'AQI',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: myGray.withOpacity(0.95)
+                                      ),
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text(
+                                      '${enviromentalData?['environmentalData']?['aqi'] ?? ''} ',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: getStatusColor(enviromentalData?['environmentalData']?['aqi'] ?? 0, 'aqi'),
+                                      ),
+                                      ),
+                                      SizedBox(width: 10,),
+                                      aqiCondition == 'Good'
+                                      ? SvgPicture.asset(
+                                          'lib/assets/icons/smiling.svg',
+                                          height: 18,
+                                          width: 18,
+                                        )
+                                      : SvgPicture.asset(
+                                          'lib/assets/icons/sad.svg',
+                                          height: 18,
+                                          width: 18,
+                                        ),
+                                  ],),
+                                  SizedBox(width: 10,),
+                                  Center(
+                                    child: Icon(
+                                    Icons.air,
+                                    size: 30,
+                                    color: myGray,
+                                    ),
+                                  ),
+                                ],
+                              ),
                               SizedBox(height: 5,),
                               Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                // Expanded(
-                                //   child: Column(
-                                //     children: [
-                                //         Container(
-                                //           height: 30,
-                                //           width: 60,
-                                //           decoration: BoxDecoration(
-                                //             border: Border.all(color: myGray.withOpacity(0.3), width: 1),
-                                //             borderRadius: BorderRadius.circular(15)
-                                //           ),
-                                //           child: const Center(
-                                //             child: Text(
-                                //             'CO',
-                                //             style: TextStyle(
-                                //               fontSize: 14,
-                                //               color: myGray,
-                                //               fontWeight: FontWeight.w600,
-                                //               ),
-                                //             ),
-                                //           ),
-                                //         ),
-                                //       SizedBox(height: 17,),
-                                //       Text(
-                                //       '${enviromentalData?['environmentalData']?['coLevel'] ?? ''}',
-                                //       style: TextStyle(
-                                //         fontSize: 16,
-                                //         fontWeight: FontWeight.w600,
-                                //         color: getColorEnv(enviromentalData?['environmentalData']?['coLevel'] ?? 0, 'co')
-                                        
-                                //       ),
-                                //     ),
-                                //   ],
-                                //   ),
-                                // ),
-                                // Container(
-                                //   color: myGray.withOpacity(0.15),
-                                //   width: 3,
-                                //   height: 75, 
-                                // ),
                                 Expanded(
                                   child: Column(
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(15),
-                                          // border: Border.all(
-                                          //   width: 2,
-                                          //   color: myGray.withOpacity(0.15)
-                                          // )
                                         ),
                                       child: Padding( 
                                         padding: EdgeInsets.all(7),
@@ -614,7 +682,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                              Row(
                               crossAxisAlignment: CrossAxisAlignment.baseline,
                               textBaseline: TextBaseline.alphabetic,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                
                                 const Text(
@@ -631,7 +699,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.red,
+                                    color: primaryColor.withOpacity(0.7),
                                     
                                   ),
                                 ),
