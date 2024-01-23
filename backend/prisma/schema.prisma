@@ -200,11 +200,11 @@ model EnviromentalHealthData{
   humidity                Float?
   aqi                     Float?
   aqiCategory             String?
-  treePollen              Float?
-  grassPollen             Float?
-  weedPollen              Float?
-  olivePollen             Float?
-  birchPollen             Float?
+  allergen1               Int?
+  allergen2               Int?
+  allergen3               Int?
+  allergen4               Int?
+  allergen5               Int?
   co2Level                Float?
   ozoneLevel              Float?
   coLevel                 Float?
