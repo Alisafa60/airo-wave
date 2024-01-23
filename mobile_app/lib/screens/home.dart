@@ -128,15 +128,9 @@ class _MyHomeScreen extends State<HomeScreen> {
       co2Value > vocValue ? 'co2' : 'voc',
     );
 
-    List<Map<String, dynamic>> recommendations = getRecommendations(enviromentalData);
-    print(recommendations);
-
-    for (final recommendation in recommendations) {
-      String displayName = recommendation['displayName'];
-      String color = recommendation['color'];
-      print('Recommendation: $displayName, Color: $color');
-    }
-
+    List<Map<String, dynamic>> plantAllergens = getPlantType(enviromentalData);
+    List<Map<String, dynamic>> pollenAllergens = getPollenType(enviromentalData);
+  
     String gasName(String dominantPollutant) {
       switch (dominantPollutant.toLowerCase()) {
         case 'o3':
