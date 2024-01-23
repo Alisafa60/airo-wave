@@ -1,119 +1,125 @@
 {
-  "dateTime": "2024-01-21T05:00:00Z",
-  "regionCode": "fr",
-  "indexes": [
+  "dailyInfo": [
     {
-      "code": "uaqi",
-      "displayName": "Universal AQI",
-      "aqi": 78,
-      "aqiDisplay": "78",
-      "color": {
-        "red": 0.3764706,
-        "green": 0.75686276,
-        "blue": 0.20392157
+      "date": {
+        "year": 2024,
+        "month": 1,
+        "day": 23
       },
-      "category": "Good air quality",
-      "dominantPollutant": "no2"
-    },
-    {
-      "code": "fra_atmo",
-      "displayName": "IQA (FR)",
-      "color": {
-        "red": 0.9372549,
-        "green": 0.9019608,
-        "blue": 0.25490198
-      },
-      "category": "Degraded air quality",
-      "dominantPollutant": "no2"
+      "pollenTypeInfo": [
+        {
+          "code": "GRASS",
+          "displayName": "Grass",
+          "inSeason": false,
+          "indexInfo": {
+            "code": "UPI",
+            "displayName": "Universal Pollen Index",
+            "value": 1,
+            "category": "Very Low",
+            "indexDescription": "People with very high allergy to pollen are likely to experience symptoms",
+            "color": {
+              "green": 0.61960787,
+              "blue": 0.22745098
+            }
+          },
+          "healthRecommendations": [
+            "Pollen levels are very low right now. It's a great day to enjoy the outdoors!"
+          ]
+        },
+        {
+          "code": "TREE",
+          "displayName": "Tree",
+          "inSeason": true,
+          "indexInfo": {
+            "code": "UPI",
+            "displayName": "Universal Pollen Index",
+            "value": 1,
+            "category": "Very Low",
+            "indexDescription": "People with very high allergy to pollen are likely to experience symptoms",
+            "color": {
+              "green": 0.61960787,
+              "blue": 0.22745098
+            }
+          },
+          "healthRecommendations": [
+            "Pollen levels are very low right now. It's a great day to enjoy the outdoors!"
+          ]
+        },
+        {
+          "code": "WEED",
+          "displayName": "Weed"
+        }
+      ],
+      "plantInfo": [
+        {
+          "code": "BIRCH",
+          "displayName": "Birch"
+        },
+        {
+          "code": "OLIVE",
+          "displayName": "Olive"
+        },
+        {
+          "code": "GRAMINALES",
+          "displayName": "Grasses",
+          "inSeason": false,
+          "indexInfo": {
+            "code": "UPI",
+            "displayName": "Universal Pollen Index",
+            "value": 1,
+            "category": "Very Low",
+            "indexDescription": "People with very high allergy to pollen are likely to experience symptoms",
+            "color": {
+              "green": 0.61960787,
+              "blue": 0.22745098
+            }
+          },
+          "plantDescription": {
+            "type": "GRASS",
+            "family": "Poaceae",
+            "season": "Late spring, summer",
+            "specialColors": "None",
+            "specialShapes": "The leaves are alternate, long and narrow and the leaf margin is smooth.",
+            "crossReaction": "Plantain (Plantago) pollen. In addition, there may be a higher risk for food allergies like melons, oranges, tomatoes, peanuts, soy, potato, and other legumes.",
+            "picture": "https://storage.googleapis.com/pollen-pictures/graminales_full.jpg",
+            "pictureCloseup": "https://storage.googleapis.com/pollen-pictures/graminales_closeup.jpg"
+          }
+        },
+        {
+          "code": "RAGWEED",
+          "displayName": "Ragweed"
+        },
+        {
+          "code": "ALDER",
+          "displayName": "Alder",
+          "inSeason": true,
+          "indexInfo": {
+            "code": "UPI",
+            "displayName": "Universal Pollen Index",
+            "value": 1,
+            "category": "Very Low",
+            "indexDescription": "People with very high allergy to pollen are likely to experience symptoms",
+            "color": {
+              "green": 0.61960787,
+              "blue": 0.22745098
+            }
+          },
+          "plantDescription": {
+            "type": "TREE",
+            "family": "Betulaceae (the Birch family)",
+            "season": "Late winter, early spring",
+            "specialColors": "In the autumn, the leaves tend to turn brown.",
+            "specialShapes": "The trees grow catkins, which are clusters of flowers without petals.",
+            "crossReaction": "Birch, Hazel, Hornbeam, Beech, Willow and Oak pollen.",
+            "picture": "https://storage.googleapis.com/pollen-pictures/alder_full.jpg",
+            "pictureCloseup": "https://storage.googleapis.com/pollen-pictures/alder_closeup.jpg"
+          }
+        },
+        {
+          "code": "MUGWORT",
+          "displayName": "Mugwort"
+        }
+      ]
     }
-  ],
-  "pollutants": [
-    {
-      "code": "co",
-      "displayName": "CO",
-      "fullName": "Carbon monoxide",
-      "concentration": {
-        "value": 372.01,
-        "units": "PARTS_PER_BILLION"
-      },
-      "additionalInfo": {
-        "sources": "Typically originates from incomplete combustion of carbon fuels, such as that which occurs in car engines and power plants.",
-        "effects": "When inhaled, carbon monoxide can prevent the blood from carrying oxygen. Exposure may cause dizziness, nausea and headaches. Exposure to extreme concentrations can lead to loss of consciousness."
-      }
-    },
-    {
-      "code": "no2",
-      "displayName": "NO2",
-      "fullName": "Nitrogen dioxide",
-      "concentration": {
-        "value": 29.51,
-        "units": "PARTS_PER_BILLION"
-      },
-      "additionalInfo": {
-        "sources": "Main sources are fuel burning processes, such as those used in industry and transportation.",
-        "effects": "Exposure may cause increased bronchial reactivity in patients with asthma, lung function decline in patients with Chronic Obstructive Pulmonary Disease (COPD), and increased risk of respiratory infections, especially in young children."
-      }
-    },
-    {
-      "code": "o3",
-      "displayName": "O3",
-      "fullName": "Ozone",
-      "concentration": {
-        "value": 22.73,
-        "units": "PARTS_PER_BILLION"
-      },
-      "additionalInfo": {
-        "sources": "Ozone is created in a chemical reaction between atmospheric oxygen, nitrogen oxides, carbon monoxide and organic compounds, in the presence of sunlight.",
-        "effects": "Ozone can irritate the airways and cause coughing, a burning sensation, wheezing and shortness of breath. Additionally, ozone is one of the major components of photochemical smog."
-      }
-    },
-    {
-      "code": "pm10",
-      "displayName": "PM10",
-      "fullName": "Inhalable particulate matter (\u003c10µm)",
-      "concentration": {
-        "value": 14.22,
-        "units": "MICROGRAMS_PER_CUBIC_METER"
-      },
-      "additionalInfo": {
-        "sources": "Main sources are combustion processes (e.g. indoor heating, wildfires), mechanical processes (e.g. construction, mineral dust, agriculture) and biological particles (e.g. pollen, bacteria, mold).",
-        "effects": "Inhalable particles can penetrate into the lungs. Short term exposure can cause irritation of the airways, coughing, and aggravation of heart and lung diseases, expressed as difficulty breathing, heart attacks and even premature death."
-      }
-    },
-    {
-      "code": "pm25",
-      "displayName": "PM2.5",
-      "fullName": "Fine particulate matter (\u003c2.5µm)",
-      "concentration": {
-        "value": 7.68,
-        "units": "MICROGRAMS_PER_CUBIC_METER"
-      },
-      "additionalInfo": {
-        "sources": "Main sources are combustion processes (e.g. power plants, indoor heating, car exhausts, wildfires), mechanical processes (e.g. construction, mineral dust) and biological particles (e.g. bacteria, viruses).",
-        "effects": "Fine particles can penetrate into the lungs and bloodstream. Short term exposure can cause irritation of the airways, coughing and aggravation of heart and lung diseases, expressed as difficulty breathing, heart attacks and even premature death."
-      }
-    },
-    {
-      "code": "so2",
-      "displayName": "SO2",
-      "fullName": "Sulfur dioxide",
-      "concentration": {
-        "value": 0.13,
-        "units": "PARTS_PER_BILLION"
-      },
-      "additionalInfo": {
-        "sources": "Main sources are burning processes of sulfur-containing fuel in industry, transportation and power plants.",
-        "effects": "Exposure causes irritation of the respiratory tract, coughing and generates local inflammatory reactions. These in turn, may cause aggravation of lung diseases, even with short term exposure."
-      }
-    }
-  ],
-  "healthRecommendations": {
-    "generalPopulation": "With this level of air quality, you have no limitations. Enjoy the outdoors!",
-    "elderly": "If you start to feel respiratory discomfort such as coughing or breathing difficulties, consider reducing the intensity of your outdoor activities. Try to limit the time you spend near busy roads, construction sites, open fires and other sources of smoke.",
-    "lungDiseasePopulation": "If you start to feel respiratory discomfort such as coughing or breathing difficulties, consider reducing the intensity of your outdoor activities. Try to limit the time you spend near busy roads, industrial emission stacks, open fires and other sources of smoke.",
-    "heartDiseasePopulation": "If you start to feel respiratory discomfort such as coughing or breathing difficulties, consider reducing the intensity of your outdoor activities. Try to limit the time you spend near busy roads, construction sites, industrial emission stacks, open fires and other sources of smoke.",
-    "athletes": "If you start to feel respiratory discomfort such as coughing or breathing difficulties, consider reducing the intensity of your outdoor activities. Try to limit the time you spend near busy roads, construction sites, industrial emission stacks, open fires and other sources of smoke.",
-    "pregnantWomen": "To keep you and your baby healthy, consider reducing the intensity of your outdoor activities. Try to limit the time you spend near busy roads, construction sites, open fires and other sources of smoke.",
-    "children": "If you start to feel respiratory discomfort such as coughing or breathing difficulties, consider reducing the intensity of your outdoor activities. Try to limit the time you spend near busy roads, construction sites, open fires and other sources of smoke."
-  }
+  ]
 }
