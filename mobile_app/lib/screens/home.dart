@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:mobile_app/models/environmental.model.dart';
 import 'package:mobile_app/requests/air_quality.dart';
 import 'package:mobile_app/requests/environmental_survice.dart';
@@ -8,6 +9,7 @@ import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/requests/pollen_service.dart';
 import 'package:mobile_app/requests/sensor_request.dart';
+import 'package:mobile_app/utils/allergens_info.dart';
 import 'package:mobile_app/utils/co2_voc_color.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 
@@ -23,10 +25,12 @@ class _MyHomeScreen extends State<HomeScreen> {
   late SensorService sensorService;
   Map<String, dynamic>? sensorData;
   Map<String, dynamic>? enviromentalData;
+  Map<String, dynamic>? pollenData;
   late Timer sensorUpdateTimer;
   late EnviromentalService enviromentalService;
-  double latitude = 48.8566;
-  double longitude = 2.3522;
+  late PollenService pollenService;
+  double latitude = 32.32;
+  double longitude = 35.32;
   
 
   @override
@@ -34,23 +38,35 @@ class _MyHomeScreen extends State<HomeScreen> {
     super.initState();
     sensorService = SensorService(widget.apiService);
     _loadSensor();
-    sensorUpdateTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
+    sensorUpdateTimer = Timer.periodic(Duration(minutes: 10), (Timer timer) {
       _loadSensor();
     });
     // enviromentalService = EnviromentalService(widget.apiService);
     // _fetchAndPostAirQualityData();
     enviromentalService = EnviromentalService(widget.apiService);
     _loadEnviromentalData();
-    fetchPollen();
+    // pollenService = PollenService(widget.apiService);
+    // fetchPollen();
   }
 
   Future<void> _loadEnviromentalData() async {
     try {
       final Map<String, dynamic> data = await enviromentalService.getEnviromental();
       setState(() {
+      //   if (data['allergen_data'] != null) {
+      //   final Map<String, dynamic> allergenData = json.decode(data['allergen_data']);
+      //   data['allergen_data'] = allergenData;
+      //   print('allergen_data: $allergenData');
+      // }else{
+      //   print('no allergen');
+      // }
+        
         enviromentalData = data;
+        
+        
       });
-     print(enviromentalData);
+      
+     
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -84,9 +100,9 @@ class _MyHomeScreen extends State<HomeScreen> {
   //   }
   // }
   
-  Future<void> fetchPollen() async {
-    await fetchPollenData(latitude, longitude); 
-  }
+  // Future<void> fetchPollen() async {
+  //   await pollenService.fetchAndPostPollen(latitude, longitude); 
+  // }
 
   @override
   Widget build(BuildContext context){
@@ -111,6 +127,15 @@ class _MyHomeScreen extends State<HomeScreen> {
       co2Value > vocValue ? co2Value : vocValue,
       co2Value > vocValue ? 'co2' : 'voc',
     );
+
+    List<Map<String, dynamic>> recommendations = getRecommendations(enviromentalData);
+    print(recommendations);
+
+    for (final recommendation in recommendations) {
+      String displayName = recommendation['displayName'];
+      String color = recommendation['color'];
+      print('Recommendation: $displayName, Color: $color');
+    }
 
     String gasName(String dominantPollutant) {
       switch (dominantPollutant.toLowerCase()) {
