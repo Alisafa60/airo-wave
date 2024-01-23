@@ -92,7 +92,6 @@ class EnviromentalService {
         print('Failed to fetch air quality data. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      // Handle errors.
       print('Error fetching or posting data: $error');
     }
   }
@@ -151,5 +150,4 @@ class EnviromentalService {
       throw Exception('Token is null. Unable to make the API request.');
     }
   }
-
 }

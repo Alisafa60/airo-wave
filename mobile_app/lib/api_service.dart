@@ -41,7 +41,6 @@ class ApiService {
     final http.MultipartRequest request = http.MultipartRequest('POST', uri)
       ..headers.addAll(headers);
 
-    // Add each part of the body to the request
     for (MapEntry<String, dynamic> entry in body.entries) {
       if (entry.value is String) {
         request.fields[entry.key] = entry.value;
