@@ -1,8 +1,5 @@
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/models/allergy.model.dart';
 import 'package:mobile_app/models/medication.model.dart';
@@ -13,11 +10,6 @@ import 'package:mobile_app/widgets/medications.dart';
 import 'package:mobile_app/api_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_app/widgets/respiratory_fields.dart';
- import 'dart:convert';
-
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-
 
 class UserHealthScreen extends StatefulWidget {
   final ApiService apiService;
@@ -61,10 +53,7 @@ class _UserHealthState extends State<UserHealthScreen> {
     String? token = await getToken();
     final int weight = int.tryParse(weightController.text) ?? 0;
     final String bloodType = bloodTypeController.text;
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
-
-    // print(decodedToken);
-
+  
     if (token!=null){
       final Map<String, String> headers = {
         'Authorization': 'Bearer $token',
@@ -98,7 +87,6 @@ class _UserHealthState extends State<UserHealthScreen> {
  
   Future<void> addAllergyCondition() async {
     String? token = await getToken();
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
     
     if (token != null) {
       final Map<String, String> headers = {
@@ -136,14 +124,12 @@ class _UserHealthState extends State<UserHealthScreen> {
   }
   Future<void> addMedication() async {
     String? token = await getToken();
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
 
     if (token != null) {
       final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
 
       MedicationFieldsState medicationFieldsState = medicationFieldsKey.currentState!;
       MedicationData medicationData = medicationFieldsState.getMedicationData();
-
 
       final Map<String, dynamic> requestBody = {
         'name': medicationData.medication,
@@ -176,8 +162,6 @@ class _UserHealthState extends State<UserHealthScreen> {
 
   Future<void> addRespiratoryCondition() async {
     String? token = await getToken();
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
-    print(decodedToken);
     if (token != null) {
       final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
       RespiratoryConditionData respiratoryConditionData = RespiratoryConditionFields(index: 0).getRespiratoryConditionData();
