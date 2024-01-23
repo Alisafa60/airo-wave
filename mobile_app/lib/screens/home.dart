@@ -128,9 +128,19 @@ class _MyHomeScreen extends State<HomeScreen> {
       co2Value > vocValue ? 'co2' : 'voc',
     );
 
+    final Map<String, Color> colorMapping = {
+    'primaryColor': primaryColor,
+    'secondaryColor': secondaryColor,
+    'red': Colors.red
+  };
+
     List<Map<String, dynamic>> plantAllergens = getPlantType(enviromentalData);
     List<Map<String, dynamic>> pollenAllergens = getPollenType(enviromentalData);
-  
+    
+    Color getColorFromName(String colorName) {
+    return colorMapping[colorName] ?? Colors.black;
+    }
+   
     String gasName(String dominantPollutant) {
       switch (dominantPollutant.toLowerCase()) {
         case 'o3':
@@ -429,15 +439,47 @@ class _MyHomeScreen extends State<HomeScreen> {
                           ),
                          child: Padding(
                           padding: EdgeInsets.all(15),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              
-                              Row(
-                               
+                            Column(
+                              children: [
+                                  Row(
                                 children: [
                                   SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 23, width: 23,),
-                                  SizedBox(width: 30,),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    '${plantAllergens[0]['displayName'] ?? ' ' }',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: getColorFromName(plantAllergens[0]['color']),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 10,),
+                                Row(
+                                children: [
+                                  SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    'Tree',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: primaryColor.withOpacity(0.7)
+                                    ),
+                                  )
+                                ],
+                              ),
+                              ],
+                            ),
+                              SizedBox(height: 7,),
+Column(
+                              children: [
+                                  Row(
+                                children: [
+                                  SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 23, width: 23,),
+                                  SizedBox(width: 5,),
                                   Text(
                                     'Grass',
                                     style: TextStyle(
@@ -451,7 +493,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                 Row(
                                 children: [
                                   SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
-                                  SizedBox(width: 30,),
+                                  SizedBox(width: 5,),
                                   Text(
                                     'Tree',
                                     style: TextStyle(
@@ -461,35 +503,8 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   )
                                 ],
                               ),
-                              SizedBox(height: 7,),
-                                Row(
-                                children: [
-                                  SvgPicture.asset('lib/assets/icons/leaf2.svg', height: 25, width: 25,),
-                                  SizedBox(width: 30,),
-                                  Text(
-                                    'Ragweed',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: secondaryColor.withOpacity(0.99)
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 7,),
-                                Row(
-                                children: [
-                                  SvgPicture.asset('lib/assets/icons/olive.svg', height: 25, width: 25,),
-                                  SizedBox(width: 30,),
-                                  Text(
-                                    'Olive',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: secondaryColor.withOpacity(0.99)
-                                    ),
-                                  )
-                                ],
-                              ),
-
+                              ],
+                            ),
                             ],
                            ),
                           ),
