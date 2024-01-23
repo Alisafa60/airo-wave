@@ -14,7 +14,9 @@ app.post('/savefile', async (req, res) => {
   const filePath = './src/recievedEnviromentalFiles/response_data.txt';
 
   try {
-    await fs.writeFile(filePath, req.body);
+    const requestData = req.body;
+    const jsonString = JSON.stringify(requestData, null, 2);
+    await fs.writeFile(filePath, jsonString);
     res.send('File saved successfully');
   } catch (error) {
     console.error('Error saving file:', error);
