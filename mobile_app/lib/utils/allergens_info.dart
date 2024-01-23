@@ -1,5 +1,5 @@
 List<Map<String, dynamic>> getRecommendations(Map<String, dynamic>? enviromentalData) {
-  final List<Map<String, dynamic>> recommendations = [];
+  final List<Map<String, dynamic>> plantType = [];
 
   if (enviromentalData != null &&
       enviromentalData.containsKey('environmentalData') &&
@@ -11,27 +11,27 @@ List<Map<String, dynamic>> getRecommendations(Map<String, dynamic>? enviromental
       final List<dynamic> plantInfo = entry['plantInfo'];
 
       for (final plant in plantInfo) {
-        final bool inSeason = plant['inSeason'] ?? false;
-        final num? rawValue = plant['indexInfo']?['value'];
-        final int value = rawValue?.toInt() ?? 0;
-        final String category = plant['indexInfo']?['category'] ?? '';
+      final num? rawValue = plant['indexInfo']?['value'];
+      final int value = rawValue?.toInt() ?? 0;
+      final String category = plant['indexInfo']?['category'] ?? '';
 
-        if (inSeason && value > 0) {
-          final String displayName = plant['displayName'] ?? '';
-          final String color = getCategoryColor(category);
+      if (value >= 0) {
+        final String displayName = plant['displayName'] ?? '';
+        final String color = getCategoryColor(category);
 
-          recommendations.add({
-            'displayName': displayName,
-            'color': color,
-          });
-        }
-      }
+    plantType.add({
+      'displayName': displayName,
+      'color': color,
+    });
+  }
+}
+
     }
   } else {
     print('No daily info');
   }
 
-  return recommendations;
+  return plantType;
 }
 
 String getCategoryColor(String category) {
@@ -40,6 +40,7 @@ String getCategoryColor(String category) {
     case 'low':
       return 'blue';
     case 'moderate':
+      return 'orange';
     case 'high':
     case 'very high':
       return 'red';
