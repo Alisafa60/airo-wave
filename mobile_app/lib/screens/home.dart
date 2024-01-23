@@ -443,16 +443,47 @@ class _MyHomeScreen extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                             Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                   Row(
                                 children: [
-                                  SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 23, width: 23,),
+                                  SvgPicture.asset('lib/assets/icons/leaf2.svg', height: 23, width: 23,),
                                   SizedBox(width: 5,),
                                   Text(
                                     '${plantAllergens[0]['displayName'] ?? ' ' }',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: getColorFromName(plantAllergens[0]['color']),
+                                      color: getColorFromName(plantAllergens[1]['color']),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 10,),
+                                Row(
+                                children: [
+                                  SvgPicture.asset('lib/assets/icons/olive.svg', height: 23, width: 25,),
+                                  const SizedBox(width: 5,),
+                                  Text(
+                                    '${plantAllergens[1]['displayName'] ?? ' ' }',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: getColorFromName(plantAllergens[1]['color'])
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 10,),
+                              
+                                Row(
+                                children: [
+                                  SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 20, width: 20,),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    '${pollenAllergens[0]['displayName'] ?? ' ' }',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: getColorFromName(pollenAllergens[0]['color']),
                                     ),
                                   )
                                 ],
@@ -463,10 +494,10 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
                                   SizedBox(width: 5,),
                                   Text(
-                                    'Tree',
+                                    '${pollenAllergens[1]['displayName'] ?? ' ' }',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: primaryColor.withOpacity(0.7)
+                                      color: getColorFromName(pollenAllergens[1]['color'])
                                     ),
                                   )
                                 ],
@@ -474,17 +505,20 @@ class _MyHomeScreen extends State<HomeScreen> {
                               ],
                             ),
                               SizedBox(height: 7,),
-Column(
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                  Row(
+                                SizedBox(height: 10,),
+                                Row(
                                 children: [
-                                  SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 23, width: 23,),
+                                  SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 20, width: 20,),
                                   SizedBox(width: 5,),
                                   Text(
-                                    'Grass',
+                                    '${pollenAllergens[0]['displayName'] ?? ' ' }',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: secondaryColor,
+                                      color: getColorFromName(pollenAllergens[0]['color']),
                                     ),
                                   )
                                 ],
@@ -495,10 +529,10 @@ Column(
                                   SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
                                   SizedBox(width: 5,),
                                   Text(
-                                    'Tree',
+                                    '${pollenAllergens[1]['displayName'] ?? ' ' }',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: primaryColor.withOpacity(0.7)
+                                      color: getColorFromName(pollenAllergens[1]['color'])
                                     ),
                                   )
                                 ],
