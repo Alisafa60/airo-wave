@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -45,9 +44,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final String phone = phoneNumberController.text;
     final String address = adressController.text;
     final String unitPreference = _isMetric ? 'Metric' : 'Imperial';
-    // Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
-
-    // print(decodedToken);
+  
     if (token != null) {
       final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
       final Map<String, dynamic> requestBody = {
