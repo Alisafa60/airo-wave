@@ -28,6 +28,8 @@ class _MyHomeScreen extends State<HomeScreen> {
   late PollenService pollenService;
   double latitude = 32.32;
   double longitude = 35.32;
+  List<Map<String, dynamic>> plantAllergens = [];
+  List<Map<String, dynamic>> pollenAllergens = [];
   
 
   @override
@@ -45,25 +47,16 @@ class _MyHomeScreen extends State<HomeScreen> {
     // pollenService = PollenService(widget.apiService);
     // fetchPollen();
   }
+  
 
   Future<void> _loadEnviromentalData() async {
     try {
       final Map<String, dynamic> data = await enviromentalService.getEnviromental();
       setState(() {
-      //   if (data['allergen_data'] != null) {
-      //   final Map<String, dynamic> allergenData = json.decode(data['allergen_data']);
-      //   data['allergen_data'] = allergenData;
-      //   print('allergen_data: $allergenData');
-      // }else{
-      //   print('no allergen');
-      // }
-        
         enviromentalData = data;
-        
-        
+        plantAllergens = getPlantType(enviromentalData);
+        pollenAllergens = getPollenType(enviromentalData);
       });
-      
-     
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -370,7 +363,6 @@ class _MyHomeScreen extends State<HomeScreen> {
                                             color: myGray.withOpacity(1),
                                             ),
                                           ),
-                                        
                                           SvgPicture.asset('lib/assets/icons/molecule.svg', height: 25, width: 25,),
                                           Text(
                                           'C',
@@ -436,78 +428,93 @@ class _MyHomeScreen extends State<HomeScreen> {
                           ),
                          child: Padding(
                           padding: const EdgeInsets.all(15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
                             children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-
-                                Row(
+                              Row(
                                 children: [
-                                  SvgPicture.asset('lib/assets/icons/leaf2.svg', height: 23, width: 23,),
-                                  const SizedBox(width: 5,),
-                                  Text(
-                                    '${plantAllergens[0]['displayName'] ?? ' ' }',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: getColorFromName(plantAllergens[1]['color']),
-                                    ),
-                                  )
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset('lib/assets/icons/leaf2.svg', height: 23, width: 23,),
+                                            const SizedBox(width: 5,),
+                                            Text(
+                                              '${plantAllergens.isNotEmpty ? plantAllergens[0]['displayName'] ?? '' : ''}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: getColorFromName(plantAllergens.isNotEmpty ? plantAllergens[0]['color'] : 'black'),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10,),
+                                          Row(
+                                          children: [
+                                            SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
+                                            const SizedBox(width: 5,),
+                                            Text(
+                                             '${plantAllergens.isNotEmpty ? plantAllergens[1]['displayName'] ?? '' : ''}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: getColorFromName(plantAllergens.isNotEmpty ? plantAllergens[0]['color'] : 'black'),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                    ],
+                                  ),
+                                 Padding(
+                                  padding: EdgeInsets.all(7),
+                                  child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    color: myGray.withOpacity(0.4),
+                                    borderRadius: BorderRadius.circular(30)
+                                  ),
+                                 ))
                                 ],
-                              ),
-                              const SizedBox(height: 10,),
-                                Row(
-                                children: [
-                                  SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
-                                  const SizedBox(width: 5,),
-                                  Text(
-                                    '${pollenAllergens[1]['displayName'] ?? ' ' }',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: getColorFromName(pollenAllergens[1]['color'])
-                                    ),
-                                  )
-                                ],
-                              ),
-                              ],
-                            ),
-                              const SizedBox(height: 7,),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 10,),
-                                Row(
-                                children: [
-                                  SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 20, width: 20,),
-                                  const SizedBox(width: 5,),
-                                  Text(
-                                    '${pollenAllergens[0]['displayName'] ?? ' ' }',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: getColorFromName(pollenAllergens[0]['color']),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 10,),
-                                Row(
-                                children: [
-                                  SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
-                                  const SizedBox(width: 5,),
-                                  Text(
-                                    '${pollenAllergens[1]['displayName'] ?? ' ' }',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: getColorFromName(pollenAllergens[1]['color'])
-                                    ),
-                                  )
-                                ],
-                              ),
-                              ],
-                            ),
+                              )
+                              
+                              
+                              
+                            
+                              
+                            //   Column(
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //   children: [
+                            //     const SizedBox(height: 10,),
+                            //     Row(
+                            //     children: [
+                            //       SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 20, width: 20,),
+                            //       const SizedBox(width: 5,),
+                            //       Text(
+                            //         '${pollenAllergens[0]['displayName'] ?? ' ' }',
+                            //         style: TextStyle(
+                            //           fontWeight: FontWeight.w600,
+                            //           color: getColorFromName(pollenAllergens[0]['color']),
+                            //         ),
+                            //       )
+                            //     ],
+                            //   ),
+                            //   const SizedBox(height: 10,),
+                            //     Row(
+                            //     children: [
+                            //       SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
+                            //       const SizedBox(width: 5,),
+                            //       Text(
+                            //         '${pollenAllergens[1]['displayName'] ?? ' ' }',
+                            //         style: TextStyle(
+                            //           fontWeight: FontWeight.w600,
+                            //           color: getColorFromName(pollenAllergens[1]['color'])
+                            //         ),
+                            //       )
+                            //     ],
+                            //   ),
+                            //   ],
+                            // ),
                             ],
                            ),
                           ),
