@@ -446,7 +446,8 @@ class _MyHomeScreen extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                  Row(
+
+                                Row(
                                 children: [
                                   SvgPicture.asset('lib/assets/icons/leaf2.svg', height: 23, width: 23,),
                                   SizedBox(width: 5,),
@@ -455,35 +456,6 @@ class _MyHomeScreen extends State<HomeScreen> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: getColorFromName(plantAllergens[1]['color']),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 10,),
-                                Row(
-                                children: [
-                                  SvgPicture.asset('lib/assets/icons/olive.svg', height: 23, width: 25,),
-                                  const SizedBox(width: 5,),
-                                  Text(
-                                    '${plantAllergens[1]['displayName'] ?? ' ' }',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: getColorFromName(plantAllergens[1]['color'])
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 10,),
-                              
-                                Row(
-                                children: [
-                                  SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 20, width: 20,),
-                                  SizedBox(width: 5,),
-                                  Text(
-                                    '${pollenAllergens[0]['displayName'] ?? ' ' }',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: getColorFromName(pollenAllergens[0]['color']),
                                     ),
                                   )
                                 ],
