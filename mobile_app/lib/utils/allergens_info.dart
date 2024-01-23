@@ -1,4 +1,4 @@
-List<Map<String, dynamic>> getRecommendations(Map<String, dynamic>? enviromentalData) {
+List<Map<String, dynamic>> getPlantType(Map<String, dynamic>? enviromentalData) {
   final List<Map<String, dynamic>> plantType = [];
 
   if (enviromentalData != null &&
@@ -15,7 +15,7 @@ List<Map<String, dynamic>> getRecommendations(Map<String, dynamic>? enviromental
       final int value = rawValue?.toInt() ?? 0;
       final String category = plant['indexInfo']?['category'] ?? '';
 
-      if (value >= 0) {
+      if (value > 0) {
         final String displayName = plant['displayName'] ?? '';
         final String color = getCategoryColor(category);
 
@@ -25,12 +25,40 @@ List<Map<String, dynamic>> getRecommendations(Map<String, dynamic>? enviromental
     });
   }
 }
-
     }
-  } else {
-    print('No daily info');
-  }
+  } 
+  return plantType;
+}
 
+List<Map<String, dynamic>> getPollenType(Map<String, dynamic>? enviromentalData) {
+  final List<Map<String, dynamic>> plantType = [];
+
+  if (enviromentalData != null &&
+      enviromentalData.containsKey('environmentalData') &&
+      enviromentalData['environmentalData'].containsKey('allergen_data') &&
+      enviromentalData['environmentalData']['allergen_data'].containsKey('dailyInfo')) {
+    final List<dynamic> dailyInfo = enviromentalData['environmentalData']['allergen_data']['dailyInfo'];
+
+    for (final entry in dailyInfo) {
+      final List<dynamic> pollenType = entry['pollenTypeInfo'];
+
+      for (final plant in pollenType) {
+      final num? rawValue = plant['indexInfo']?['value'];
+      final int value = rawValue?.toInt() ?? 0;
+      final String category = plant['indexInfo']?['category'] ?? '';
+
+      if (value > 0) {
+        final String displayName = plant['displayName'] ?? '';
+        final String color = getCategoryColor(category);
+
+    plantType.add({
+      'displayName': displayName,
+      'color': color,
+    });
+  }
+}
+    }
+  } 
   return plantType;
 }
 
