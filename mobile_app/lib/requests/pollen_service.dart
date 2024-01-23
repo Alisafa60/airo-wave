@@ -86,6 +86,7 @@ class PollenService {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
+        print(response.body);
         final location = {'latitude': latitude, 'longitude': longitude};
 
         await postPollen(jsonData: responseData, location: location);
