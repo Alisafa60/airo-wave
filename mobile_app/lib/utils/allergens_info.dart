@@ -1,33 +1,51 @@
-class AllergenInfo {
-  final String displayName;
-  final int value;
-  final String category;
+List<Map<String, dynamic>> getRecommendations(Map<String, dynamic>? enviromentalData) {
+  final List<Map<String, dynamic>> recommendations = [];
 
-  AllergenInfo(this.displayName, this.value, this.category);
-}
+  if (enviromentalData != null &&
+      enviromentalData.containsKey('environmentalData') &&
+      enviromentalData['environmentalData'].containsKey('allergen_data') &&
+      enviromentalData['environmentalData']['allergen_data'].containsKey('dailyInfo')) {
+    final List<dynamic> dailyInfo = enviromentalData['environmentalData']['allergen_data']['dailyInfo'];
 
-String getRecommendation(List<dynamic> allergiesData) {
-  List<AllergenInfo> selectedAllergens = [];
+    for (final entry in dailyInfo) {
+      final List<dynamic> plantInfo = entry['plantInfo'];
 
-  for (var entry in allergiesData) {
-    for (var allergen in entry['plantInfo']) {
-      String displayName = allergen['displayName'];
-      int value = allergen['indexInfo']['value'];
+      for (final plant in plantInfo) {
+        final bool inSeason = plant['inSeason'] ?? false;
+        final num? rawValue = plant['indexInfo']?['value'];
+        final int value = rawValue?.toInt() ?? 0;
+        final String category = plant['indexInfo']?['category'] ?? '';
 
-      if (value != null && value > 0) {
-        String category = allergen['indexInfo']['category'];
-        selectedAllergens.add(AllergenInfo(displayName, value, category));
+        if (inSeason && value > 0) {
+          final String displayName = plant['displayName'] ?? '';
+          final String color = getCategoryColor(category);
+
+          recommendations.add({
+            'displayName': displayName,
+            'color': color,
+          });
+        }
       }
     }
+  } else {
+    print('No daily info');
   }
 
-  selectedAllergens.sort((a, b) => b.value.compareTo(a.value));
-  if (selectedAllergens.isNotEmpty) {
-    String recommendation = selectedAllergens.first.displayName;
-    String color = getColor(selectedAllergens.first.category);
-    return '$recommendation - $color';
-  } else {
-    return 'No significant allergens found';
+  return recommendations;
+}
+
+String getCategoryColor(String category) {
+  switch (category.toLowerCase()) {
+    case 'very low':
+    case 'low':
+      return 'blue';
+    case 'moderate':
+    case 'high':
+    case 'very high':
+      return 'red';
+    default:
+      return 'black';
   }
 }
+
 
