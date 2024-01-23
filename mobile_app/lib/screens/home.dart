@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:mobile_app/models/environmental.model.dart';
 import 'package:mobile_app/requests/air_quality.dart';
 import 'package:mobile_app/requests/environmental_survice.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,8 @@ class HomeScreen extends StatefulWidget {
 
 class _MyHomeScreen extends State<HomeScreen> {
   late SensorService sensorService;
-  Map<String, dynamic>? healthData;
+  Map<String, dynamic>? sensorData;
+  Map<String, dynamic>? enviromentalData;
   late Timer sensorUpdateTimer;
   late EnviromentalService enviromentalService;
   double latitude = 48.8566;
@@ -29,13 +31,27 @@ class _MyHomeScreen extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // sensorService = SensorService(widget.apiService);
-    // _loadSensor();
-    // sensorUpdateTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
-    //   _loadSensor();
-    // });
+    sensorService = SensorService(widget.apiService);
+    _loadSensor();
+    sensorUpdateTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
+      _loadSensor();
+    });
     enviromentalService = EnviromentalService(widget.apiService);
     _fetchAndPostAirQualityData();
+    enviromentalService = EnviromentalService(widget.apiService);
+    _loadEnviromentalData();
+  }
+
+  Future<void> _loadEnviromentalData() async {
+    try {
+      final Map<String, dynamic> data = await enviromentalService.getEnviromental();
+      setState(() {
+        enviromentalData = data;
+      });
+     print(enviromentalData);
+    } catch (error) {
+      print('Error loading health data: $error');
+    }
   }
 
   @override
@@ -48,16 +64,15 @@ class _MyHomeScreen extends State<HomeScreen> {
     try {
       final Map<String, dynamic> data = await sensorService.getSensorData();
       setState(() {
-        healthData = data;
+        sensorData = data;
       });
-     print(healthData);
+     print(sensorData);
     } catch (error) {
       print('Error loading health data: $error');
     }
   }
    Future<void> _fetchAndPostAirQualityData() async {
     try {
-
       await enviromentalService.fetchAirQualityDataAndPost(
         latitude,
         longitude,
@@ -67,15 +82,19 @@ class _MyHomeScreen extends State<HomeScreen> {
     }
   }
 
-  
-
   @override
   Widget build(BuildContext context){
     double screenHeight = MediaQuery.of(context).size.height;
     double appBarHeight = AppBar().preferredSize.height;
     double bottomNavBarHeight = kBottomNavigationBarHeight;
-    int co2Value = healthData?['lastSensorData']?['co2'] ?? 0;
-    int vocValue = healthData?['lastSensorData']?['voc'] ?? 0;
+    int co2Value = sensorData?['lastSensorData']?['co2'] ?? 0;
+    int vocValue = sensorData?['lastSensorData']?['voc'] ?? 0;
+    String dominantPollutant = '${enviromentalData?['environmentalData']?['dominantPollutant'] ?? ''}';
+    dominantPollutant = dominantPollutant.toUpperCase();
+    String aqiCategory = '${enviromentalData?['environmentalData']?['aqiCategory'] ?? ''}';
+    String aqiCondition = aqiCategory.split(' ').first;
+    
+
 
     Color statusColor = getStatusColor(
       co2Value > vocValue ? co2Value : vocValue,
@@ -85,7 +104,26 @@ class _MyHomeScreen extends State<HomeScreen> {
     String statusText = getStatusText(
       co2Value > vocValue ? co2Value : vocValue,
       co2Value > vocValue ? 'co2' : 'voc',
-  );
+    );
+
+    String gasName(String dominantPollutant) {
+      switch (dominantPollutant.toLowerCase()) {
+        case 'o3':
+          return 'Ozone';
+        case 'co':
+          return 'Carbon monoxide';
+        case 'pm10':
+          return 'Inhalable particulate (<10µm)';
+        case 'pm25':
+          return 'Fine particulate (<2.5µm)';
+        case 'so2':
+          return 'Sulfur dioxide';
+        case 'no2':
+          return 'Nitrogen dioxide';
+        default:
+          return 'Unknown Gas'; 
+      }
+    }
   
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -258,12 +296,12 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       SvgPicture.asset('lib/assets/icons/carbon-dioxide.svg', height: 50, width: 50,),
                                       SizedBox(height: 10,),
                                       Text(
-                                      '${healthData?['lastSensorData']?['co2'] ?? ''}',
+                                      '${sensorData?['lastSensorData']?['co2'] ?? ''}',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         color: getStatusColor(
-                                          healthData?['lastSensorData']?['co2'] ?? 0,
+                                          sensorData?['lastSensorData']?['co2'] ?? 0,
                                           'co2',
                                         ),
                                       ),
@@ -316,12 +354,12 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       ),
                                       SizedBox(height: 14),
                                       Text(
-                                        '${healthData?['lastSensorData']?['voc'] ?? ''}', 
+                                        '${sensorData?['lastSensorData']?['voc'] ?? ''}', 
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                           color: getStatusColor(
-                                          healthData?['lastSensorData']?['voc'] ?? 0,
+                                          sensorData?['lastSensorData']?['voc'] ?? 0,
                                           'voc',
                                           )
                                         ),
@@ -382,95 +420,51 @@ class _MyHomeScreen extends State<HomeScreen> {
                             padding: EdgeInsets.all(15),
                             child: Column(
                             children: [
-                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                    Text(
-                                      'Air Quality Index',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: myGray.withOpacity(0.95)
-                                      ),
-                                      ),
-                                      SizedBox(width: 10,),
-                                      Text(
-                                      '',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: myGray.withOpacity(0.95)
-                                      ),
-                                      ),
-                                  ],),
-                                  
-                                  SizedBox(width: 10,),
-                                  Container(
-                                  height: 20,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    color: secondaryColor,
-                                    border: Border.all(color: myGray.withOpacity(0.3), width: 1),
-                                    borderRadius: BorderRadius.circular(15)
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                    'Good',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                              ),
+                              
                               SizedBox(height: 5,),
                               Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                        Container(
-                                          height: 30,
-                                          width: 60,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(color: myGray.withOpacity(0.3), width: 1),
-                                            borderRadius: BorderRadius.circular(15)
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                            'CO',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: myGray,
-                                              fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      SizedBox(height: 17,),
-                                      Text(
-                                      '',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
+                                // Expanded(
+                                //   child: Column(
+                                //     children: [
+                                //         Container(
+                                //           height: 30,
+                                //           width: 60,
+                                //           decoration: BoxDecoration(
+                                //             border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                                //             borderRadius: BorderRadius.circular(15)
+                                //           ),
+                                //           child: const Center(
+                                //             child: Text(
+                                //             'CO',
+                                //             style: TextStyle(
+                                //               fontSize: 14,
+                                //               color: myGray,
+                                //               fontWeight: FontWeight.w600,
+                                //               ),
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       SizedBox(height: 17,),
+                                //       Text(
+                                //       '${enviromentalData?['environmentalData']?['coLevel'] ?? ''}',
+                                //       style: TextStyle(
+                                //         fontSize: 16,
+                                //         fontWeight: FontWeight.w600,
+                                //         color: getColorEnv(enviromentalData?['environmentalData']?['coLevel'] ?? 0, 'co')
                                         
-                                      ),
-                                    ),
-                                  ],
-                                  ),
-                                ),
-                                Container(
-                                  color: myGray.withOpacity(0.15),
-                                  width: 3,
-                                  height: 75, 
-                                ),
+                                //       ),
+                                //     ),
+                                //   ],
+                                //   ),
+                                // ),
+                                // Container(
+                                //   color: myGray.withOpacity(0.15),
+                                //   width: 3,
+                                //   height: 75, 
+                                // ),
                                 Expanded(
                                   child: Column(
                                     children: [
@@ -511,11 +505,11 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        '', 
+                                        '${enviromentalData?['environmentalData']?['so2Level'] ?? ''}', 
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          
+                                          color: getColorEnv(enviromentalData?['environmentalData']?['so2Level'] ?? 0, 'so2')
                                         ),
                                       ),
                                     ],
@@ -549,11 +543,11 @@ class _MyHomeScreen extends State<HomeScreen> {
                                         ),
                                       SizedBox(height: 17,),
                                       Text(
-                                      '',
+                                      '${enviromentalData?['environmentalData']?['no2Level'] ?? ''}',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
-                                        
+                                        color: getColorEnv(enviromentalData?['environmentalData']?['no2Level'] ?? 0, 'no2')
                                       ),
                                     ),
                                   ],
@@ -604,11 +598,11 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       ),
                                       SizedBox(height: 10),
                                       Text(
-                                        '', 
+                                        '${enviromentalData?['environmentalData']?['pm10'] ?? ''}', 
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          
+                                          color: getColorEnv(enviromentalData?['environmentalData']?['pm10'] ?? 0, 'pm10')
                                         ),
                                       ),
                                     ],
@@ -616,25 +610,28 @@ class _MyHomeScreen extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-                            
                             SizedBox(height: 14,),
                              Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Dominant Polutant',
+                               
+                                const Text(
+                                  'Dominant Pollutant',
                                   style: TextStyle(
                                     color: myGray,
-                                    fontSize: 14,
+                                    fontSize: 13,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                SizedBox(width: 10),
                                 Text(
-                                  '', 
+                                  gasName(dominantPollutant), 
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 13,
                                     fontWeight: FontWeight.w600,
+                                    color: Colors.red,
                                     
                                   ),
                                 ),
