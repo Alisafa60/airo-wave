@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:mobile_app/models/environmental.model.dart';
-import 'package:mobile_app/requests/air_quality.dart';
 import 'package:mobile_app/requests/environmental_survice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -304,7 +301,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(15)
                           ),
                           child: Padding(
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             child: Column(
                             children: [
                                Row(
@@ -320,7 +317,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   )
                                 ],
                               ),
-                              SizedBox(height: 5,),
+                              const SizedBox(height: 5,),
                               Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -329,7 +326,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   child: Column(
                                     children: [
                                       SvgPicture.asset('lib/assets/icons/carbon-dioxide.svg', height: 50, width: 50,),
-                                      SizedBox(height: 10,),
+                                      const SizedBox(height: 10,),
                                       Text(
                                       '${sensorData?['lastSensorData']?['co2'] ?? ''}',
                                       style: TextStyle(
@@ -361,7 +358,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                           // )
                                         ),
                                       child: Padding( 
-                                        padding: EdgeInsets.all(7),
+                                        padding: const EdgeInsets.all(7),
                                        child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
@@ -373,7 +370,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                             color: myGray.withOpacity(1),
                                             ),
                                           ),
-                                          SizedBox(width: 0,),
+                                        
                                           SvgPicture.asset('lib/assets/icons/molecule.svg', height: 25, width: 25,),
                                           Text(
                                           'C',
@@ -387,7 +384,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                        ),
                                         ),
                                       ),
-                                      SizedBox(height: 14),
+                                      const SizedBox(height: 14),
                                       Text(
                                         '${sensorData?['lastSensorData']?['voc'] ?? ''}', 
                                         style: TextStyle(
@@ -404,7 +401,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10,),
+                            const SizedBox(height: 10,),
                             Container(
                               height: 25,
                               width: (statusText == 'Good' || statusText == 'High') ? 60 : 80,
@@ -417,7 +414,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   child: Text(
                                   statusText,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -438,7 +435,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(15)
                           ),
                          child: Padding(
-                          padding: EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(15),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -450,7 +447,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                 Row(
                                 children: [
                                   SvgPicture.asset('lib/assets/icons/leaf2.svg', height: 23, width: 23,),
-                                  SizedBox(width: 5,),
+                                  const SizedBox(width: 5,),
                                   Text(
                                     '${plantAllergens[0]['displayName'] ?? ' ' }',
                                     style: TextStyle(
@@ -460,11 +457,11 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   )
                                 ],
                               ),
-                              SizedBox(height: 10,),
+                              const SizedBox(height: 10,),
                                 Row(
                                 children: [
                                   SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
-                                  SizedBox(width: 5,),
+                                  const SizedBox(width: 5,),
                                   Text(
                                     '${pollenAllergens[1]['displayName'] ?? ' ' }',
                                     style: TextStyle(
@@ -476,16 +473,16 @@ class _MyHomeScreen extends State<HomeScreen> {
                               ),
                               ],
                             ),
-                              SizedBox(height: 7,),
+                              const SizedBox(height: 7,),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 10,),
+                                const SizedBox(height: 10,),
                                 Row(
                                 children: [
                                   SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 20, width: 20,),
-                                  SizedBox(width: 5,),
+                                  const SizedBox(width: 5,),
                                   Text(
                                     '${pollenAllergens[0]['displayName'] ?? ' ' }',
                                     style: TextStyle(
@@ -495,11 +492,11 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   )
                                 ],
                               ),
-                              SizedBox(height: 10,),
+                              const SizedBox(height: 10,),
                                 Row(
                                 children: [
                                   SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
-                                  SizedBox(width: 5,),
+                                  const SizedBox(width: 5,),
                                   Text(
                                     '${pollenAllergens[1]['displayName'] ?? ' ' }',
                                     style: TextStyle(
@@ -529,7 +526,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(15)
                           ),
                           child: Padding(
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             child: Column(
                             children: [
                                Row(
@@ -545,7 +542,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                         color: myGray.withOpacity(0.95)
                                       ),
                                       ),
-                                      SizedBox(width: 10,),
+                                      const SizedBox(width: 10,),
                                       Text(
                                       '${enviromentalData?['environmentalData']?['aqi'] ?? ''} ',
                                       style: TextStyle(
@@ -554,7 +551,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                         color: getStatusColor(enviromentalData?['environmentalData']?['aqi'] ?? 0, 'aqi'),
                                       ),
                                       ),
-                                      SizedBox(width: 10,),
+                                      const SizedBox(width: 10,),
                                       aqiCondition == 'Good'
                                       ? SvgPicture.asset(
                                           'lib/assets/icons/smiling.svg',
@@ -567,8 +564,8 @@ class _MyHomeScreen extends State<HomeScreen> {
                                           width: 18,
                                         ),
                                   ],),
-                                  SizedBox(width: 10,),
-                                  Center(
+                                  const SizedBox(width: 10,),
+                                  const Center(
                                     child: Icon(
                                     Icons.air,
                                     size: 30,
@@ -577,7 +574,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 5,),
+                              const SizedBox(height: 5,),
                               Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -590,7 +587,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                           borderRadius: BorderRadius.circular(15),
                                         ),
                                       child: Padding( 
-                                        padding: EdgeInsets.all(7),
+                                        padding: const EdgeInsets.all(7),
                                        child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
@@ -616,7 +613,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                        ),
                                         ),
                                       ),
-                                      SizedBox(height: 10),
+                                      const SizedBox(height: 10),
                                       Text(
                                         '${enviromentalData?['environmentalData']?['so2Level'] ?? ''}', 
                                         style: TextStyle(
@@ -654,7 +651,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                             ),
                                           ),
                                         ),
-                                      SizedBox(height: 17,),
+                                      const SizedBox(height: 17,),
                                       Text(
                                       '${enviromentalData?['environmentalData']?['no2Level'] ?? ''}',
                                       style: TextStyle(
@@ -677,10 +674,6 @@ class _MyHomeScreen extends State<HomeScreen> {
                                       Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(15),
-                                          // border: Border.all(
-                                          //   width: 2,
-                                          //   color: myGray.withOpacity(0.15)
-                                          // )
                                         ),
                                       child: Padding( 
                                         padding: EdgeInsets.all(7),
@@ -729,7 +722,6 @@ class _MyHomeScreen extends State<HomeScreen> {
                               textBaseline: TextBaseline.alphabetic,
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                               
                                 const Text(
                                   'Dominant Pollutant',
                                   style: TextStyle(
@@ -745,7 +737,6 @@ class _MyHomeScreen extends State<HomeScreen> {
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
                                     color: primaryColor.withOpacity(0.7),
-                                    
                                   ),
                                 ),
                               ],
