@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mobile_app/api_service.dart';
@@ -9,7 +8,7 @@ class EnviromentalService {
   final ApiService apiService;
   EnviromentalService(this.apiService);
 
-  Future<Map<String, dynamic>> getEnvironmetnal() async {
+  Future<Map<String, dynamic>> getEnviromental() async {
      String? token = await _getToken();
 
     if (token != null) {
@@ -17,7 +16,7 @@ class EnviromentalService {
 
       try {
         final http.Response response = await apiService.get(
-          '/api/user/health/last-environmental-data',
+          '/api/user/latest-environmental-data',
           headers,
         );
 
