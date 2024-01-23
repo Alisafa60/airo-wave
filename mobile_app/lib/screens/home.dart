@@ -41,6 +41,7 @@ class _MyHomeScreen extends State<HomeScreen> {
     // _fetchAndPostAirQualityData();
     enviromentalService = EnviromentalService(widget.apiService);
     _loadEnviromentalData();
+    fetchPollen();
   }
 
   Future<void> _loadEnviromentalData() async {
@@ -82,6 +83,10 @@ class _MyHomeScreen extends State<HomeScreen> {
   //     print('Error fetching and posting air quality data: $error');
   //   }
   // }
+  
+  Future<void> fetchPollen() async {
+    await fetchPollenData(latitude, longitude); 
+  }
 
   @override
   Widget build(BuildContext context){
