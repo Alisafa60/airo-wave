@@ -66,9 +66,9 @@ String getCategoryColor(String category) {
   switch (category.toLowerCase()) {
     case 'very low':
     case 'low':
-      return 'blue';
+      return 'secondaryColor';
     case 'moderate':
-      return 'orange';
+      return 'primaryColor';
     case 'high':
     case 'very high':
       return 'red';
