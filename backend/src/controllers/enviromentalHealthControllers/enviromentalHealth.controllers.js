@@ -38,14 +38,41 @@ const environmentalDataSchema = Joi.object({
     latitude: Joi.number().required(),
     longitude: Joi.number().required(),
   }).required(),
+  allergen_data: Joi.object({
+    code: Joi.string(),
+    displayName: Joi.string(),
+    inSeason: Joi.boolean(),
+    indexInfo: Joi.object({
+      code: Joi.string(),
+      displayName: Joi.string(),
+      value: Joi.number(),
+      category: Joi.string(),
+      indexDescription: Joi.string(),
+      color: Joi.object({
+        green: Joi.number(),
+        blue: Joi.number(),
+      }),
+    }),
+    healthRecommendations: Joi.array().items(Joi.string()),
+    plantDescription: Joi.object({
+      type: Joi.string(),
+      family: Joi.string(),
+      season: Joi.string(),
+      specialColors: Joi.string(),
+      specialShapes: Joi.string(),
+      crossReaction: Joi.string(),
+      picture: Joi.string(),
+      pictureCloseup: Joi.string(),
+    }),
+  }).unknown(true).optional()
 });
 
 const createEnvironmentalData = async (req, res) => {
   try {
-    const { temperature, humidity, aqi, aqiCategory, o3Level, treePollen, grassPollen, weedPollen, olivePollen, birchPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm25, pm10, windSpeed, bloodO2Level, dominantPollutant, heartRate, deviceId, location} = req.body;
+    const { temperature, humidity, aqi, aqiCategory, o3Level, treePollen, grassPollen, weedPollen, olivePollen, birchPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm25, pm10, windSpeed, bloodO2Level, dominantPollutant, heartRate, deviceId, location, allergen_data} = req.body;
     const userId = req.user.id;
     const { error, value } = environmentalDataSchema.validate({
-      temperature, humidity, aqi, aqiCategory, o3Level, pm10, treePollen, grassPollen, weedPollen, olivePollen, birchPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm25, pm10, windSpeed, bloodO2Level, dominantPollutant, heartRate, deviceId, userId, location
+      temperature, humidity, aqi, aqiCategory, o3Level, pm10, treePollen, grassPollen, weedPollen, olivePollen, birchPollen, co2Level, ozoneLevel, coLevel, vocLevel, so2Level, no2Level, pm1_0, pm25, pm10, windSpeed, bloodO2Level, dominantPollutant, heartRate, deviceId, userId, location, allergen_data
     });
 
     if (error) {
