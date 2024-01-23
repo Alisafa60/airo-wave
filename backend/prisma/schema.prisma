@@ -200,11 +200,7 @@ model EnviromentalHealthData{
   humidity                Float?
   aqi                     Float?
   aqiCategory             String?
-  allergen1               Int?
-  allergen2               Int?
-  allergen3               Int?
-  allergen4               Int?
-  allergen5               Int?
+  allergen_data           Json?
   co2Level                Float?
   ozoneLevel              Float?
   coLevel                 Float?
