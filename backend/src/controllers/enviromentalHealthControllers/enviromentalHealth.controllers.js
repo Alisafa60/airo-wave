@@ -66,18 +66,19 @@ const getLastEnvironmentalData = async (req, res) => {
   try{
     const userId = req.user.id;
 
-    getLastEnvironmentalData = await prisma.enviromentalHealthData.findFirst({
+    environmentalData = await prisma.enviromentalHealthData.findFirst({
       where: { userId: userId},
       orderBy:{ createdAt: 'desc'}
     })
 
-    if (!getLastEnvironmentalData){
+    if (!environmentalData){
       return res.status(404).json({error: 'No Enviromental Data found'});
     }
     
-    res.status(200).json({getLastEnvironmentalData});
+    res.status(200).json({environmentalData});
   }catch(e){
     handleError(res, e, 'Error retrieving EnvironmentalHealthData');
+
   }
 }
 
