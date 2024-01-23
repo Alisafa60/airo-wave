@@ -75,64 +75,63 @@ class PollenService {
   }
 
   Future<void> fetchAndPostPollen(double latitude, double longitude) async {
-  try {
-    final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY']; 
-    final apiUrl = "https://pollen.googleapis.com/v1/forecast:lookup?key=$apiKey&location.longitude=$longitude&location.latitude=$latitude&days=1";
-
-    final response = await http.get(
-      Uri.parse(apiUrl),
-      headers: {'Content-Type': 'application/json'},
-    );
-
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      final location = {'latitude': latitude, 'longitude': longitude};
-
-      await postPollen(jsonData: responseData, location: location);
-      
-    } else {
-      print('Failed to fetch air quality data. Status code: ${response.statusCode}');
-    }
-  } catch (error) {
-    print('Error fetching or posting data: $error');
-  }
-}
-
-Future<Map<String, dynamic>> postPollen({
-  required Map<String, dynamic> jsonData,
-  required Map<String, dynamic> location,
-}) async {
-  String? token = await _getToken();
-
-  if (token != null) {
-    final Map<String, String> headers = {
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json',
-    };
-
     try {
-      final http.Response response = await apiService.post(
-        '/api/user/environmental-data',
-        headers,
-        {
-          'allergen_data': jsonData,
-          'location': location,
-        },
+      final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY']; 
+      final apiUrl = "https://pollen.googleapis.com/v1/forecast:lookup?key=$apiKey&location.longitude=$longitude&location.latitude=$latitude&days=1";
+
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
       );
 
-      if (response.statusCode == 201) {
-        final Map<String, dynamic> environmentalData = json.decode(response.body) as Map<String, dynamic>;
-        return environmentalData;
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        final location = {'latitude': latitude, 'longitude': longitude};
+
+        await postPollen(jsonData: responseData, location: location);
+        
       } else {
-        throw Exception('Failed to post environmental data. Status code: ${response.statusCode}, Body: ${response.body}, response: ${response}');
+        print('Failed to fetch air quality data. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      throw Exception('Error during environmental data update API call: $error');
+      print('Error fetching or posting data: $error');
     }
-  } else {
-    throw Exception('Token is null. Unable to make the API request.');
   }
-}
 
+  Future<Map<String, dynamic>> postPollen({
+    required Map<String, dynamic> jsonData,
+    required Map<String, dynamic> location,
+  }) async {
+    String? token = await _getToken();
+
+    if (token != null) {
+      final Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
+
+      try {
+        final http.Response response = await apiService.post(
+          '/api/user/environmental-data',
+          headers,
+          {
+            'allergen_data': jsonData,
+            'location': location,
+          },
+        );
+
+        if (response.statusCode == 201) {
+          final Map<String, dynamic> environmentalData = json.decode(response.body) as Map<String, dynamic>;
+          return environmentalData;
+        } else {
+          throw Exception('Failed to post environmental data. Status code: ${response.statusCode}, Body: ${response.body}, response: ${response}');
+        }
+      } catch (error) {
+        throw Exception('Error during environmental data update API call: $error');
+      }
+    } else {
+      throw Exception('Token is null. Unable to make the API request.');
+    }
+  }
 
 }
