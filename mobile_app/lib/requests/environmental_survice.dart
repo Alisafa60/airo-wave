@@ -87,7 +87,7 @@ class EnviromentalService {
           dominantPollutant: dominantPollutant,
         );
 
-        print("Response: $responseData");
+        
       } else {
         print('Failed to fetch air quality data. Status code: ${response.statusCode}');
       }
@@ -132,7 +132,7 @@ class EnviromentalService {
         };
 
         final http.Response response = await apiService.post(
-          '/api/user/environmental-data',
+          '/api/user/latest-environmental-data',
           headers,
           requestBody,
         );
