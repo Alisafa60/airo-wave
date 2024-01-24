@@ -21,10 +21,8 @@ class UserHealthScreen extends StatefulWidget {
 }
 
 class _UserHealthState extends State<UserHealthScreen> {
-  GlobalKey<MedicationFieldsState> medicationFieldsKey = GlobalKey<MedicationFieldsState>();
   List<GlobalKey<MedicationFieldsState>> medicationFieldsKeys = [];
-  int initialMedicationCount = 0;
-  
+  int initialMedicationCount = 30;
 
   final List<DropdownMenuItem<String>> _conditionItems = [
     const DropdownMenuItem(value: 'None', child: Text('None')),
@@ -52,6 +50,11 @@ class _UserHealthState extends State<UserHealthScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState(){
+    super.initState();
      for (int i = 0; i < initialMedicationCount; i++) {
       medicationFieldsKeys.add(GlobalKey<MedicationFieldsState>());
     }
@@ -135,37 +138,40 @@ class _UserHealthState extends State<UserHealthScreen> {
       }
     }
   }
+  
   Future<void> addMedication() async {
     String? token = await getToken();
 
     if (token != null) {
       final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
 
-      MedicationFieldsState medicationFieldsState = medicationFieldsKey.currentState!;
-      MedicationData medicationData = medicationFieldsState.getMedicationData();
-
-      final Map<String, dynamic> requestBody = {
-        'name': medicationData.medication,
-        'dosage': medicationData.dosage,
-        'frequency': medicationData.frequency,
-        'startDate': medicationData.startDate,
-        'context': medicationData.healthCondition,
-      };
-
       try {
-        final http.Response response = await widget.apiService.post(
-          '/api/user/health/medication',
-          headers,
-          requestBody,
-        );
+        for (int i = 0; i < medicationFieldsKeys.length; i++) {
+          MedicationFieldsState medicationFieldsState = medicationFieldsKeys[i].currentState!;
+          MedicationData medicationData = medicationFieldsState.getMedicationData();
 
-        print(requestBody);
+          final Map<String, dynamic> requestBody = {
+            'name': medicationData.medication,
+            'dosage': medicationData.dosage,
+            'frequency': medicationData.frequency,
+            'startDate': medicationData.startDate,
+            'context': medicationData.healthCondition,
+          };
 
-        if (response.statusCode == 201) {
-          print('Medication added successfully');
+          final http.Response response = await widget.apiService.post(
+            '/api/user/health/medication',
+            headers,
+            requestBody,
+          );
+
           print(requestBody);
-        } else {
-          print('Medication addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+
+          if (response.statusCode == 201) {
+            print('Medication added successfully');
+            print(requestBody);
+          } else {
+            print('Medication addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+          }
         }
       } catch (error) {
         print('Error during medication addition: $error');
@@ -426,7 +432,7 @@ class _UserHealthState extends State<UserHealthScreen> {
                       ),
                       for (int i = 0; i < medicationEntries.length; i++)
                         MedicationFields(
-                          key: medicationFieldsKey, 
+                          key1: medicationFieldsKeys[i],
                           index: i,
                         ),
                     ],
