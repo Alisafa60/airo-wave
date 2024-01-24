@@ -79,21 +79,9 @@ const createEnvironmentalData = async (req, res) => {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const transactionPromise = new Promise(async (resolve, reject) => {
-      try {
-        const airQualityResult = await prisma.enviromentalHealthData.create({
-          data: {
-            ...value,
-            allergen_data: allergen_data,
-          },
-        });
-
-        resolve({ airQualityResult });
-      } catch (error) {
-        reject(error);
-      }
+    const newEnvironmentalData = await prisma.enviromentalHealthData.create({
+      data: value,
     });
-    const newEnvironmentalData = await transactionPromise;
 
     res.status(201).json({ environmentalData: newEnvironmentalData });
   } catch (e) {
@@ -120,6 +108,50 @@ const getLastEnvironmentalData = async (req, res) => {
 
   }
 }
+
+const updateLastRowAllergenData = async (req, res) => {
+  try {
+    const { aqi, o3Level, no2Level, so2Level, coLevel, pm10, pm25, location, dominantPollutant, aqiCategory } = req.body;
+    const userId = req.user.id;
+
+    const lastRow = await prisma.enviromentalHealthData.findFirst({
+      where: {
+        userId: userId,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+
+    if (!lastRow) {
+      return res.status(404).json({ error: 'No records found for the user' });
+    }
+
+    const updatedData = await prisma.enviromentalHealthData.updateMany({
+      where: {
+        id: lastRow.id,
+      },
+      data: {
+        aqi: aqi,
+        aqiCategory: aqiCategory,
+        o3Level: o3Level,
+        pm10: pm10,
+        so2Level: so2Level,
+        pm25: pm25,
+        coLevel: coLevel,
+        no2Level: no2Level,
+        dominantPollutant: dominantPollutant,
+        location: location,
+      },
+    });
+    console.log('updated'),
+    console.log(coLevel)
+    console.log(location);
+    res.status(200).json({ updatedData });
+  } catch (error) {
+    handleError(res, error, 'Error updating allergen_data in the last row');
+  }
+};
 
 const getEnvironmentalDataByDateRange = async (req, res) => {
     try {
@@ -174,4 +206,5 @@ module.exports = {
   getEnvironmentalDataByDateRange,
   getEnvironmentalDataList,
   getLastEnvironmentalData,
+  updateLastRowAllergenData,
 }
