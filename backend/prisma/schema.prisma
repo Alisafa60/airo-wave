@@ -74,9 +74,9 @@ model HealthCondition{
 model RespiratoryCondition{
   id                  Int                @id @default(autoincrement())
   condition           String
-  diangnosis          String
-  symptomsFrequency   String
-  triggers            String
+  diangnosis          String?
+  symptomsFrequency   String?
+  triggers            String?
   healthConditionId   Int
   healthCondition     HealthCondition   @relation(fields: [healthConditionId], references: [id])
   medications         Medication[]
@@ -85,9 +85,9 @@ model RespiratoryCondition{
 model Allergy{
   id                  Int                @id @default(autoincrement())
   allergen            String
-  severity            String
-  duration            String
-  triggers            String
+  severity            String?
+  duration            String?
+  triggers            String?
   healthConditionId   Int
   healthCondition     HealthCondition   @relation(fields: [healthConditionId], references: [id])
   medications         Medication[]
@@ -97,8 +97,8 @@ model Allergy{
 model Medication{
   id                      Int                    @id @default(autoincrement())
   name                    String
-  frequency               String
-  dosage                  String
+  frequency               String?
+  dosage                  String?
   startDate               DateTime?
   respiratoryConditionId  Int?
   respiratoryCondition    RespiratoryCondition?  @relation(fields: [respiratoryConditionId], references: [id])
