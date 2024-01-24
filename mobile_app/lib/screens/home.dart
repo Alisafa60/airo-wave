@@ -42,7 +42,7 @@ class _MyHomeScreen extends State<HomeScreen> {
     });
     enviromentalService = EnviromentalService(widget.apiService);
     pollenService = PollenService(widget.apiService);
-    _fetchAndPostAirQualityData();
+    // _fetchAndPostAirQualityData();
     _loadEnviromentalData();
     // fetchPollen();
   }
@@ -80,15 +80,15 @@ class _MyHomeScreen extends State<HomeScreen> {
   }
 Future<void> _fetchAndPostAirQualityData() async {
   try {
-    final airQuality = enviromentalService.fetchAirQualityDataAndPost(latitude, longitude);
     final pollen = pollenService.fetchAndPostPollen(latitude, longitude);
-    await Future.wait([pollen, airQuality]);
-
+    await Future.delayed(Duration(seconds: 1));
+    final airQuality = enviromentalService.fetchAirQualityDataAndPost(latitude, longitude);
+    
+    await Future.wait([airQuality, pollen]);
   } catch (error) {
     print('Error fetching and posting air quality data: $error');
   }
 }
-
   @override
   Widget build(BuildContext context){
     double screenHeight = MediaQuery.of(context).size.height;
