@@ -6,4 +6,5 @@ router.post('/user/environmental-data', environmentalDataController.createEnviro
 router.get('/user/environmental-data/dateRange', environmentalDataController.getEnvironmentalDataByDateRange);
 router.get('/user/environmental-data', environmentalDataController.getEnvironmentalDataList);
 router.get('/user/latest-environmental-data', environmentalDataController.getLastEnvironmentalData);
+router.post('/user/latest-environmental-data', environmentalDataController.updateLastRowAllergenData);
 module.exports = router;
