@@ -35,6 +35,7 @@ class _UserHealthState extends State<UserHealthScreen> {
   final List<List<TextEditingController>> _fieldControllers = [[]];
   final TextEditingController weightController = TextEditingController();
   final TextEditingController bloodTypeController = TextEditingController();
+  ScrollController _scrollController = ScrollController();
   List<String> medicationEntries = [];
 
   bool isBloodTypeValid = true;
@@ -44,8 +45,8 @@ class _UserHealthState extends State<UserHealthScreen> {
     return validBloodTypes.contains(bloodType.toUpperCase());
   }
 
-  final ScrollController _scrollController = ScrollController();
-
+  double _saveButtonOpacity = 1.0;
+  bool isSaveButtonVisible = true;
   @override
   void dispose() {
     _scrollController.dispose();
@@ -58,6 +59,7 @@ class _UserHealthState extends State<UserHealthScreen> {
      for (int i = 0; i < initialMedicationCount; i++) {
       medicationFieldsKeys.add(GlobalKey<MedicationFieldsState>());
     }
+     _scrollController = ScrollController();
   }
 
   Future<String?> getToken() async {
@@ -138,7 +140,7 @@ class _UserHealthState extends State<UserHealthScreen> {
       }
     }
   }
-  
+
   Future<void> addMedication() async {
     String? token = await getToken();
 
@@ -213,35 +215,22 @@ class _UserHealthState extends State<UserHealthScreen> {
     }
   }
 
-  @override
- Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(255, 252, 252, 1),
-        title: const Text(
-          "Health",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          Container(
-            decoration: BoxDecoration(
-              color: const Color.fromRGBO(74, 74, 74, 0.1),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.clear),
-              color: const Color.fromRGBO(74, 74, 74, 1),
-              onPressed: () {},
-              iconSize: 30,
-            ),
-          ),
-        ],
-      ),
-      body: Stack(
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+    
+    ),
+    body: NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollInfo) {
+        if (scrollInfo is ScrollUpdateNotification) {
+          setState(() {
+            _saveButtonOpacity = scrollInfo.scrollDelta! < 0 ? 0.2 : 1.0;
+          });
+        }
+        return false;
+      },
+      child: Stack(
         children: [
           SingleChildScrollView(
             controller: _scrollController,
@@ -261,11 +250,6 @@ class _UserHealthState extends State<UserHealthScreen> {
                         child: UnderlineInputField(
                           controller: bloodTypeController,
                           hintText: ' Blood Type',
-                          // onChanged: (value) {
-                          //   setState(() {
-                          //     isBloodTypeValid = isValidBloodType(value);
-                          //   });
-                          // },
                         ),
                       ),
                     ],
@@ -338,7 +322,6 @@ class _UserHealthState extends State<UserHealthScreen> {
                       );
                     }).toList(),
                   ),
-
                   const SizedBox(height: 5),
                   InkWell(
                     onTap: () {
@@ -437,7 +420,7 @@ class _UserHealthState extends State<UserHealthScreen> {
                         ),
                     ],
                   ),
-                  const SizedBox(height: 40,),
+                  const SizedBox(height: 70,),
                 ],
               ),
             ),
@@ -445,10 +428,10 @@ class _UserHealthState extends State<UserHealthScreen> {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 0,
+            bottom: 10,
             child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 50),
-              opacity: (_scrollController.hasClients && _scrollController.offset > 100) ? 0.0 : 1.0,
+              duration: const Duration(milliseconds: 100),
+              opacity: _saveButtonOpacity,
               child: Container(
                 color: Colors.transparent,
                 padding: const EdgeInsets.all(15),
@@ -461,9 +444,10 @@ class _UserHealthState extends State<UserHealthScreen> {
           ),
         ],
       ),
+    ),
+  );
+}
 
-    );
-  }
 
   void _updateFieldControllers(int index) {
     _fieldControllers[index].forEach((controller) {
