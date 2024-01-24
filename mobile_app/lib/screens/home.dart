@@ -40,11 +40,10 @@ class _MyHomeScreen extends State<HomeScreen> {
     sensorUpdateTimer = Timer.periodic(Duration(minutes: 10), (Timer timer) {
       _loadSensor();
     });
-    // enviromentalService = EnviromentalService(widget.apiService);
-    // _fetchAndPostAirQualityData();
     enviromentalService = EnviromentalService(widget.apiService);
+    pollenService = PollenService(widget.apiService);
+    _fetchAndPostAirQualityData();
     _loadEnviromentalData();
-    // pollenService = PollenService(widget.apiService);
     // fetchPollen();
   }
   
@@ -79,20 +78,16 @@ class _MyHomeScreen extends State<HomeScreen> {
       print('Error loading health data: $error');
     }
   }
-  //  Future<void> _fetchAndPostAirQualityData() async {
-  //   try {
-  //     await enviromentalService.fetchAirQualityDataAndPost(
-  //       latitude,
-  //       longitude,
-  //     );
-  //   } catch (error) {
-  //     print('Error fetching and posting air quality data: $error');
-  //   }
-  // }
-  
-  // Future<void> fetchPollen() async {
-  //   await pollenService.fetchAndPostPollen(latitude, longitude); 
-  // }
+Future<void> _fetchAndPostAirQualityData() async {
+  try {
+    final airQuality = enviromentalService.fetchAirQualityDataAndPost(latitude, longitude);
+    final pollen = pollenService.fetchAndPostPollen(latitude, longitude);
+    await Future.wait([pollen, airQuality]);
+
+  } catch (error) {
+    print('Error fetching and posting air quality data: $error');
+  }
+}
 
   @override
   Widget build(BuildContext context){
@@ -106,8 +101,6 @@ class _MyHomeScreen extends State<HomeScreen> {
     String aqiCategory = '${enviromentalData?['environmentalData']?['aqiCategory'] ?? ''}';
     String aqiCondition = aqiCategory.split(' ').first;
     
-
-
     Color statusColor = getStatusColor(
       co2Value > vocValue ? co2Value : vocValue,
       co2Value > vocValue ? 'co2' : 'voc',
@@ -431,6 +424,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                           child: Column(
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -465,12 +459,12 @@ class _MyHomeScreen extends State<HomeScreen> {
                                     ],
                                   ),
                                  Padding(
-                                  padding: EdgeInsets.all(7),
+                                  padding: const EdgeInsets.all(7),
                                   child: Container(
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
-                                    color: primaryColor.withOpacity(0.2),
+                                    color: myGray.withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(30)
                                   ),
                                   child: Column(
@@ -491,6 +485,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                               ),
                               SizedBox(height: 5,),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -530,7 +525,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
-                                    color: primaryColor.withOpacity(0.2),
+                                    color: myGray.withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(30)
                                   ),
                                   child: Column(
