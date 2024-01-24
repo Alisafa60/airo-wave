@@ -470,51 +470,20 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
-                                    color: myGray.withOpacity(0.4),
+                                    color: primaryColor.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(30)
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Plant', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: myGray),),
+                                        Text('Type', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: myGray),),
+                                    ],
                                   ),
                                  ))
                                 ],
                               )
-                              
-                              
-                              
-                            
-                              
-                            //   Column(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                            //   children: [
-                            //     const SizedBox(height: 10,),
-                            //     Row(
-                            //     children: [
-                            //       SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 20, width: 20,),
-                            //       const SizedBox(width: 5,),
-                            //       Text(
-                            //         '${pollenAllergens[0]['displayName'] ?? ' ' }',
-                            //         style: TextStyle(
-                            //           fontWeight: FontWeight.w600,
-                            //           color: getColorFromName(pollenAllergens[0]['color']),
-                            //         ),
-                            //       )
-                            //     ],
-                            //   ),
-                            //   const SizedBox(height: 10,),
-                            //     Row(
-                            //     children: [
-                            //       SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
-                            //       const SizedBox(width: 5,),
-                            //       Text(
-                            //         '${pollenAllergens[1]['displayName'] ?? ' ' }',
-                            //         style: TextStyle(
-                            //           fontWeight: FontWeight.w600,
-                            //           color: getColorFromName(pollenAllergens[1]['color'])
-                            //         ),
-                            //       )
-                            //     ],
-                            //   ),
-                            //   ],
-                            // ),
+                          
                             ],
                            ),
                           ),
