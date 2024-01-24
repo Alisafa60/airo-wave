@@ -476,14 +476,73 @@ class _MyHomeScreen extends State<HomeScreen> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('Plant', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: myGray),),
-                                        Text('Type', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: myGray),),
+                                      Text('Plant', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: myGray.withOpacity(0.9)),),
+                                        Text('Type', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: myGray.withOpacity(0.9)),),
                                     ],
                                   ),
                                  ))
                                 ],
-                              )
-                          
+                              ),
+                              SizedBox( height: 10),
+                              Container(
+                                height: 1.5,
+                                width: 100,
+                                color: myGray.withOpacity(0.2),
+                              ),
+                              SizedBox(height: 5,),
+                              Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 23, width: 23,),
+                                            const SizedBox(width: 5,),
+                                            Text(
+                                              '${plantAllergens.isNotEmpty ? pollenAllergens[0]['displayName'] ?? '' : ''}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: getColorFromName(plantAllergens.isNotEmpty ? pollenAllergens[0]['color'] : 'black'),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10,),
+                                          Row(
+                                          children: [
+                                            SvgPicture.asset('lib/assets/icons/olive.svg', height: 23, width: 25,),
+                                            const SizedBox(width: 5,),
+                                            Text(
+                                             '${plantAllergens.isNotEmpty ? pollenAllergens[1]['displayName'] ?? '' : ''}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: getColorFromName(plantAllergens.isNotEmpty ? pollenAllergens[0]['color'] : 'black'),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                    ],
+                                  ),
+                                 Padding(
+                                  padding: EdgeInsets.all(7),
+                                  child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    color: primaryColor.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(30)
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Pollen', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: myGray.withOpacity(0.9)),),
+                                        Text('Type', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: myGray.withOpacity(0.9)),),
+                                    ],
+                                  ),
+                                 ))
+                                ],
+                              ),
                             ],
                            ),
                           ),
