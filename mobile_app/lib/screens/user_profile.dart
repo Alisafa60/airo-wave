@@ -9,6 +9,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final ApiService apiService;
@@ -159,6 +160,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       String? uploadedImagePath = await _uploadImage(imagePath);
 
       if (uploadedImagePath != null) {
+        await _saveImagePath(uploadedImagePath);
         setState(() {
           _imagePath = uploadedImagePath;
           fileName = basename(uploadedImagePath);
@@ -170,6 +172,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         print('Image upload failed');
       }
     }
+  }
+
+  Future<void> _saveImagePath(String imagePath) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('profileImagePath', imagePath);
   }
   
   @override
