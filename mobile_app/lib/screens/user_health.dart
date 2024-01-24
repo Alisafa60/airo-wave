@@ -105,38 +105,39 @@ class _UserHealthState extends State<UserHealthScreen> {
  
   Future<void> addAllergyCondition() async {
     String? token = await getToken();
-    
+
     if (token != null) {
-      final Map<String, String> headers = {
-        'Authorization': 'Bearer $token',
-         'Content-Type': 'application/json'
-        };
+      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
       AllergyData allergyData = const AllergyFields(index: 0).getAllergyData();
 
-      final Map<String, dynamic> requestBody = {
-        'allergen': allergyData.allergen,
-        'severity': allergyData.severity,
-        'duration': allergyData.duration,
-        'triggers': allergyData.triggers,
-      };
+      if (allergyData.allergen.isNotEmpty) {
+        final Map<String, dynamic> requestBody = {
+          'allergen': allergyData.allergen,
+          'severity': allergyData.severity,
+          'duration': allergyData.duration,
+          'triggers': allergyData.triggers,
+        };
 
-      try {
-        final http.Response response = await widget.apiService.post(
-          '/api/user/health/allergy',
-          headers,
-          requestBody,
-        );
+        try {
+          final http.Response response = await widget.apiService.post(
+            '/api/user/health/allergy',
+            headers,
+            requestBody,
+          );
 
-        print(requestBody);
-
-        if (response.statusCode == 201) {
-          print('Allergy conditions added successfully');
           print(requestBody);
-        } else {
-          print('Allergy condition addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+
+          if (response.statusCode == 201) {
+            print('Allergy conditions added successfully');
+            print(requestBody);
+          } else {
+            print('Allergy condition addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+          }
+        } catch (error) {
+          print('Error during allergy condition addition: $error');
         }
-      } catch (error) {
-        print('Error during allergy condition addition: $error');
+      } else {
+        print('Skipping allergy due to missing field');
       }
     }
   }
@@ -152,27 +153,31 @@ class _UserHealthState extends State<UserHealthScreen> {
           MedicationFieldsState medicationFieldsState = medicationFieldsKeys[i].currentState!;
           MedicationData medicationData = medicationFieldsState.getMedicationData();
 
-          final Map<String, dynamic> requestBody = {
-            'name': medicationData.medication,
-            'dosage': medicationData.dosage,
-            'frequency': medicationData.frequency,
-            'startDate': medicationData.startDate,
-            'context': medicationData.healthCondition,
-          };
+          if (medicationData.medication.isNotEmpty) {
+            final Map<String, dynamic> requestBody = {
+              'name': medicationData.medication,
+              'dosage': medicationData.dosage,
+              'frequency': medicationData.frequency,
+              'startDate': medicationData.startDate,
+              'context': medicationData.healthCondition,
+            };
 
-          final http.Response response = await widget.apiService.post(
-            '/api/user/health/medication',
-            headers,
-            requestBody,
-          );
+            final http.Response response = await widget.apiService.post(
+              '/api/user/health/medication',
+              headers,
+              requestBody,
+            );
 
-          print(requestBody);
-
-          if (response.statusCode == 201) {
-            print('Medication added successfully');
             print(requestBody);
+
+            if (response.statusCode == 201) {
+              print('Medication added successfully');
+              print(requestBody);
+            } else {
+              print('Medication addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+            }
           } else {
-            print('Medication addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+            print('skipping medicaiton due to empty fields');
           }
         }
       } catch (error) {
@@ -183,37 +188,43 @@ class _UserHealthState extends State<UserHealthScreen> {
 
   Future<void> addRespiratoryCondition() async {
     String? token = await getToken();
+
     if (token != null) {
       final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
       RespiratoryConditionData respiratoryConditionData = RespiratoryConditionFields(index: 0).getRespiratoryConditionData();
-      
-      final Map<String, dynamic> requestBody = {
-        'condition': respiratoryConditionData.condition,
-        'diagnosis': respiratoryConditionData.diagnosis,
-        'symptomsFrequency': respiratoryConditionData.symptomsFrequency,
-        'triggers': respiratoryConditionData.triggers,
-      };
 
-      try {
-        final http.Response response = await widget.apiService.post(
-          '/api/user/health/respiratoryCondition',
-          headers,
-          requestBody,
-        );
+      if (respiratoryConditionData.condition.isNotEmpty) {
+        final Map<String, dynamic> requestBody = {
+          'condition': respiratoryConditionData.condition,
+          'diagnosis': respiratoryConditionData.diagnosis,
+          'symptomsFrequency': respiratoryConditionData.symptomsFrequency,
+          'triggers': respiratoryConditionData.triggers,
+        };
 
-        print(requestBody);
+        try {
+          final http.Response response = await widget.apiService.post(
+            '/api/user/health/respiratoryCondition',
+            headers,
+            requestBody,
+          );
 
-        if (response.statusCode == 201) {
-          print('Respiratory conditions added successfully');
           print(requestBody);
-        } else {
-          print('Respiratory condition addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+
+          if (response.statusCode == 201) {
+            print('Respiratory conditions added successfully');
+            print(requestBody);
+          } else {
+            print('Respiratory condition addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+          }
+        } catch (error) {
+          print('Error during respiratory condition addition: $error');
         }
-      } catch (error) {
-        print('Error during respiratory condition addition: $error');
+      } else {
+        print('Skipping respiratory condition due to missing fields');
       }
     }
   }
+
 
  @override
 Widget build(BuildContext context) {
@@ -435,10 +446,18 @@ Widget build(BuildContext context) {
               child: Container(
                 color: Colors.transparent,
                 padding: const EdgeInsets.all(15),
-                child: SaveButton(
-                  buttonText: 'Save',
-                  onPressed: addMedication,
-                ),
+              child: SaveButton(
+                buttonText: 'Save',
+                onPressed: () async {
+                  
+                  await Future.wait([
+                    addAllergyCondition(),
+                    addMedication(),
+                    addRespiratoryCondition(),
+                    addHealthCondition(),
+                  ]);
+                },
+              ),
               ),
             ),
           ),
@@ -447,7 +466,6 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
 
   void _updateFieldControllers(int index) {
     _fieldControllers[index].forEach((controller) {
