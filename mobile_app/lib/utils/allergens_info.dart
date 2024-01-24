@@ -1,64 +1,68 @@
 List<Map<String, dynamic>> getPlantType(Map<String, dynamic>? enviromentalData) {
   final List<Map<String, dynamic>> plantType = [];
 
-  if (enviromentalData != null &&
-      enviromentalData.containsKey('environmentalData') &&
-      enviromentalData['environmentalData'].containsKey('allergen_data') &&
-      enviromentalData['environmentalData']['allergen_data'].containsKey('dailyInfo')) {
-    final List<dynamic> dailyInfo = enviromentalData['environmentalData']['allergen_data']['dailyInfo'];
+  final List<dynamic>? dailyInfoList =
+      enviromentalData?['environmentalData']?['allergen_data']?['dailyInfo'];
 
-    for (final entry in dailyInfo) {
-      final List<dynamic> plantInfo = entry['plantInfo'];
+  if (dailyInfoList != null) {
+    for (final entry in dailyInfoList) {
+      final List<dynamic>? plantInfoList = entry?['plantInfo'];
 
-      for (final plant in plantInfo) {
-      final num? rawValue = plant['indexInfo']?['value'];
-      final int value = rawValue?.toInt() ?? 0;
-      final String category = plant['indexInfo']?['category'] ?? '';
+      if (plantInfoList != null) {
+        for (final plant in plantInfoList) {
+          final Map<String, dynamic>? indexInfo = plant?['indexInfo'];
+          final num? rawValue = indexInfo?['value'];
+          final int value = rawValue?.toInt() ?? 0;
+          final String category = indexInfo?['category'] ?? '';
 
-      if (value > 0) {
-        final String displayName = plant['displayName'] ?? '';
-        final String color = getCategoryColor(category);
+          if (value > 0) {
+            final String displayName = plant?['displayName'] ?? '';
+            final String color = getCategoryColor(category);
 
-    plantType.add({
-      'displayName': displayName,
-      'color': color,
-    });
-  }
-}
+            plantType.add({
+              'displayName': displayName,
+              'color': color,
+            });
+          }
+        }
+      }
     }
-  } 
+  }
+
   return plantType;
 }
 
 List<Map<String, dynamic>> getPollenType(Map<String, dynamic>? enviromentalData) {
   final List<Map<String, dynamic>> plantType = [];
 
-  if (enviromentalData != null &&
-      enviromentalData.containsKey('environmentalData') &&
-      enviromentalData['environmentalData'].containsKey('allergen_data') &&
-      enviromentalData['environmentalData']['allergen_data'].containsKey('dailyInfo')) {
-    final List<dynamic> dailyInfo = enviromentalData['environmentalData']['allergen_data']['dailyInfo'];
+  final List<dynamic>? dailyInfoList =
+      enviromentalData?['environmentalData']?['allergen_data']?['dailyInfo'];
 
-    for (final entry in dailyInfo) {
-      final List<dynamic> pollenType = entry['pollenTypeInfo'];
+  if (dailyInfoList != null) {
+    for (final entry in dailyInfoList) {
+      final List<dynamic>? pollenTypeList = entry?['pollenTypeInfo'];
 
-      for (final plant in pollenType) {
-      final num? rawValue = plant['indexInfo']?['value'];
-      final int value = rawValue?.toInt() ?? 0;
-      final String category = plant['indexInfo']?['category'] ?? '';
+      if (pollenTypeList != null) {
+        for (final plant in pollenTypeList) {
+          final Map<String, dynamic>? indexInfo = plant?['indexInfo'];
+          final num? rawValue = indexInfo?['value'];
+          final int value = rawValue?.toInt() ?? 0;
+          final String category = indexInfo?['category'] ?? '';
 
-      if (value > 0) {
-        final String displayName = plant['displayName'] ?? '';
-        final String color = getCategoryColor(category);
+          if (value > 0) {
+            final String displayName = plant?['displayName'] ?? '';
+            final String color = getCategoryColor(category);
 
-    plantType.add({
-      'displayName': displayName,
-      'color': color,
-    });
-  }
-}
+            plantType.add({
+              'displayName': displayName,
+              'color': color,
+            });
+          }
+        }
+      }
     }
-  } 
+  }
+
   return plantType;
 }
 
