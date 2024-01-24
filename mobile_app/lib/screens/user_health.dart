@@ -22,7 +22,9 @@ class UserHealthScreen extends StatefulWidget {
 
 class _UserHealthState extends State<UserHealthScreen> {
   GlobalKey<MedicationFieldsState> medicationFieldsKey = GlobalKey<MedicationFieldsState>();
-
+  List<GlobalKey<MedicationFieldsState>> medicationFieldsKeys = [];
+  int initialMedicationCount = 0;
+  
 
   final List<DropdownMenuItem<String>> _conditionItems = [
     const DropdownMenuItem(value: 'None', child: Text('None')),
@@ -42,6 +44,17 @@ class _UserHealthState extends State<UserHealthScreen> {
 
   bool isValidBloodType(String bloodType) {
     return validBloodTypes.contains(bloodType.toUpperCase());
+  }
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+     for (int i = 0; i < initialMedicationCount; i++) {
+      medicationFieldsKeys.add(GlobalKey<MedicationFieldsState>());
+    }
   }
 
   Future<String?> getToken() async {
@@ -195,7 +208,7 @@ class _UserHealthState extends State<UserHealthScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+ Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(255, 252, 252, 1),
@@ -222,208 +235,227 @@ class _UserHealthState extends State<UserHealthScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const SizedBox(height: 80,),
-                  Expanded(
-                   child: UnderlineInputField(hintText: 'Weight', controller: weightController,)
-                  ),
-                  const SizedBox(width: 7),
-                  Expanded(
-                    child: UnderlineInputField(
-                      controller: bloodTypeController,
-                      hintText: ' Blood Type',
-                      // onChanged: (value) {
-                      //   setState(() {
-                      //     isBloodTypeValid = isValidBloodType(value);
-                      //   });
-                      // },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                ' Health Condition',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Color.fromRGBO(74, 74, 74, 0.7),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 14),
-              ExpansionPanelList(
-                elevation: 1,
-                expandedHeaderPadding: const EdgeInsets.all(0),
-                expansionCallback: (int index, bool isExpanded) {
-                  setState(() {
-                    _selectedConditions[index] = isExpanded ? 'None' : _selectedConditions[index];
-                  });
-                },
-                children: _selectedConditions.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  String condition = entry.value;
-
-                  return ExpansionPanel(
-                    headerBuilder: (BuildContext context, bool isExpanded) {
-                      return InkWell(
-                        onTap: () {
-                          setState(() {
-                            _selectedConditions[index] = !isExpanded ? 'None' : 'None';
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Row(
-                            children: [
-                              DropdownButton<String>(
-                                value: condition,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedConditions[index] = value!;
-                                    _updateFieldControllers(index);
-                                  });
-                                },
-                                items: _conditionItems,
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  setState(() {
-                                    _selectedConditions.removeAt(index);
-                                    _fieldControllers.removeAt(index);
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    body: HealthConditionFieldsWidget(condition: condition, index: index),
-                    isExpanded: condition != 'None',
-                  );
-                }).toList(),
-              ),
-
-              const SizedBox(height: 5),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _selectedConditions.add('None');
-                    _fieldControllers.add([TextEditingController()]);
-                  });
-                },
-                child: Container(
-                  height: 50,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.add),
-                      SizedBox(width: 10),
-                      Text('Add Health Condition'),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30,),
-              Column(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            controller: _scrollController,
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      const SizedBox(height: 80,),
+                      Expanded(
+                        child: UnderlineInputField(hintText: 'Weight', controller: weightController,)
+                      ),
+                      const SizedBox(width: 7),
+                      Expanded(
+                        child: UnderlineInputField(
+                          controller: bloodTypeController,
+                          hintText: ' Blood Type',
+                          // onChanged: (value) {
+                          //   setState(() {
+                          //     isBloodTypeValid = isValidBloodType(value);
+                          //   });
+                          // },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
                   const Text(
-                    ' Medications',
+                    ' Health Condition',
                     style: TextStyle(
                       fontSize: 18,
                       color: Color.fromRGBO(74, 74, 74, 0.7),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              medicationEntries.add('New Medication');
-                            });
-                          },
-                          child: Container(
-                            height: 50,
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-                              borderRadius: BorderRadius.circular(5),
+                  const SizedBox(height: 14),
+                  ExpansionPanelList(
+                    elevation: 1,
+                    expandedHeaderPadding: const EdgeInsets.all(0),
+                    expansionCallback: (int index, bool isExpanded) {
+                      setState(() {
+                        _selectedConditions[index] = isExpanded ? 'None' : _selectedConditions[index];
+                      });
+                    },
+                    children: _selectedConditions.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      String condition = entry.value;
+
+                      return ExpansionPanel(
+                        headerBuilder: (BuildContext context, bool isExpanded) {
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                _selectedConditions[index] = !isExpanded ? 'None' : 'None';
+                              });
+                            },
+                            child: Container(
+                              height: 50,
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Row(
+                                children: [
+                                  DropdownButton<String>(
+                                    value: condition,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedConditions[index] = value!;
+                                        _updateFieldControllers(index);
+                                      });
+                                    },
+                                    items: _conditionItems,
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () {
+                                      setState(() {
+                                        _selectedConditions.removeAt(index);
+                                        _fieldControllers.removeAt(index);
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: const Row(
-                              children: [
-                                Icon(Icons.add),
-                                SizedBox(width: 10),
-                                Text('Add Medication'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      InkWell(
-                        onTap: () {
-                          if (medicationEntries.isNotEmpty) {
-                            setState(() {
-                              medicationEntries.removeLast();
-                            });
-                          }
+                          );
                         },
-                        child: Container(
-                          height: 50,
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.delete),
-                              SizedBox(width: 10),
-                              Text('Delete Medication'),
-                            ],
-                          ),
+                        body: HealthConditionFieldsWidget(condition: condition, index: index),
+                        isExpanded: condition != 'None',
+                      );
+                    }).toList(),
+                  ),
+
+                  const SizedBox(height: 5),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedConditions.add('None');
+                        _fieldControllers.add([TextEditingController()]);
+                      });
+                    },
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.add),
+                          SizedBox(width: 10),
+                          Text('Add Health Condition'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        ' Medications',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromRGBO(74, 74, 74, 0.7),
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  medicationEntries.add('New Medication');
+                                });
+                              },
+                              child: Container(
+                                height: 50,
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.add),
+                                    SizedBox(width: 10),
+                                    Text('Add Medication'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          InkWell(
+                            onTap: () {
+                              if (medicationEntries.isNotEmpty) {
+                                setState(() {
+                                  medicationEntries.removeLast();
+                                });
+                              }
+                            },
+                            child: Container(
+                              height: 50,
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: const Row(
+                                children: [
+                                  Icon(Icons.delete),
+                                  SizedBox(width: 10),
+                                  Text('Delete Medication'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      for (int i = 0; i < medicationEntries.length; i++)
+                        MedicationFields(
+                          key: medicationFieldsKey, 
+                          index: i,
+                        ),
                     ],
                   ),
-                  for (int i = 0; i < medicationEntries.length; i++)
-                    MedicationFields(
-                      key: medicationFieldsKey, // Pass the GlobalKey here
-                      index: i,
-                    ),
+                  const SizedBox(height: 40,),
                 ],
               ),
-              const SizedBox(height: 40,),
-              SaveButton(
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 50),
+              opacity: (_scrollController.hasClients && _scrollController.offset > 100) ? 0.0 : 1.0,
+              child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.all(15),
+                child: SaveButton(
                   buttonText: 'Save',
                   onPressed: addMedication,
-              )
-            ],  
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
+
     );
   }
 
