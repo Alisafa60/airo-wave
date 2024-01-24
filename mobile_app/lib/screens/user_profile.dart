@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/widgets/dropdown_menu.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mobile_app/api_service.dart';
@@ -257,9 +258,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             UnderlineInputField(controller: lastNameController, hintText: ' Last name'),
             const SizedBox(height: 20,),
             UnderlineInputField(controller: phoneNumberController, hintText: ' Phone number'),
-            const SizedBox(height: 20,),
-            GenderDropdownFormField(
-              selectedGender: selectedGender,
+            const SizedBox(height: 10,),
+            GenderDropdownForm(
+              currentValue: selectedGender,
               onChanged: (String? value) {
                 print('selected gender: $value');
                 setState(() {
