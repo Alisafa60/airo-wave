@@ -79,9 +79,21 @@ const createEnvironmentalData = async (req, res) => {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const newEnvironmentalData = await prisma.enviromentalHealthData.create({
-      data: value,
+    const transactionPromise = new Promise(async (resolve, reject) => {
+      try {
+        const airQualityResult = await prisma.enviromentalHealthData.create({
+          data: {
+            ...value,
+            allergen_data: allergen_data,
+          },
+        });
+
+        resolve({ airQualityResult });
+      } catch (error) {
+        reject(error);
+      }
     });
+    const newEnvironmentalData = await transactionPromise;
 
     res.status(201).json({ environmentalData: newEnvironmentalData });
   } catch (e) {
