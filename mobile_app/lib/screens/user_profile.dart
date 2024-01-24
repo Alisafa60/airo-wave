@@ -216,24 +216,31 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   onTap: () {
                     showPopupMenu(context);
                   },
-                  child: ClipOval(
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        image: fileName != null
-                            ?  DecorationImage(
-                                image: NetworkImage('http://172.25.135.58:3000/uploads/$fileName'),
-                                fit: BoxFit.cover,
-                              )
-                            : const DecorationImage(
-                                image: AssetImage('lib/assets/images/profile-picture.png'),
-                                fit: BoxFit.cover,
-                              ),
-                              
+                  child: Container(
+                    key: ValueKey<String>(_imagePath ?? ''),
+                    color: const Color.fromRGBO(255, 252, 252, 1),
+                    child: GestureDetector(
+                      onTap: () {
+                        showPopupMenu(context);
+                      },
+                      child: ClipOval(
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          child: _imagePath != null
+                              ? Image.network(
+                                  'http://172.25.135.58:3000/uploads/$fileName',
+                                  key: ValueKey<String>(_imagePath ?? ' '), 
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'lib/assets/images/profile-picture.png',
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                       ),
                     ),
-                  ),
+                  )
                 ),
               ),
             ),
