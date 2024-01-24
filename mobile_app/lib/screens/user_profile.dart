@@ -32,6 +32,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController adressController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileImage();
+  }
   
   Future<String?> getToken() async {
     const FlutterSecureStorage storage = FlutterSecureStorage();
@@ -105,7 +111,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         if (response.statusCode == 201) {
           final Map<String, dynamic> responseData = jsonDecode(response.body);
           final String uploadedImagePath = responseData['imageUrl'];
-          return uploadedImagePath;
+          final String uploadedFileName = basename(uploadedImagePath);
+          return uploadedFileName;
         } else {
             print('Image upload failed. Status code: ${response.statusCode}, Body: ${response.body}');
             return null; 
@@ -133,6 +140,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         if (response.statusCode == 204) {
           setState(() {
             _imagePath = null;
+            fileName = null;
           });
         } else {
           print('Profile picture deletion failed. Status code: ${response.statusCode}, Body: ${response.body}');
@@ -161,23 +169,39 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       String? uploadedImagePath = await _uploadImage(imagePath);
 
       if (uploadedImagePath != null) {
+        await _removeOldImagePath();
         await _saveImagePath(uploadedImagePath);
+
         setState(() {
           _imagePath = uploadedImagePath;
           fileName = basename(uploadedImagePath);
-          print('Image Path: $_imagePath');
         });
-        
-        print(fileName);
       } else {
         print('Image upload failed');
       }
     }
   }
 
+Future<void> _removeOldImagePath() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove('profileImagePath');
+}
+
   Future<void> _saveImagePath(String imagePath) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('profileImagePath', imagePath);
+    print('saved image pathh: $imagePath');
+  }
+
+  Future<void> _loadProfileImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedImagePath = prefs.getString('profileImagePath');
+    if (savedImagePath != null){
+      setState(() {
+        fileName = savedImagePath;
+      });
+      print('image path $fileName');
+    }
   }
   
   @override
@@ -235,7 +259,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Container(
                           width: 80,
                           height: 80,
-                          child: _imagePath != null
+                          child: fileName != null
                               ? Image.network(
                                   'http://172.25.135.58:3000/uploads/$fileName',
                                   key: ValueKey<String>(_imagePath ?? ' '), 
