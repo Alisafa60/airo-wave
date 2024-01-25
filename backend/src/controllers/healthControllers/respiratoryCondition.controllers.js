@@ -15,7 +15,7 @@ const addRespiratoryCondition = async (req, res) => {
             return res.status(400).json({ error: 'User health information not found.' });
         }
 
-        if (!allergen || !severity || !duration || !triggers) {
+        if (!condition || !diagnosis || !symptomsFrequency || !triggers) {
             return res.status(400).json({ error: 'Required fields are missing for allergy creation.' });
         }
 
@@ -136,7 +136,7 @@ const updateRespiratoryConditionByName = async (req, res) => {
         existingRespiratoryCondition = await prisma.respiratoryCondition.create({
           data: {
             name: name,
-            diangnosis: diagnosis,
+            diagnosis: diagnosis,
             symptomsFrequency: symptomsFrequency, 
             triggers: triggers, 
             healthConditionId: healthCondition.id,
@@ -149,7 +149,7 @@ const updateRespiratoryConditionByName = async (req, res) => {
             id: existingRespiratoryCondition.id,
           },
           data: {
-            diangnosis: diagnosis || existingRespiratoryCondition.diangnosis,
+            diagnosis: diagnosis || existingRespiratoryCondition.diagnosis,
             symptomsFrequency: symptomsFrequency || existingRespiratoryCondition.symptomsFrequency,
             triggers: triggers || existingRespiratoryCondition.triggers,
           },

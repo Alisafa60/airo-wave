@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 const { handleError } = require('../../helpers');
 
 const createMedication = async (req, res) => {
+
   try {
       const { name, frequency, dosage, startDate, context, allergen, respiratoryCondition } = req.body;
       const userId = req.user.id;

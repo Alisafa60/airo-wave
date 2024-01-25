@@ -4,6 +4,5 @@ const userLocation = require('../controllers/locationControllers/userLocation.co
 
 router.post('/user/location', userLocation.createUserLocation);
 router.get('/user/location/:id', userLocation.getUserLocationById);
-router.get('/user/last-location', userLocation.getUserLastLocation);
-// router.put('/user/location/:id', userLocation.updateUserLocationById);
+router.get('/user/last-location', userLocation.getUserLastLocation);;
 module.exports = router;
