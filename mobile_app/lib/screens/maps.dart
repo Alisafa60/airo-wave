@@ -93,7 +93,7 @@ class _MapsScreenState extends State<MapsScreen> {
       double? longitude = _currentLocation!.longitude;
       if (latitude!=0 && longitude!=0) {
         if (_showHeatmap) {
-          final heatmapData = await fetchHeatmapTile(4, latitude!, longitude!, 'GBR_DEFRA');
+          final heatmapData = await fetchHeatmapTile(intZoomLevel, latitude!, longitude!, 'GBR_DEFRA');
           if (heatmapData != null) {
             final Uint8List? heatmapImageBytes = heatmapData['imageBytes'];
             final int heatmapX = heatmapData['x'];
@@ -108,7 +108,7 @@ class _MapsScreenState extends State<MapsScreen> {
         }
 
         if (_showTreeAllergy) {
-          final allergyData = await fetchAllergyTile(4, latitude!, longitude!, 'TREE_UPI');
+          final allergyData = await fetchAllergyTile(intZoomLevel, latitude!, longitude!, 'TREE_UPI');
           if (allergyData != null) {
             final Uint8List? allergyImageBytes = allergyData['imageBytes'];
             final int allergyX = allergyData['x'];
@@ -122,7 +122,7 @@ class _MapsScreenState extends State<MapsScreen> {
           }
         }
         if (_showGrassAllergy) {
-          final allergyData = await fetchAllergyTile(4, latitude!, longitude!, 'GRASS_UPI');
+          final allergyData = await fetchAllergyTile(intZoomLevel, latitude!, longitude!, 'GRASS_UPI');
           if (allergyData != null) {
             final Uint8List? allergyImageBytes = allergyData['imageBytes'];
             final int allergyX = allergyData['x'];
@@ -136,7 +136,7 @@ class _MapsScreenState extends State<MapsScreen> {
           }
         }
         if (_showWeedAllergy) {
-          final allergyData = await fetchAllergyTile(4, latitude!, longitude!, 'Weed_UPI');
+          final allergyData = await fetchAllergyTile(intZoomLevel, latitude!, longitude!, 'Weed_UPI');
           if (allergyData != null) {
             final Uint8List? allergyImageBytes = allergyData['imageBytes'];
             final int allergyX = allergyData['x'];
@@ -202,8 +202,10 @@ class _MapsScreenState extends State<MapsScreen> {
 
   void _onCameraMove(CameraPosition position) {
     intZoomLevel = position.zoom.round();
+    print('integer zoom: $intZoomLevel');
+    print('zooom: $position.zoom');
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -233,6 +235,7 @@ class _MapsScreenState extends State<MapsScreen> {
                 _mapController = controller;
               });
             },
+            onCameraMove: _onCameraMove,
             initialCameraPosition: CameraPosition(
               target: LatLng(_currentLocation?.latitude ?? 37.7749, _currentLocation?.longitude ?? -122.4194),
               zoom: intZoomLevel.toDouble(),
@@ -293,7 +296,7 @@ class _MapsScreenState extends State<MapsScreen> {
                             setState(() {
                               _showHeatmap = !_showHeatmap;
                             });
-                            updateTileOverlays(); // Update tile overlays based on conditions
+                            updateTileOverlays(); 
                           },
                           child: Container(
                             width: 40,
