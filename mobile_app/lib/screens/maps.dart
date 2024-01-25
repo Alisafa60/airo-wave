@@ -3,7 +3,7 @@ import 'dart:math' show cos, log, tan;
 import 'dart:typed_data';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,9 +21,9 @@ class _MapsScreenState extends State<MapsScreen> {
   int _currentPageIndex = 0;
   bool _showHeatmap = false;
   bool _showAllergyTile = false;
-  LatLng? _selectedPoint;
-  Position? _currentPosition;
   GoogleMapController? _mapController;
+  Location _location = Location();
+  LocationData? _currentLocation;
 
   Set<TileOverlay> tileOverlaysSet = Set<TileOverlay>();
 
@@ -86,7 +86,7 @@ class _MapsScreenState extends State<MapsScreen> {
     tileOverlaysSet.clear(); 
 
     if (_showHeatmap) {
-      final heatmapData = await fetchHeatmapTile(3, 48.8566, 2.3522, 'GBR_DEFRA');
+      final heatmapData = await fetchHeatmapTile(4, 48.8566, 2.3522, 'GBR_DEFRA');
       if (heatmapData != null) {
         final Uint8List? heatmapImageBytes = heatmapData['imageBytes'];
         final int heatmapX = heatmapData['x'];
@@ -101,7 +101,7 @@ class _MapsScreenState extends State<MapsScreen> {
     }
 
     if (_showAllergyTile) {
-      final allergyData = await fetchAllergyTile(3, 48.8566, 2.3522, 'TREE_UPI');
+      final allergyData = await fetchAllergyTile(4, 48.8566, 2.3522, 'TREE_UPI');
       if (allergyData != null) {
         final Uint8List? allergyImageBytes = allergyData['imageBytes'];
         final int allergyX = allergyData['x'];
@@ -114,25 +114,39 @@ class _MapsScreenState extends State<MapsScreen> {
         ));
       }
     }
-    setState(() {});
   }
+
+   Future<void> _requestLocationPermission() async {
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+
+    serviceEnabled = await _location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await _location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await _location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+    _location.onLocationChanged.listen((LocationData currentLocation) {
+      setState(() {
+        _currentLocation = currentLocation;
+      });
+    });
+  }
+
    @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
-  }
-
-  Future<void> _getCurrentLocation() async {
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-      setState(() {
-        _currentPosition = position;
-      });
-    } catch (e) {
-      print("Error getting current location: $e");
-    }
+    _requestLocationPermission();
+    // _requestLocationPermission();
   }
 
   @override
@@ -158,29 +172,22 @@ class _MapsScreenState extends State<MapsScreen> {
       ),
       body: Stack(
         children: [
-          GoogleMap(
+           GoogleMap(
             onMapCreated: (GoogleMapController controller) {
-              
+              setState(() {
+                _mapController = controller;
+              });
             },
             initialCameraPosition: CameraPosition(
-              target: _currentPosition != null
-                  ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
-                  : LatLng(48.8566, 2.3522),
-              zoom: 15,
+              target: LatLng(_currentLocation?.latitude ?? 48.8566, _currentLocation?.longitude ?? 2.3522),
+              zoom: 3,
             ),
-             markers: {
-              if (_selectedPoint != null)
-                Marker(
-                  markerId: MarkerId("selectedPoint"),
-                  position: _selectedPoint!,
-                  infoWindow: InfoWindow(title: "Selected Point"),
-                ),
-              if (_currentPosition != null)
-                Marker(
-                  markerId: MarkerId("currentPosition"),
-                  position: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-                  infoWindow: InfoWindow(title: "Current Position"),
-                ),
+            markers: {
+              Marker(
+                markerId: MarkerId('markerId'),
+                position: LatLng(_currentLocation?.latitude ?? 48.8566, _currentLocation?.longitude ?? 2.3522),
+                infoWindow: InfoWindow(title: 'Marker Title'),
+              ),
             },
             tileOverlays: tileOverlaysSet,
           ),
@@ -378,19 +385,6 @@ class _MapsScreenState extends State<MapsScreen> {
         selectedIndex: 2,
       ),
     );
-  }
-  void _onMapTapped(LatLng position) {
-    setState(() {
-      _selectedPoint = position;
-    });
-
-    if (_mapController != null) {
-      _mapController!.animateCamera(
-        CameraUpdate.newLatLng(position),
-      );
-
-      print("Latitude: ${position.latitude}, Longitude: ${position.longitude}");
-    }
   }
 }
 
