@@ -23,7 +23,7 @@ class BorderedInputField extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(5),
       child: TextField(
-        controller: controller, // Set the provided controller
+        controller: controller, 
         textAlign: TextAlign.start,
         textAlignVertical: TextAlignVertical.bottom,
         obscureText: hintText.toLowerCase().contains('password'),

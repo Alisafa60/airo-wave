@@ -3,9 +3,9 @@ import 'package:mobile_app/models/medication.model.dart';
 
 class MedicationFields extends StatefulWidget {
   final int index;
-  final GlobalKey<MedicationFieldsState> key1;
+  
 
-  const MedicationFields({super.key, required this.index, required this.key1});
+  const MedicationFields({super.key, required this.index});
 
   @override
   State<MedicationFields> createState() => MedicationFieldsState();
