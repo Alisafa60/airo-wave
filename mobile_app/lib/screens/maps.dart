@@ -3,7 +3,7 @@ import 'dart:math' show cos, log, tan;
 import 'dart:typed_data';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,6 +21,9 @@ class _MapsScreenState extends State<MapsScreen> {
   int _currentPageIndex = 0;
   bool _showHeatmap = false;
   bool _showAllergyTile = false;
+  LatLng? _selectedPoint;
+  Position? _currentPosition;
+  GoogleMapController? _mapController;
 
   Set<TileOverlay> tileOverlaysSet = Set<TileOverlay>();
 
@@ -80,7 +83,7 @@ class _MapsScreenState extends State<MapsScreen> {
   }
 
   Future<void> updateTileOverlays() async {
-    tileOverlaysSet.clear(); // Clear existing tile overlays
+    tileOverlaysSet.clear(); 
 
     if (_showHeatmap) {
       final heatmapData = await fetchHeatmapTile(3, 48.8566, 2.3522, 'GBR_DEFRA');
@@ -111,10 +114,25 @@ class _MapsScreenState extends State<MapsScreen> {
         ));
       }
     }
+    setState(() {});
+  }
+   @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
 
-    setState(() {
-      // Trigger a rebuild to reflect the changes in tileOverlaysSet
-    });
+  Future<void> _getCurrentLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      setState(() {
+        _currentPosition = position;
+      });
+    } catch (e) {
+      print("Error getting current location: $e");
+    }
   }
 
   @override
@@ -142,18 +160,27 @@ class _MapsScreenState extends State<MapsScreen> {
         children: [
           GoogleMap(
             onMapCreated: (GoogleMapController controller) {
-              // Additional setup if needed
+              
             },
             initialCameraPosition: CameraPosition(
-              target: LatLng(48.8566, 2.3522),
-              zoom: 3,
+              target: _currentPosition != null
+                  ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
+                  : LatLng(48.8566, 2.3522),
+              zoom: 15,
             ),
-            markers: {
-              Marker(
-                markerId: MarkerId('markerId'),
-                position: LatLng(48.8566, 2.3522),
-                infoWindow: InfoWindow(title: 'Marker Title'),
-              ),
+             markers: {
+              if (_selectedPoint != null)
+                Marker(
+                  markerId: MarkerId("selectedPoint"),
+                  position: _selectedPoint!,
+                  infoWindow: InfoWindow(title: "Selected Point"),
+                ),
+              if (_currentPosition != null)
+                Marker(
+                  markerId: MarkerId("currentPosition"),
+                  position: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+                  infoWindow: InfoWindow(title: "Current Position"),
+                ),
             },
             tileOverlays: tileOverlaysSet,
           ),
@@ -352,6 +379,19 @@ class _MapsScreenState extends State<MapsScreen> {
       ),
     );
   }
+  void _onMapTapped(LatLng position) {
+    setState(() {
+      _selectedPoint = position;
+    });
+
+    if (_mapController != null) {
+      _mapController!.animateCamera(
+        CameraUpdate.newLatLng(position),
+      );
+
+      print("Latitude: ${position.latitude}, Longitude: ${position.longitude}");
+    }
+  }
 }
 
 class CustomTileProvider extends TileProvider {
@@ -377,7 +417,6 @@ class CustomTileProvider extends TileProvider {
 
     print('getTile called with x: $x, y: $y, zoom: $zoom, calculated X: $this.x, calculated Y: $this.y, calculated Zoom: $this.zoom');
 
-    // Create the tile
     return Tile(this.x, this.y, imageBytes);
   }
 }
