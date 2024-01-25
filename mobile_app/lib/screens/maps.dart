@@ -3,15 +3,18 @@ import 'dart:math' show cos, log, tan;
 import 'dart:typed_data';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:location/location.dart';
+import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class MapsScreen extends StatefulWidget {
-  const MapsScreen({super.key});
+  final ApiService apiService;
+  const MapsScreen({super.key, required this.apiService});
 
   @override
   State<MapsScreen> createState() => _MapsScreenState();
@@ -153,9 +156,7 @@ class _MapsScreenState extends State<MapsScreen> {
     }
   }
 
-  
-
-   Future<void> _requestLocationPermission() async {
+  Future<void> _requestLocationPermission() async {
     bool serviceEnabled;
     PermissionStatus permissionGranted;
 
@@ -181,12 +182,61 @@ class _MapsScreenState extends State<MapsScreen> {
     });
   }
 
+  Future<String?> getToken() async {
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+    return await storage.read(key: 'jwtToken');
+  }
+
+  Future<void> addUserLocation() async {
+    String? token = await getToken();
+    double longitude = _currentLocation!.longitude!;
+    double latitude = _currentLocation!.latitude!;
+    
+    if (token != null){
+      final Map<String, String> headers = {
+         'Authorization': 'Bearer $token',
+         'Content-Type': 'application/json',
+      };
+      final Map<String, dynamic> requestBody = {
+        'location':{
+          'longitude': longitude,
+          'latitude': latitude,
+        }
+      };
+      try{
+        final http.Response response = await widget.apiService.post(
+         '/api/user/location',
+         headers,
+         requestBody
+         );
+
+      if (response.statusCode == 201) {
+          print('Profile update successful');
+          print({requestBody});
+          
+        } else {
+          print('Profile update failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        }
+      }catch(error){
+        print('error fetching: $error');
+      }
+    }
+
+  }
+
    @override
   void initState() {
     super.initState();
-    _requestLocationPermission();
-    // _requestLocationPermission();
+    _initializeLocation();
   }
+
+  Future<void> _initializeLocation() async {
+    await _requestLocationPermission();
+    await _location.onLocationChanged.first;
+    addUserLocation();
+    updateCameraPosition();
+  }
+
   int intZoomLevel = 4;
   Future<void> updateCameraPosition() async {
     if (_mapController != null && _currentLocation != null) {
