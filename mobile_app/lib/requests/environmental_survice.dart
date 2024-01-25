@@ -40,10 +40,11 @@ class EnviromentalService {
   }
 
   Future<void> fetchAirQualityDataAndPost(double latitude, double longitude) async {
+    
     try {
       final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
       final apiUrl = "https://airquality.googleapis.com/v1/currentConditions:lookup?key=$apiKey";
-
+      print('befooooooore');
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {'Content-Type': 'application/json'},
@@ -67,12 +68,12 @@ class EnviromentalService {
         final aqiCategory = responseData['indexes'][0]['category'];
         final coLevel = responseData['pollutants'].firstWhere((pollutant) => pollutant['code'] == 'co')['concentration']['value'];
         final so2Level = responseData['pollutants'].firstWhere((pollutant) => pollutant['code'] == 'so2')['concentration']['value'];
-        final o3Level = responseData['pollutants'].firstWhere((pollutant) => pollutant['code'] == 'so2')['concentration']['value'];
-        final pm10 = responseData['pollutants'].firstWhere((pollutant) => pollutant['code'] == 'so2')['concentration']['value'];
+        final o3Level = responseData['pollutants'].firstWhere((pollutant) => pollutant['code'] == 'o3')['concentration']['value'];
+        final pm10 = responseData['pollutants'].firstWhere((pollutant) => pollutant['code'] == 'pm10')['concentration']['value'];
         final no2Level = responseData['pollutants'].firstWhere((pollutant) => pollutant['code'] == 'no2')['concentration']['value'];
         final pm25 = responseData['pollutants'].firstWhere((pollutant) => pollutant['code'] == 'pm25')['concentration']['value'];
         final dominantPollutant = responseData['indexes'][0]['dominantPollutant'];
-
+        print(responseData);
         await postEnvironmentalData(
           latitude: latitude,
           longitude: longitude,
@@ -92,21 +93,21 @@ class EnviromentalService {
         print('Failed to fetch air quality data. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error fetching or posting data: $error');
+      print('Error fetching or posting data air quality: $error');
     }
   }
 
   Future<Map<String, dynamic>> postEnvironmentalData({
-    required double latitude,
-    required double longitude,
+    required latitude,
+    required longitude,
     required int aqi,
     required String aqiCategory,
-    required double o3Level,
-    required double pm10,
-    required double so2Level,
-    required double pm25,
-    required double coLevel,
-    required double no2Level,
+    required o3Level,
+    required pm10,
+    required so2Level,
+    required pm25,
+    required coLevel,
+    required no2Level,
     required String dominantPollutant,
   }) async {
     String? token = await _getToken();
@@ -137,7 +138,7 @@ class EnviromentalService {
           requestBody,
         );
         print(requestBody);
-        if (response.statusCode == 201) {
+        if (response.statusCode == 201 || response.statusCode == 200) {
           final Map<String, dynamic> environmentalData = json.decode(response.body) as Map<String, dynamic>;
           return environmentalData;
         } else {
