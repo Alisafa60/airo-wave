@@ -96,7 +96,7 @@ class _MapsScreenState extends State<MapsScreen> {
       double? longitude = _currentLocation!.longitude;
       if (latitude!=0 && longitude!=0) {
         if (_showHeatmap) {
-          final heatmapData = await fetchHeatmapTile(intZoomLevel, latitude!, longitude!, 'GBR_DEFRA');
+          final heatmapData = await fetchHeatmapTile(intZoomLevel, latitude!, longitude!, 'US_AQI');
           if (heatmapData != null) {
             final Uint8List? heatmapImageBytes = heatmapData['imageBytes'];
             final int heatmapX = heatmapData['x'];

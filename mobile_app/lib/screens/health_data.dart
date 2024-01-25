@@ -198,7 +198,6 @@ List<Widget> buildMedicationWidgets(Map<String, dynamic>? medicationData) {
       : [];
 }
 
-
   Future<void> updateAllergy({
     required String allergen,
     String? severity,

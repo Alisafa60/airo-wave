@@ -62,7 +62,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       'adress': address,
       'gender': gender,
       'unit': unitPreference,
-    };
+      };
 
       try {
         final http.Response response = await widget.apiService.put(
@@ -182,10 +182,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
-Future<void> _removeOldImagePath() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.remove('profileImagePath');
-}
+  Future<void> _removeOldImagePath() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('profileImagePath');
+  }
 
   Future<void> _saveImagePath(String imagePath) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

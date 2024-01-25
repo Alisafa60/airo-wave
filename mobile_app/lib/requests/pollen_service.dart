@@ -51,7 +51,7 @@ class PollenService {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        print(response.body);
+        
         final location = {'latitude': latitude, 'longitude': longitude};
 
         await postPollen(jsonData: responseData, location: location);
@@ -60,7 +60,7 @@ class PollenService {
         print('Failed to fetch air quality data. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error fetching or posting data: $error');
+      print('Error fetching or posting data pollen: $error');
     }
   }
 

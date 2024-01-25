@@ -82,9 +82,7 @@ class _UserHealthState extends State<UserHealthScreen> {
         'weight': weight,
         'bloodType': bloodType,
       };
-      print(requestBody);
-      print(headers);
-
+      
       try {
         final http.Response response = await widget.apiService.post(
           '/api/user/health',
@@ -93,7 +91,6 @@ class _UserHealthState extends State<UserHealthScreen> {
         );
         if (response.statusCode == 201) {
           print('Profile update successful');
-          print(requestBody);
           
         } else {
           print('Profile update failed. Status code: ${response.statusCode}, Body: ${response.body}');

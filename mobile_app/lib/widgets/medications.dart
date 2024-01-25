@@ -4,7 +4,6 @@ import 'package:mobile_app/models/medication.model.dart';
 class MedicationFields extends StatefulWidget {
   final int index;
   
-
   const MedicationFields({super.key, required this.index});
 
   @override

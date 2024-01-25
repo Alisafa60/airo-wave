@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(255, 115, 15, 1)),
         useMaterial3: true,
       ),
-      home: HomeScreen(apiService: apiService),
+      home: HomeScreen(apiService: apiService,),
       // initialRoute: '/',
       // routes: {
       //   '/signup': (context) => SignupScreen(apiService: apiService),
