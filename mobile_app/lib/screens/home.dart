@@ -6,6 +6,7 @@ import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/requests/location.service.dart';
 import 'package:mobile_app/requests/pollen_service.dart';
+import 'package:mobile_app/requests/save_allergen.dart';
 import 'package:mobile_app/requests/sensor_request.dart';
 import 'package:mobile_app/utils/allergens_info.dart';
 import 'package:mobile_app/utils/co2_voc_color.dart';
@@ -32,6 +33,7 @@ class _MyHomeScreen extends State<HomeScreen> {
   List<Map<String, dynamic>> plantAllergens = [];
   List<Map<String, dynamic>> pollenAllergens = [];
   late LocationService locationService;
+  late SaveAllergenService saveAllergenService;
   Map<String, dynamic>? locationData;
   
 
@@ -48,6 +50,7 @@ class _MyHomeScreen extends State<HomeScreen> {
     enviromentalService = EnviromentalService(widget.apiService);
     pollenService = PollenService(widget.apiService);
     locationService = LocationService(widget.apiService);
+    saveAllergenService = SaveAllergenService(widget.apiService);
     // _loadEnviromentalData();
     // _fetchAndPostAirQualityData();
     // fetchPollen();
@@ -70,15 +73,20 @@ class _MyHomeScreen extends State<HomeScreen> {
     }
   }
 
-  
-
   Future<void> _loadEnviromentalData() async {
     try {
       final Map<String, dynamic> data = await enviromentalService.getEnviromental();
-      setState(() {
+       setState(() {
         enviromentalData = data;
         plantAllergens = getPlantType(enviromentalData);
         pollenAllergens = getPollenType(enviromentalData);
+        
+        try {
+           saveAllergenService.saveAllergenData(plantAllergens);
+           saveAllergenService.saveAllergenData(pollenAllergens);
+        } catch (error) {
+          print('Error saving allergen data: $error');
+        }
       });
     } catch (error) {
       print('Error loading health data: $error');
@@ -469,7 +477,7 @@ Future<void> _fetchAndPostAirQualityData() async {
                                         const SizedBox(height: 10,),
                                           Row(
                                           children: [
-                                            SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
+                                            SvgPicture.asset('lib/assets/icons/olive.svg', height: 23, width: 25,),
                                             const SizedBox(width: 5,),
                                             Text(
                                              '${plantAllergens.isNotEmpty ? plantAllergens[1]['displayName'] ?? '' : ''}',
@@ -530,7 +538,7 @@ Future<void> _fetchAndPostAirQualityData() async {
                                         const SizedBox(height: 10,),
                                           Row(
                                           children: [
-                                            SvgPicture.asset('lib/assets/icons/olive.svg', height: 23, width: 25,),
+                                            SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
                                             const SizedBox(width: 5,),
                                             Text(
                                              '${plantAllergens.isNotEmpty ? pollenAllergens[1]['displayName'] ?? '' : ''}',
