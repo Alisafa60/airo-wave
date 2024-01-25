@@ -9,12 +9,11 @@ const wkx = require('wkx');
 const createUserLocation = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { location, deviceId } = req.body;
+    const { location } = req.body;
 
     const newUserLocation = await prisma.userLocation.create({
-      userId,
+      userId: userId,
       location: { longitude: location.longitude, latitude: location.latitude },
-      deviceId,
     });
     res.status(201).json({ userLocation: newUserLocation });
     

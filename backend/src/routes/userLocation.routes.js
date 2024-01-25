@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const userLocation = require('../controllers/locationControllers/userLocation.controllers');
+const userLocation = require('../controllers/locationControllers/location.controllers');
 
-router.post('/user/location', userLocation.createUserLocation);
-router.get('/user/location/:id', userLocation.getUserLocationById);
-router.get('/user/last-location', userLocation.getUserLastLocation);;
+router.post('/user/location', userLocation.createLocation);
+router.get('/user/last-location', userLocation.getLastLocation);;
 module.exports = router;
