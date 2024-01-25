@@ -3,6 +3,7 @@ import 'dart:math' show cos, log, tan;
 import 'dart:typed_data';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:location/location.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -20,7 +21,9 @@ class _MapsScreenState extends State<MapsScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPageIndex = 0;
   bool _showHeatmap = false;
-  bool _showAllergyTile = false;
+  bool _showTreeAllergy = false;
+  bool _showGrassAllergy = false;
+  bool _showWeedAllergy = false;
   GoogleMapController? _mapController;
   Location _location = Location();
   LocationData? _currentLocation;
@@ -104,8 +107,36 @@ class _MapsScreenState extends State<MapsScreen> {
           }
         }
 
-        if (_showAllergyTile) {
+        if (_showTreeAllergy) {
           final allergyData = await fetchAllergyTile(4, latitude!, longitude!, 'TREE_UPI');
+          if (allergyData != null) {
+            final Uint8List? allergyImageBytes = allergyData['imageBytes'];
+            final int allergyX = allergyData['x'];
+            final int allergyY = allergyData['y'];
+            final CustomTileProvider allergyCustomTileProvider = CustomTileProvider(allergyImageBytes!, allergyX, allergyY, 2);
+
+            tileOverlaysSet.add(TileOverlay(
+              tileOverlayId: TileOverlayId("allergyTile"),
+              tileProvider: allergyCustomTileProvider,
+            ));
+          }
+        }
+        if (_showGrassAllergy) {
+          final allergyData = await fetchAllergyTile(4, latitude!, longitude!, 'GRASS_UPI');
+          if (allergyData != null) {
+            final Uint8List? allergyImageBytes = allergyData['imageBytes'];
+            final int allergyX = allergyData['x'];
+            final int allergyY = allergyData['y'];
+            final CustomTileProvider allergyCustomTileProvider = CustomTileProvider(allergyImageBytes!, allergyX, allergyY, 2);
+
+            tileOverlaysSet.add(TileOverlay(
+              tileOverlayId: TileOverlayId("allergyTile"),
+              tileProvider: allergyCustomTileProvider,
+            ));
+          }
+        }
+        if (_showGrassAllergy) {
+          final allergyData = await fetchAllergyTile(4, latitude!, longitude!, 'Weed_UPI');
           if (allergyData != null) {
             final Uint8List? allergyImageBytes = allergyData['imageBytes'];
             final int allergyX = allergyData['x'];
@@ -275,7 +306,7 @@ class _MapsScreenState extends State<MapsScreen> {
                         child: GestureDetector(
                           onTap: () async {
                             setState(() {
-                              _showAllergyTile = !_showAllergyTile;
+                              _showTreeAllergy = !_showTreeAllergy;
                             });
                             updateTileOverlays(); 
                           },
@@ -284,16 +315,20 @@ class _MapsScreenState extends State<MapsScreen> {
                             height: 40,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: _showAllergyTile ? Colors.green : Colors.white,
+                              color: _showTreeAllergy ? Colors.green : Colors.white,
                             ),
                             child: Center(
-                              child: Text(
-                                'Allergy',
-                                style: TextStyle(
-                                  color: _showAllergyTile ? Colors.white : Colors.green,
-                                  fontWeight: FontWeight.bold,
+                              child: _showTreeAllergy
+                              ? SvgPicture.asset(
+                                  'lib/assets/icons/tree-white.svg',
+                                  width: 30, // Adjust the width as needed
+                                  height: 30, // Adjust the height as needed
+                                )
+                              : SvgPicture.asset(
+                                  'lib/assets/icons/tree-green.svg',
+                                  width: 30, // Adjust the width as needed
+                                  height: 30, // Adjust the height as needed
                                 ),
-                              ),
                             ),
                           ),
                         ),
