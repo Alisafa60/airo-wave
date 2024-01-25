@@ -74,7 +74,7 @@ model HealthCondition{
 model RespiratoryCondition{
   id                  Int                @id @default(autoincrement())
   condition           String
-  diangnosis          String?
+  diagnosis          String?
   symptomsFrequency   String?
   triggers            String?
   healthConditionId   Int
