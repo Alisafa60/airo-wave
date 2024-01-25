@@ -187,8 +187,8 @@ model UserLocation {
   location                Unsupported("geography(Point, 4326)")
   userId                  Int
   user                    User                                     @relation(fields: [userId], references: [id])
-  deviceId                Int
-  device                  Device                                   @relation(fields: [deviceId], references: [id])
+  deviceId                Int?
+  device                  Device?                                   @relation(fields: [deviceId], references: [id])
   stress                  StressData[]
   sleep                   SleepData[]
   createdAt               DateTime                                 @default(now())
