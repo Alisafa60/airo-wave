@@ -62,6 +62,7 @@ const stress = require('./routes/stress.routes');
 const userRoutes = require('./routes/createRoutes.controllers');
 const device = require('./routes/device.routes');
 const sensorRoutes = require('./routes/sensor.routes');
+const allergenRoutes = require('./routes/allergen.routes');
 
 app.use('/auth', authRoutes);
 app.use('/api', sensorRoutes);
@@ -84,6 +85,7 @@ app.use('/api', authMiddleware, stress);
 app.use('/api', authMiddleware, heartRate);
 app.use('/api', authMiddleware, userRoutes);
 app.use('/api', authMiddleware, device);
+app.use('/api', authMiddleware, allergenRoutes);
 module.exports = app;
 
 const PORT = process.env.PORT || 3000;
