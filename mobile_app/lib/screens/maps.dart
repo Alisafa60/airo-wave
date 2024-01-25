@@ -135,7 +135,7 @@ class _MapsScreenState extends State<MapsScreen> {
             ));
           }
         }
-        if (_showGrassAllergy) {
+        if (_showWeedAllergy) {
           final allergyData = await fetchAllergyTile(4, latitude!, longitude!, 'Weed_UPI');
           if (allergyData != null) {
             final Uint8List? allergyImageBytes = allergyData['imageBytes'];
@@ -321,13 +321,83 @@ class _MapsScreenState extends State<MapsScreen> {
                               child: _showTreeAllergy
                               ? SvgPicture.asset(
                                   'lib/assets/icons/tree-white.svg',
-                                  width: 30, // Adjust the width as needed
-                                  height: 30, // Adjust the height as needed
+                                  width: 27, // Adjust the width as needed
+                                  height: 27, // Adjust the height as needed
                                 )
                               : SvgPicture.asset(
                                   'lib/assets/icons/tree-green.svg',
-                                  width: 30, // Adjust the width as needed
-                                  height: 30, // Adjust the height as needed
+                                  width: 27, // Adjust the width as needed
+                                  height: 27, // Adjust the height as needed
+                                ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                      Padding(
+                      padding: const EdgeInsets.only(bottom: 16, right: 10),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              _showGrassAllergy = !_showGrassAllergy;
+                            });
+                            updateTileOverlays(); 
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _showGrassAllergy ? Colors.green : Colors.white,
+                            ),
+                            child: Center(
+                              child: _showGrassAllergy
+                              ? SvgPicture.asset(
+                                  'lib/assets/icons/grass-white.svg',
+                                  width: 24, // Adjust the width as needed
+                                  height: 24, // Adjust the height as needed
+                                )
+                              : SvgPicture.asset(
+                                  'lib/assets/icons/grass-green.svg',
+                                  width: 24, // Adjust the width as needed
+                                  height: 24, // Adjust the height as needed
+                                ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                     Padding(
+                      padding: const EdgeInsets.only(bottom: 16, right: 10),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              _showWeedAllergy = !_showWeedAllergy;
+                            });
+                            updateTileOverlays(); 
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _showWeedAllergy ? Colors.green : Colors.white,
+                            ),
+                            child: Center(
+                              child: _showWeedAllergy
+                              ? SvgPicture.asset(
+                                  'lib/assets/icons/leaf-white.svg',
+                                  width: 27, // Adjust the width as needed
+                                  height: 27, // Adjust the height as needed
+                                )
+                              : SvgPicture.asset(
+                                  'lib/assets/icons/leaf-green.svg',
+                                  width: 27, // Adjust the width as needed
+                                  height: 27, // Adjust the height as needed
                                 ),
                             ),
                           ),
