@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/requests/location.service.dart';
 import 'package:mobile_app/requests/pollen_service.dart';
 import 'package:mobile_app/requests/sensor_request.dart';
 import 'package:mobile_app/utils/allergens_info.dart';
@@ -30,6 +31,8 @@ class _MyHomeScreen extends State<HomeScreen> {
   double longitude = 35.32;
   List<Map<String, dynamic>> plantAllergens = [];
   List<Map<String, dynamic>> pollenAllergens = [];
+  late LocationService locationService;
+  Map<String, dynamic>? locationData;
   
 
   @override
@@ -40,12 +43,27 @@ class _MyHomeScreen extends State<HomeScreen> {
     sensorUpdateTimer = Timer.periodic(Duration(minutes: 10), (Timer timer) {
       _loadSensor();
     });
+    locationService = LocationService(widget.apiService);
+    _loadLocationData();
     enviromentalService = EnviromentalService(widget.apiService);
     pollenService = PollenService(widget.apiService);
     // _fetchAndPostAirQualityData();
     _loadEnviromentalData();
     // fetchPollen();
   }
+
+  Future<void> _loadLocationData() async {
+    try{
+      final Map<String, dynamic> data = await locationService.getUserLocation();
+      setState(() {
+        locationData = data;
+      });
+      print('${locationData?['location']['latitude']}');
+    }catch(error){
+      print('error loading location $error');
+    }
+  }
+
   
 
   Future<void> _loadEnviromentalData() async {
