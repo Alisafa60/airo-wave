@@ -47,18 +47,24 @@ class _MyHomeScreen extends State<HomeScreen> {
     _loadLocationData();
     enviromentalService = EnviromentalService(widget.apiService);
     pollenService = PollenService(widget.apiService);
+    locationService = LocationService(widget.apiService);
+    // _loadEnviromentalData();
     // _fetchAndPostAirQualityData();
-    _loadEnviromentalData();
     // fetchPollen();
   }
 
   Future<void> _loadLocationData() async {
     try{
       final Map<String, dynamic> data = await locationService.getUserLocation();
+      final double newLatitude = data['location']['latitude'];
+      final double newLongitude = data['location']['longitude'];
       setState(() {
+        latitude = newLatitude;
+        longitude = newLongitude;
         locationData = data;
       });
-      print('${locationData?['location']['latitude']}');
+      _fetchAndPostAirQualityData();
+      _loadEnviromentalData();
     }catch(error){
       print('error loading location $error');
     }
@@ -98,7 +104,7 @@ class _MyHomeScreen extends State<HomeScreen> {
   }
 Future<void> _fetchAndPostAirQualityData() async {
   try {
-    final pollen = pollenService.fetchAndPostPollen(latitude, longitude);
+    final pollen = pollenService.fetchAndPostPollen(32.32, 35.32);
     await Future.delayed(Duration(seconds: 1));
     final airQuality = enviromentalService.fetchAirQualityDataAndPost(latitude, longitude);
     
@@ -648,7 +654,7 @@ Future<void> _fetchAndPostAirQualityData() async {
                                           ),
                                           child: const Center(
                                             child: Text(
-                                            'SO2',
+                                            'PM25',
                                             style: TextStyle(
                                               fontSize: 14,
                                               color: myGray,
@@ -663,11 +669,11 @@ Future<void> _fetchAndPostAirQualityData() async {
                                       ),
                                       const SizedBox(height: 10),
                                       Text(
-                                        '${enviromentalData?['environmentalData']?['so2Level'] ?? ''}', 
+                                        '${enviromentalData?['environmentalData']?['pm25'] ?? ''}', 
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          color: getColorEnv(enviromentalData?['environmentalData']?['so2Level'] ?? 0, 'so2')
+                                          color: getColorEnv(enviromentalData?['environmentalData']?['pm25'] ?? 0, 'so2')
                                         ),
                                       ),
                                     ],
