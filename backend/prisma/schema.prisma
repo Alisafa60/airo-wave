@@ -53,6 +53,7 @@ model User{
   replies               Reply[]    
   routes                Route[]
   location              Location[]
+  allergen              Allergen[]
 }
 
 enum MeasurementSystem{
@@ -231,11 +232,19 @@ model EnviromentalHealthData{
   user                    User         @relation(fields: [userId], references: [id])
 }
 
+model Allergen{
+  id                      Int         @id @default(autoincrement())
+  name                    String
+  color                   String
+  userId                  Int
+  user                    User         @relation(fields: [userId], references: [id])
+}
+
 model PushNotification {
   id              Int       @id @default(autoincrement())
   title           String
   body            String
-  data            Json      // Additional data to send with the notification
+  data            Json      
   type            String    
   sentAt          DateTime  @default(now())
   deliveredAt     DateTime?
