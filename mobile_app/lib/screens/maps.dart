@@ -83,38 +83,46 @@ class _MapsScreenState extends State<MapsScreen> {
   }
 
   Future<void> updateTileOverlays() async {
-    tileOverlaysSet.clear(); 
+    tileOverlaysSet.clear();
 
-    if (_showHeatmap) {
-      final heatmapData = await fetchHeatmapTile(4, 48.8566, 2.3522, 'GBR_DEFRA');
-      if (heatmapData != null) {
-        final Uint8List? heatmapImageBytes = heatmapData['imageBytes'];
-        final int heatmapX = heatmapData['x'];
-        final int heatmapY = heatmapData['y'];
-        final CustomTileProvider heatmapCustomTileProvider = CustomTileProvider(heatmapImageBytes!, heatmapX, heatmapY, 2);
+    if (_currentLocation != null) {
+      double? latitude = _currentLocation!.latitude;
+      double? longitude = _currentLocation!.longitude;
+      if (latitude!=0 && longitude!=0) {
+        if (_showHeatmap) {
+          final heatmapData = await fetchHeatmapTile(4, latitude!, longitude!, 'GBR_DEFRA');
+          if (heatmapData != null) {
+            final Uint8List? heatmapImageBytes = heatmapData['imageBytes'];
+            final int heatmapX = heatmapData['x'];
+            final int heatmapY = heatmapData['y'];
+            final CustomTileProvider heatmapCustomTileProvider = CustomTileProvider(heatmapImageBytes!, heatmapX, heatmapY, 2);
 
-        tileOverlaysSet.add(TileOverlay(
-          tileOverlayId: TileOverlayId("heatmapTile"),
-          tileProvider: heatmapCustomTileProvider,
-        ));
-      }
-    }
+            tileOverlaysSet.add(TileOverlay(
+              tileOverlayId: TileOverlayId("heatmapTile"),
+              tileProvider: heatmapCustomTileProvider,
+            ));
+          }
+        }
 
-    if (_showAllergyTile) {
-      final allergyData = await fetchAllergyTile(4, 48.8566, 2.3522, 'TREE_UPI');
-      if (allergyData != null) {
-        final Uint8List? allergyImageBytes = allergyData['imageBytes'];
-        final int allergyX = allergyData['x'];
-        final int allergyY = allergyData['y'];
-        final CustomTileProvider allergyCustomTileProvider = CustomTileProvider(allergyImageBytes!, allergyX, allergyY, 2);
+        if (_showAllergyTile) {
+          final allergyData = await fetchAllergyTile(4, latitude!, longitude!, 'TREE_UPI');
+          if (allergyData != null) {
+            final Uint8List? allergyImageBytes = allergyData['imageBytes'];
+            final int allergyX = allergyData['x'];
+            final int allergyY = allergyData['y'];
+            final CustomTileProvider allergyCustomTileProvider = CustomTileProvider(allergyImageBytes!, allergyX, allergyY, 2);
 
-        tileOverlaysSet.add(TileOverlay(
-          tileOverlayId: TileOverlayId("allergyTile"),
-          tileProvider: allergyCustomTileProvider,
-        ));
+            tileOverlaysSet.add(TileOverlay(
+              tileOverlayId: TileOverlayId("allergyTile"),
+              tileProvider: allergyCustomTileProvider,
+            ));
+          }
+        }
       }
     }
   }
+
+  
 
    Future<void> _requestLocationPermission() async {
     bool serviceEnabled;
@@ -180,7 +188,7 @@ class _MapsScreenState extends State<MapsScreen> {
             },
             initialCameraPosition: CameraPosition(
               target: LatLng(_currentLocation?.latitude ?? 48.8566, _currentLocation?.longitude ?? 2.3522),
-              zoom: 3,
+              zoom: 4,
             ),
             markers: {
               Marker(
@@ -269,7 +277,7 @@ class _MapsScreenState extends State<MapsScreen> {
                             setState(() {
                               _showAllergyTile = !_showAllergyTile;
                             });
-                            updateTileOverlays(); // Update tile overlays based on conditions
+                            updateTileOverlays(); 
                           },
                           child: Container(
                             width: 40,
