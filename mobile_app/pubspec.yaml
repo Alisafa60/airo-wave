@@ -59,6 +59,8 @@ dependencies:
   path_provider: ^2.1.2
   shared_preferences: ^2.2.2
   geolocator: ^10.1.0
+  permission_handler: ^11.2.0
+  location: ^5.0.3
   
 
 dev_dependencies:
@@ -117,6 +119,12 @@ flutter:
       - lib/assets/icons/olive.svg
       - lib/assets/icons/leaf2.svg
       - lib/assets/icons/tree1.svg
+      - lib/assets/icons/grass-green.svg
+      - lib/assets/icons/grass-white.svg
+      - lib/assets/icons/tree-white.svg
+      - lib/assets/icons/tree-green.svg
+      - lib/assets/icons/leaf-green.svg
+      - lib/assets/icons/leaf-white.svg
       
 
 
