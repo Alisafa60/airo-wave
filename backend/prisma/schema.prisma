@@ -38,7 +38,7 @@ model User{
   userTypeId            Int
   userType              UserType           @relation(fields: [userTypeId], references: [id])
   healthCondition       HealthCondition?
-  location              UserLocation[]
+  userLocation          UserLocation[]
   enviromentalHealthData EnviromentalHealthData[]
   device                Device[]
   notifications         PushNotification[]
@@ -52,6 +52,7 @@ model User{
   responses             Response[]   
   replies               Reply[]    
   routes                Route[]
+  location              Location[]
 }
 
 enum MeasurementSystem{
@@ -191,6 +192,14 @@ model UserLocation {
   device                  Device?                                   @relation(fields: [deviceId], references: [id])
   stress                  StressData[]
   sleep                   SleepData[]
+  createdAt               DateTime                                 @default(now())
+}
+
+model Location {
+  id                      Int                                      @id @default(autoincrement())
+  location                Json
+  userId                  Int
+  user                    User                                     @relation(fields: [userId], references: [id])
   createdAt               DateTime                                 @default(now())
 }
 
