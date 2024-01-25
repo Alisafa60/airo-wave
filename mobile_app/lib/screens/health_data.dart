@@ -107,101 +107,97 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
     }
   }
 
-  List<Widget> buildAllergenWidgets(Map<String, dynamic>? allergyData) {
-    if (allergyData!.containsKey('allergies') && allergyData!['allergies'] is List) {
-      List<Map<String, dynamic>> allergies = List<Map<String, dynamic>>.from(allergyData['allergies']);
-
-      return allergies.map((allergy) {
-        return Padding(
-          padding: EdgeInsets.only(right: 10),
-          child: Container(
-            height: 30,
-            width: 100,
-            decoration: BoxDecoration(
-              border: Border.all(color: myGray.withOpacity(0.3), width: 1),
-              borderRadius: BorderRadius.circular(15)
-            ),
-           child: Center(
-              child: Text(
-              '${allergy['allergen']}',
-              style: TextStyle(
-                fontSize: 16,
-                color: myGray.withOpacity(0.8),
-                fontWeight: FontWeight.w400,
-            ),
+ List<Widget> buildAllergenWidgets(Map<String, dynamic>? allergyData) {
+  return (allergyData?.containsKey('allergies') == true &&
+          allergyData!['allergies'] is List)
+      ? List<Map<String, dynamic>>.from(allergyData['allergies'])
+          .map((allergy) {
+          return Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                  border:
+                      Border.all(color: myGray.withOpacity(0.3), width: 1),
+                  borderRadius: BorderRadius.circular(15)),
+              child: Center(
+                child: Text(
+                  '${allergy['allergen'] ?? "Unknown Allergen"}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: myGray.withOpacity(0.8),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-          ),
-          )
-        );
-      }).toList();
-    } else {
-      return [];
-    }
-  }
-  
-  List<Widget> buildRespiratoryWidgets(Map<String, dynamic>? respiratoryData) {
-    if (respiratoryData!.containsKey('respiratoryConditions') && respiratoryData!['respiratoryConditions'] is List) {
-      List<Map<String, dynamic>> respiratoryConditions = List<Map<String, dynamic>>.from(respiratoryData['respiratoryConditions']);
+            ),
+          );
+        }).toList()
+      : [];
+}
 
-      return respiratoryConditions.map((respiratoryCondition) {
-        return Padding(
-          padding: EdgeInsets.only(right: 10),
-          child: Container(
-            height: 30,
-            width: 100,
-           decoration: BoxDecoration(
-              border: Border.all(color: myGray.withOpacity(0.3), width: 1),
-              borderRadius: BorderRadius.circular(15)
-            ),
-           child: Center(
-              child: Text(
-              '${respiratoryCondition['condition']}',
-              style: TextStyle(
-                fontSize: 16,
-                color: myGray.withOpacity(0.8),
-                fontWeight: FontWeight.w400,
-            ),
+List<Widget> buildRespiratoryWidgets(Map<String, dynamic>? respiratoryData) {
+  return (respiratoryData?.containsKey('respiratoryConditions') == true &&
+          respiratoryData!['respiratoryConditions'] is List)
+      ? List<Map<String, dynamic>>.from(
+          respiratoryData['respiratoryConditions'])
+          .map((respiratoryCondition) {
+          return Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                  border:
+                      Border.all(color: myGray.withOpacity(0.3), width: 1),
+                  borderRadius: BorderRadius.circular(15)),
+              child: Center(
+                child: Text(
+                  '${respiratoryCondition['condition'] ?? "Unknown Condition"}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: myGray.withOpacity(0.8),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-          ),
-          )
-        );
-      }).toList();
-    } else {
-      return [];
-    }
-  }
-
-  List<Widget> buildMedicationWidgets(Map<String, dynamic>? medicationData) {
-    if (medicationData!.containsKey('medications') && medicationData!['medications'] is List) {
-      List<Map<String, dynamic>> medications = List<Map<String, dynamic>>.from(medicationData['medications']);
-
-      return medications.map((medication) {
-        return Padding(
-          padding: EdgeInsets.only(right: 10),
-          child: Container(
-            height: 30,
-            width: 100,
-            decoration: BoxDecoration(
-              border: Border.all(color: myGray.withOpacity(0.3), width: 1),
-              borderRadius: BorderRadius.circular(15)
             ),
-           child: Center(
-              child: Text(
-              '${medication['name']}',
-              style: TextStyle(
-                fontSize: 16,
-                color: myGray.withOpacity(0.8),
-                fontWeight: FontWeight.w400,
-            ),
+          );
+        }).toList()
+      : [];
+}
+
+List<Widget> buildMedicationWidgets(Map<String, dynamic>? medicationData) {
+  return (medicationData?.containsKey('medications') == true &&
+          medicationData!['medications'] is List)
+      ? List<Map<String, dynamic>>.from(medicationData['medications'])
+          .map((medication) {
+          return Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Container(
+              height: 30,
+              width: 100,
+              decoration: BoxDecoration(
+                  border:
+                      Border.all(color: myGray.withOpacity(0.3), width: 1),
+                  borderRadius: BorderRadius.circular(15)),
+              child: Center(
+                child: Text(
+                  '${medication['name'] ?? "Unknown Medication"}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: myGray.withOpacity(0.8),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-          ),
-          )
-        );
-      }).toList();
-    } else {
-      return [];
-    }
-  }
+            ),
+          );
+        }).toList()
+      : [];
+}
+
 
   Future<void> updateAllergy({
     required String allergen,
@@ -269,8 +265,6 @@ Future<void> updateRespiratoryCondition({
     }
   }
   
-  
-
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -492,7 +486,7 @@ Future<void> updateRespiratoryCondition({
                 ),
               ],
             ),
-            SizedBox(height: 10,),
+            SizedBox(height: 7,),
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -503,7 +497,7 @@ Future<void> updateRespiratoryCondition({
               child: Stack(
                 children: [
                   Container(
-                    height: 124,
+                    height: 126,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: myGray.withOpacity(0.4),
@@ -584,7 +578,7 @@ Future<void> updateRespiratoryCondition({
                 ],
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(height: 7,),
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -594,7 +588,7 @@ Future<void> updateRespiratoryCondition({
               child: Stack(
                 children: [
                   Container(
-                    height: 124,
+                    height: 128,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: myGray.withOpacity(0.4),
@@ -676,7 +670,7 @@ Future<void> updateRespiratoryCondition({
                 ],
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(height: 7,),
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -686,7 +680,7 @@ Future<void> updateRespiratoryCondition({
               child: Stack(
                 children: [
                   Container(
-                    height: 124,
+                    height: 128,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: myGray.withOpacity(0.4),
