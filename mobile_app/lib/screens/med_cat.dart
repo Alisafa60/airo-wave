@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 
 class MedCatScreen extends StatefulWidget {
   const MedCatScreen({Key? key}) : super(key: key);
 
   @override
-  _MedCatScreenState createState() => _MedCatScreenState();
+  State<MedCatScreen> createState() => _MedCatScreenState();
 }
 
 class _MedCatScreenState extends State<MedCatScreen> {
@@ -199,7 +200,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
               height: isExpanded ? MediaQuery.of(context).size.height * 0.67 : 245,
               width: 400,
               decoration: BoxDecoration(
-                color: Color.fromARGB(232, 3, 4, 6),
+                color: Color.fromARGB(170, 3, 4, 6),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Padding(
@@ -232,7 +233,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           height: 70,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(95, 156, 247, 1),
+                            border: Border.all( color: secondaryColor, width: 2),
                           ),
                           child: Center(
                             child: Text(
@@ -256,7 +257,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           height: 70,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(95, 156, 247, 1),
+                            border: Border.all( color: secondaryColor, width: 2),
                           ),
                           child: Center(
                             child: Text(
