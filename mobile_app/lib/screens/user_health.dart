@@ -21,7 +21,7 @@ class UserHealthScreen extends StatefulWidget {
 }
 
 class _UserHealthState extends State<UserHealthScreen> {
-  List<GlobalKey<MedicationFieldsState>> medicationFieldsKeys = [];
+  GlobalKey<MedicationFieldsState> medicationFieldsKey = GlobalKey<MedicationFieldsState>();
   int initialMedicationCount = 30;
 
   final List<DropdownMenuItem<String>> _conditionItems = [
@@ -37,6 +37,7 @@ class _UserHealthState extends State<UserHealthScreen> {
   final TextEditingController bloodTypeController = TextEditingController();
   ScrollController _scrollController = ScrollController();
   List<String> medicationEntries = [];
+  List<GlobalKey<MedicationFieldsState>> medicationFieldsKeys = [];
 
   bool isBloodTypeValid = true;
   List<String> validBloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -56,10 +57,10 @@ class _UserHealthState extends State<UserHealthScreen> {
   @override
   void initState(){
     super.initState();
-     for (int i = 0; i < initialMedicationCount; i++) {
-      medicationFieldsKeys.add(GlobalKey<MedicationFieldsState>());
-    }
      _scrollController = ScrollController();
+     for (int i = 0; i < initialMedicationCount; i++) {
+    medicationFieldsKeys.add(GlobalKey<MedicationFieldsState>());
+    }
   }
 
   Future<String?> getToken() async {
@@ -142,50 +143,45 @@ class _UserHealthState extends State<UserHealthScreen> {
     }
   }
 
-  Future<void> addMedication() async {
-    String? token = await getToken();
+ Future<void> addMedication() async {
+  String? token = await getToken();
 
-    if (token != null) {
-      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+  if (token != null) {
+    final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+
+    for (int i = 0; i < medicationEntries.length; i++) {
+      MedicationFieldsState medicationFieldsState = medicationFieldsKeys[i].currentState!;
+      MedicationData medicationData = medicationFieldsState.getMedicationData();
+
+      final Map<String, dynamic> requestBody = {
+        'name': medicationData.medication,
+        'dosage': medicationData.dosage,
+        'frequency': medicationData.frequency,
+        'startDate': medicationData.startDate,
+        'context': medicationData.healthCondition,
+      };
 
       try {
-        for (int i = 0; i < medicationFieldsKeys.length; i++) {
-          MedicationFieldsState medicationFieldsState = medicationFieldsKeys[i].currentState!;
-          MedicationData medicationData = medicationFieldsState.getMedicationData();
+        final http.Response response = await widget.apiService.post(
+          '/api/user/health/medication',
+          headers,
+          requestBody,
+        );
 
-          if (medicationData.medication.isNotEmpty) {
-            final Map<String, dynamic> requestBody = {
-              'name': medicationData.medication,
-              'dosage': medicationData.dosage,
-              'frequency': medicationData.frequency,
-              'startDate': medicationData.startDate,
-              'context': medicationData.healthCondition,
-            };
+        print(requestBody);
 
-            final http.Response response = await widget.apiService.post(
-              '/api/user/health/medication',
-              headers,
-              requestBody,
-            );
-
-            print(requestBody);
-
-            if (response.statusCode == 201) {
-              print('Medication added successfully');
-              print(requestBody);
-            } else {
-              print('Medication addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
-            }
-          } else {
-            print('skipping medicaiton due to empty fields');
-          }
+        if (response.statusCode == 201) {
+          print('Medication added successfully');
+          print(requestBody);
+        } else {
+          print('Medication addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
         }
       } catch (error) {
         print('Error during medication addition: $error');
       }
     }
   }
-
+}
   Future<void> addRespiratoryCondition() async {
     String? token = await getToken();
 
@@ -426,7 +422,7 @@ Widget build(BuildContext context) {
                       ),
                       for (int i = 0; i < medicationEntries.length; i++)
                         MedicationFields(
-                          key1: medicationFieldsKeys[i],
+                          key: medicationFieldsKeys[i], 
                           index: i,
                         ),
                     ],
@@ -451,10 +447,10 @@ Widget build(BuildContext context) {
                 onPressed: () async {
                   
                   await Future.wait([
-                    addAllergyCondition(),
+                    // addAllergyCondition(),
                     addMedication(),
-                    addRespiratoryCondition(),
-                    addHealthCondition(),
+                    // addRespiratoryCondition(),
+                    // addHealthCondition(),
                   ]);
                 },
               ),
