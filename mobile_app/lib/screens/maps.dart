@@ -135,7 +135,7 @@ class _MapsScreenState extends State<MapsScreen> {
             ));
           }
         }
-        if (_showGrassAllergy) {
+        if (_showWeedAllergy) {
           final allergyData = await fetchAllergyTile(4, latitude!, longitude!, 'Weed_UPI');
           if (allergyData != null) {
             final Uint8List? allergyImageBytes = allergyData['imageBytes'];
@@ -187,6 +187,22 @@ class _MapsScreenState extends State<MapsScreen> {
     _requestLocationPermission();
     // _requestLocationPermission();
   }
+  int intZoomLevel = 4;
+  Future<void> updateCameraPosition() async {
+    if (_mapController != null && _currentLocation != null) {
+      await _mapController!.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
+          intZoomLevel.toDouble(),
+        ),
+      );
+      await updateTileOverlays();
+    }
+  }
+
+  void _onCameraMove(CameraPosition position) {
+    intZoomLevel = position.zoom.round();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -218,8 +234,8 @@ class _MapsScreenState extends State<MapsScreen> {
               });
             },
             initialCameraPosition: CameraPosition(
-              target: LatLng(_currentLocation?.latitude ?? 48.8566, _currentLocation?.longitude ?? 2.3522),
-              zoom: 4,
+              target: LatLng(_currentLocation?.latitude ?? 37.7749, _currentLocation?.longitude ?? -122.4194),
+              zoom: intZoomLevel.toDouble(),
             ),
             markers: {
               Marker(
@@ -321,13 +337,83 @@ class _MapsScreenState extends State<MapsScreen> {
                               child: _showTreeAllergy
                               ? SvgPicture.asset(
                                   'lib/assets/icons/tree-white.svg',
-                                  width: 30, // Adjust the width as needed
-                                  height: 30, // Adjust the height as needed
+                                  width: 27, 
+                                  height: 27, 
                                 )
                               : SvgPicture.asset(
                                   'lib/assets/icons/tree-green.svg',
-                                  width: 30, // Adjust the width as needed
-                                  height: 30, // Adjust the height as needed
+                                  width: 27, 
+                                  height: 27, 
+                                ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                      Padding(
+                      padding: const EdgeInsets.only(bottom: 16, right: 10),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              _showGrassAllergy = !_showGrassAllergy;
+                            });
+                            updateTileOverlays(); 
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _showGrassAllergy ? Colors.green : Colors.white,
+                            ),
+                            child: Center(
+                              child: _showGrassAllergy
+                              ? SvgPicture.asset(
+                                  'lib/assets/icons/grass-white.svg',
+                                  width: 24, 
+                                  height: 24, 
+                                )
+                              : SvgPicture.asset(
+                                  'lib/assets/icons/grass-green.svg',
+                                  width: 24, 
+                                  height: 24, 
+                                ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                     Padding(
+                      padding: const EdgeInsets.only(bottom: 16, right: 10),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              _showWeedAllergy = !_showWeedAllergy;
+                            });
+                            updateTileOverlays(); 
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _showWeedAllergy ? Colors.green : Colors.white,
+                            ),
+                            child: Center(
+                              child: _showWeedAllergy
+                              ? SvgPicture.asset(
+                                  'lib/assets/icons/leaf-white.svg',
+                                  width: 27, 
+                                  height: 27, 
+                                )
+                              : SvgPicture.asset(
+                                  'lib/assets/icons/leaf-green.svg',
+                                  width: 27, 
+                                  height: 27, 
                                 ),
                             ),
                           ),
