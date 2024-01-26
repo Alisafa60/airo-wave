@@ -5,7 +5,9 @@ import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/requests/allergy_survice.dart';
 import 'package:mobile_app/requests/health_survice.dart';
 import 'package:mobile_app/requests/medication_survice.dart';
+import 'package:mobile_app/requests/profile.dart';
 import 'package:mobile_app/requests/respiratory_condition_survice.dart';
+import 'package:mobile_app/utils/image_helper.dart';
 import 'package:mobile_app/widgets/allergy_overlay.dart';
 import 'package:mobile_app/widgets/medication_overlay.dart';
 import 'package:mobile_app/widgets/respiratory_overlay.dart';
@@ -25,6 +27,8 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
   late AllergySurvice allergySurvice;
   late RespiratoryConditionSurvice respiratorySurvice;
   late MedicationSurvice medicationSurvice;
+  late ProfileService profileService;
+  String? fileName;
 
   TextEditingController allergyNameController = TextEditingController();
   TextEditingController allergySeverityController = TextEditingController();
@@ -45,6 +49,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
   Map<String, dynamic>? allergyData;
   Map<String, dynamic>? respiratoryData;
   Map<String, dynamic>? medicationData;
+  Map<String, dynamic>? profileData;
 
   @override
   void initState() {
@@ -53,12 +58,35 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
     allergySurvice = AllergySurvice(widget.apiService); 
     respiratorySurvice = RespiratoryConditionSurvice(widget.apiService);
     medicationSurvice = MedicationSurvice(widget.apiService);
+    profileService = ProfileService(widget.apiService);
     _loadHealthData();
     _loadAllergy();
     _loadRespiratory();
     _loadMedication();
-    
+    _loadProfile();
+    _loadProfileImage();
   }
+
+  Future<void> _loadProfileImage() async {
+    String? savedImagePath = await ImageHelper.loadProfileImage();
+    if (savedImagePath != null) {
+      setState(() {
+        fileName = savedImagePath;
+      });
+      print('image path $fileName');
+    }
+  }
+
+  Future<void> _loadProfile() async {
+      try {
+        final Map<String, dynamic> data = await profileService.getProfile();
+        setState(() {
+          profileData = data;
+        });
+      } catch (error) {
+        print('Error loading health data: $error');
+      }
+    }
 
   Future<void> _loadHealthData() async {
     try {
@@ -66,7 +94,6 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       setState(() {
         healthData = data;
       });
-     print(healthData);
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -78,9 +105,8 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       setState(() {
         allergyData = data;
       });
-      print(allergyData);
     } catch (error) {
-      print('Error loading health data: $error');
+      
     }
   }
 
@@ -90,7 +116,6 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       setState(() {
         respiratoryData = data;
       });
-      print(respiratoryData);
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -211,8 +236,6 @@ List<Widget> buildMedicationWidgets(Map<String, dynamic>? medicationData) {
         duration: duration,
         triggers: triggers,
       );
-
-      print('Allergy Updated: $updatedAllergy');
       
       await _loadAllergy();
     } catch (error) {
@@ -233,9 +256,6 @@ List<Widget> buildMedicationWidgets(Map<String, dynamic>? medicationData) {
         frequency: frequency,
         startDate: startDate,
       );
-
-      print('Medication Updated: $updatedMedication');
-
       await _loadMedication();
     } catch (error) {
       print('Error updating medication: $error');
@@ -255,8 +275,6 @@ Future<void> updateRespiratoryCondition({
         symptomsFrequency: symptomsFrequency,
         triggers: triggers,
       );
-
-      print('Medication Updated: $updateRespiratoryCondition');
 
       await _loadMedication();
     } catch (error) {
@@ -301,25 +319,27 @@ Future<void> updateRespiratoryCondition({
               color: const Color.fromRGBO(255, 252, 252, 1),
               child: Column(
                 children: [
-               
                   GestureDetector(
                     onTap: () {
-                      //route for user profile
+                      
                     },
                     child: Stack(
                       children: [
-                        ClipOval(
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('lib/assets/images/profile-picture.png'),
-                                fit: BoxFit.cover,
-                              ),
+                         ClipOval(
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              child: fileName != null
+                              ? Image.network(
+                                  'http://172.25.135.58:3000/uploads/$fileName',
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'lib/assets/images/profile-picture.png',
+                                  fit: BoxFit.cover,
+                                ),
                             ),
                           ),
-                        ),
                         Positioned(
                           top: 5,
                           right: 5,
@@ -339,9 +359,9 @@ Future<void> updateRespiratoryCondition({
                     ),
                   ),
                   const SizedBox(height: 5,),
-                  const Text(
-                    'Ali Safa',
-                    style: TextStyle(
+                   Text(
+                    '${profileData?['user']?['firstName']} ${profileData?['user']?['lastName']}',
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                       color: Color.fromRGBO(74, 74, 74, 1),
