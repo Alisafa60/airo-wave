@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/requests/severity_service.dart';
+import 'package:mobile_app/utils/image_helper.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 
 class MedCatScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
   bool isExpanded = false;
   int expandedContainerIndex = -1;
   late SeverityService severityService;
+  String? fileName;
   
   void handleContainerTap (int index){
     setState(() {
@@ -50,10 +52,21 @@ class _MedCatScreenState extends State<MedCatScreen> {
     }
   }
 
+  Future<void> _loadProfileImage() async {
+    String? savedImagePath = await ImageHelper.loadProfileImage();
+    if (savedImagePath != null) {
+      setState(() {
+        fileName = savedImagePath;
+      });
+      print('image path $fileName');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     severityService = SeverityService(widget.apiService);
+    _loadProfileImage();
   }
 
   @override
@@ -97,16 +110,20 @@ class _MedCatScreenState extends State<MedCatScreen> {
                             },
                             child: ClipOval(
                               child: Container(
-                                width: 60,
-                                height: 60,
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage('lib/assets/images/profile-picture.png'),
+                                width: 70,
+                                height: 70,
+                                child: fileName != null
+                                ? Image.network(
+                                    'http://172.25.135.58:3000/uploads/$fileName',
+                                    
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    'lib/assets/images/profile-picture.png',
                                     fit: BoxFit.cover,
                                   ),
-                                ),
-                              ),
                             ),
+                          ),
                           ),
                           const SizedBox(height: 5,),
                           const Text(
