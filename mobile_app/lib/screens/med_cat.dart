@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/requests/severity_service.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 
 class MedCatScreen extends StatefulWidget {
-  const MedCatScreen({Key? key}) : super(key: key);
+  final ApiService apiService;
+  const MedCatScreen({super.key, required this.apiService});
 
   @override
+
   State<MedCatScreen> createState() => _MedCatScreenState();
 }
 
 class _MedCatScreenState extends State<MedCatScreen> {
   bool isExpanded = false;
   int expandedContainerIndex = -1;
-
+  late SeverityService severityService;
+  
   void handleContainerTap (int index){
     setState(() {
       if (index == expandedContainerIndex){
@@ -23,6 +28,32 @@ class _MedCatScreenState extends State<MedCatScreen> {
         expandedContainerIndex = index;
       }
     });
+  }
+
+  void handleNumberCircleTap(int severity) {
+    try {
+      severityService.addSeverity(severity);
+      print('Severity $severity added successfully');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Severity $severity added successfully'),
+          duration: const Duration(seconds: 2), 
+        ),
+      );
+    } catch (error) {
+      print('Error adding severity: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to add severity. Please try again.'),
+        ),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    severityService = SeverityService(widget.apiService);
   }
 
   @override
@@ -109,23 +140,30 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           ),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Row(
+                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             for (int i = 1; i <= 5; i++)
                               GestureDetector(
                                 onTap: () {
-                                  print('Pressed button $i');
+                                  handleNumberCircleTap(i);
                                 },
-                                child: CircleAvatar(
-                                  backgroundColor: const Color.fromRGBO(255, 117, 19, 0.683),
-                                  child: Text(
-                                    i.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
+                                child: i == 1 || i == 5
+                                    ? CircleAvatar(
+                                        child: SvgPicture.asset(
+                                          i == 1 ? 'lib/assets/icons/happy-circle.svg' : 'lib/assets/icons/sad-circle.svg',
+                                          height: 38, width: 38,
+                                        ),
+                                      )
+                                    : CircleAvatar(
+                                        backgroundColor: const Color.fromRGBO(255, 117, 29, 0.7),
+                                        child: Text(
+                                          i.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
                               ),
                           ],
                         ),
@@ -313,7 +351,6 @@ class _MedCatScreenState extends State<MedCatScreen> {
               ),
             ),
           ),
-
         ],
       ),
     bottomNavigationBar: CustomBottomNavigationBar(
