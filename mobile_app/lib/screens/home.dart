@@ -6,11 +6,13 @@ import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/requests/location.service.dart';
 import 'package:mobile_app/requests/pollen_service.dart';
+import 'package:mobile_app/requests/profile.dart';
 import 'package:mobile_app/requests/save_allergen.dart';
 import 'package:mobile_app/requests/sensor_request.dart';
 import 'package:mobile_app/utils/allergens_info.dart';
 import 'package:mobile_app/utils/co2_voc_color.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
+import 'package:mobile_app/utils/image_helper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.apiService});
@@ -34,8 +36,10 @@ class _MyHomeScreen extends State<HomeScreen> {
   List<Map<String, dynamic>> pollenAllergens = [];
   late LocationService locationService;
   late SaveAllergenService saveAllergenService;
+  late ProfileService profileService;
   Map<String, dynamic>? locationData;
-  
+  String? fileName;
+  Map<String, dynamic>? profileData;
 
   @override
   void initState() {
@@ -45,15 +49,28 @@ class _MyHomeScreen extends State<HomeScreen> {
     sensorUpdateTimer = Timer.periodic(Duration(minutes: 10), (Timer timer) {
       _loadSensor();
     });
-    locationService = LocationService(widget.apiService);
-    _loadLocationData();
-    enviromentalService = EnviromentalService(widget.apiService);
-    pollenService = PollenService(widget.apiService);
-    locationService = LocationService(widget.apiService);
-    saveAllergenService = SaveAllergenService(widget.apiService);
+    // locationService = LocationService(widget.apiService);
+    // _loadLocationData();
+    // enviromentalService = EnviromentalService(widget.apiService);
+    // pollenService = PollenService(widget.apiService);
+    // locationService = LocationService(widget.apiService);
+    // saveAllergenService = SaveAllergenService(widget.apiService);
     // _loadEnviromentalData();
     // _fetchAndPostAirQualityData();
     // fetchPollen();
+   _loadProfileImage();
+    profileService = ProfileService(widget.apiService);
+    _loadProfile();
+  }
+
+  Future<void> _loadProfileImage() async {
+    String? savedImagePath = await ImageHelper.loadProfileImage();
+    if (savedImagePath != null) {
+      setState(() {
+        fileName = savedImagePath;
+      });
+      print('image path $fileName');
+    }
   }
 
   Future<void> _loadLocationData() async {
@@ -110,17 +127,30 @@ class _MyHomeScreen extends State<HomeScreen> {
       print('Error loading health data: $error');
     }
   }
-Future<void> _fetchAndPostAirQualityData() async {
-  try {
-    final pollen = pollenService.fetchAndPostPollen(32.32, 35.32);
-    await Future.delayed(Duration(seconds: 1));
-    final airQuality = enviromentalService.fetchAirQualityDataAndPost(latitude, longitude);
-    
-    await Future.wait([airQuality, pollen]);
-  } catch (error) {
-    print('Error fetching and posting air quality data: $error');
-  }
-}
+    Future<void> _loadProfile() async {
+      try {
+        final Map<String, dynamic> data = await profileService.getProfile();
+        setState(() {
+          profileData = data;
+        });
+        print(profileData);
+      } catch (error) {
+        print('Error loading health data: $error');
+      }
+    }
+
+    Future<void> _fetchAndPostAirQualityData() async {
+      try {
+        final pollen = pollenService.fetchAndPostPollen(32.32, 35.32);
+        await Future.delayed(Duration(seconds: 1));
+        final airQuality = enviromentalService.fetchAirQualityDataAndPost(latitude, longitude);
+        
+        await Future.wait([airQuality, pollen]);
+      } catch (error) {
+        print('Error fetching and posting air quality data: $error');
+      }
+    }
+
   @override
   Widget build(BuildContext context){
     double screenHeight = MediaQuery.of(context).size.height;
@@ -174,7 +204,7 @@ Future<void> _fetchAndPostAirQualityData() async {
           return 'Unknown Gas'; 
       }
     }
-  
+    
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar:  PreferredSize(
@@ -199,8 +229,15 @@ Future<void> _fetchAndPostAirQualityData() async {
               onPressed: () { 
                 _showNotificationOverlay(context);
               },
-              )
+            )
           ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Container(
+              height: 1,
+              color: Colors.black12,
+            ),
+          )
         ),
       ),
 
@@ -214,12 +251,7 @@ Future<void> _fetchAndPostAirQualityData() async {
               color: const Color.fromRGBO(255, 252, 252, 1),
               child: Column(
                 children: [
-                  SizedBox(height: 12,),
-                  Container(
-                    
-                    color: const Color.fromARGB(255, 211, 211, 211),
-                    height: 1.5,
-                  ),
+                  SizedBox(height: 5,),
                   Container(
                     padding: const EdgeInsets.only(top: 10),
                     color: const Color.fromRGBO(255, 252, 252, 1),
@@ -232,14 +264,18 @@ Future<void> _fetchAndPostAirQualityData() async {
                           },
                           child: ClipOval(
                             child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('lib/assets/images/profile-picture.png'),
+                              width: 70,
+                              height: 70,
+                              child: fileName != null
+                              ? Image.network(
+                                  'http://172.25.135.58:3000/uploads/$fileName',
+                                  
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'lib/assets/images/profile-picture.png',
                                   fit: BoxFit.cover,
                                 ),
-                              ),
                             ),
                           ),
                         ),
@@ -247,8 +283,8 @@ Future<void> _fetchAndPostAirQualityData() async {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
-                            'Hello Ali, How are you doing today?',
+                             Text(
+                            'Hello ${profileData?['user']?['firstName']}, How are you doing today?',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
