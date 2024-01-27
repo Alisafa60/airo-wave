@@ -58,7 +58,7 @@ class MedicationSurvice {
         };
 
         final http.Response response = await apiService.post(
-          '/api/user/health/medication/edit',
+          '/api/user/health/edit-medication',
           headers,
           requestBody,
         );
