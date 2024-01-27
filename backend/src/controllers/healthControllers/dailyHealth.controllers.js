@@ -59,15 +59,14 @@ const getAllDailyHealth = async (req, res) => {
 const getLastDailyHealth = async (req, res) => {
   try{
       const userId = req.user.id;
-      const dailyHealthId = req.params.id;
 
       const dailyHealth = await prisma.dailyHealth.findUnique({
         where: {
-          id: dailyHealthId,
-          healthConditions:{
-            userId: userId,
-          },
+          userId:userId,
         },
+        orderBy: {
+          createdAt: 'desc',
+        }
       });
 
       if (!dailyHealth){

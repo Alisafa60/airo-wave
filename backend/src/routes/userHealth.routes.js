@@ -6,7 +6,7 @@ const { healthRoutes } = require('../helpers');
 // module.exports = healthRoutes(router, userHealthController);
 router.post('/user/health', userHealthController.addUserHealth);
 router.get('/user/health', userHealthController.getUserHealth);
-router.put('/user/health', userHealthController.updateUserHealth);
+router.post('/user/health/edit', userHealthController.updateUserHealth);
 router.delete('/user/health', userHealthController.deleteUserHealthById);
 
 module.exports = router;
