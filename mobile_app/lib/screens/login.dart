@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   final ApiService apiService;
@@ -18,13 +19,30 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   String loginError = '';
   
+  Future<bool> isFirstLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isFirstLogin = prefs.getBool('firstLogin');
+
+    print('isFirstLogin value: $isFirstLogin');
+
+    if (isFirstLogin == null) {
+      await prefs.setBool('firstLogin', true);
+      return true;
+    }
+
+    return isFirstLogin;
+  }
+
+  Future<void> markHealthScreenVisited() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('healthScreenVisited', true);
+    print('healthScreenVisited marked as true');
+  }
 
   Future<void> loginUser() async {
-
     final String email = emailController.text;
     final String password = passwordController.text;
     final Map<String, String> requestBody = {'email': email, 'password': password};
-    print(requestBody);
     final BuildContext currentContext = context;
 
     try {
@@ -32,13 +50,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        print('Login successful: $data');
         final String? token = data['token'];
 
         if (token != null && token.isNotEmpty) {
           await saveToken(token);
-          Navigator.pushReplacementNamed(currentContext, '/health');
-
+          print('Before isFirstLogin');
+          if (await isFirstLogin()) {
+             print('Inside isFirstLogin');
+            await markHealthScreenVisited();
+            Navigator.pushReplacementNamed(currentContext, '/health');
+          } else {
+            print('Inside else');
+            Navigator.pushReplacementNamed(currentContext, '/home');
+          }
         } else {
           print('Invalid or empty token received.');
         }
@@ -52,6 +76,8 @@ class _LoginScreenState extends State<LoginScreen> {
       print('Error during login: $error');
     }
   }
+
+
   
   Future<void> saveToken(String token) async {
     try {
