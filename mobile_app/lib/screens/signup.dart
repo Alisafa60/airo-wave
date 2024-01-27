@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:mobile_app/widgets/dropdown_menu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupScreen extends StatefulWidget {
   final ApiService apiService;
@@ -50,7 +51,10 @@ class _SignupScreenState extends State<SignupScreen> {
       if (response.statusCode == 200){
         final Map<String, dynamic>data = jsonDecode(response.body);
         Navigator.pushReplacementNamed(context, '/login');
-      }else{
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.remove('healthScreenVisited');
+        await prefs.remove('firstLogin');
+            }else{
         setState(() {
           errorText = 'Invalid email/password';
         });
