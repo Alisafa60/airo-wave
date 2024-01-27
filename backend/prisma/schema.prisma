@@ -178,10 +178,12 @@ model StressData{
 model DailyHealth{
   id                      Int                   @id @default(autoincrement())
   severity                Int
+  condition               String?
   userHealthId            Int
   healthConditions        HealthCondition       @relation(fields: [userHealthId], references: [id])
   sleepData               SleepData[]
   stressData              StressData[]
+  createdAt               DateTime               @default(now())
 }
 
 model UserLocation {
