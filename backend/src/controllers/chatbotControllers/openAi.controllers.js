@@ -1,11 +1,114 @@
-
-const { PrismaClient } = require('@prisma/client');
 const openai = require('openai');
 require('dotenv').config();
-
-const router = express.Router();
-const prisma = new PrismaClient();
 const openaiApiKey = process.env.OPENAI_API_KEY;
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+console.log('api key', openaiApiKey);
+
+const axios = require('axios'); 
+
+const determineSeverityRecommendation = (severity) => {
+    if (severity >= 4) {
+        return 'Your health severity is high. Please consult with a healthcare professional.';
+    } else if (severity >= 2) {
+        return 'Your health severity is moderate. Consider taking necessary precautions.';
+    } else {
+        return 'Your health severity is low. Continue with your regular health routine.';
+    }
+};
+
+const generateHealthRecommendation = (
+    lastSeverityEntry,
+    sensorDataWithAverage,
+    environmentalHealthDataWithAverage,
+    last10Allergens,
+    respiratoryConditions,
+    allergies,
+    lastLocation 
+) => {
+    
+ 
+    const severityRecommendation = determineSeverityRecommendation(lastSeverityEntry.severity);
+    const locationRecommendation = `Based on your last known location, please be aware of any specific health risks associated with that area.`;
+    const indoorRecommendation = `Based on indoor sensor data, ensure proper ventilation and consider checking for potential sources of indoor pollution.`;
+    const outdoorRecommendation = `Based on outdoor environmental data, be cautious of high levels of pollutants in the air. Consider staying indoors during poor air quality conditions.`;
+
+    const respiratoryConditionRecommendation = (respiratoryConditions.length > 0)
+        ? `Considering your respiratory condition, take extra precautions to avoid triggers and follow your prescribed medications.`
+        : '';
+
+    const recommendation = `
+        Based on the collected data:
+        - Severity Recommendation: ${severityRecommendation}
+        - Location Recommendation: ${locationRecommendation}
+        - Indoor Recommendation: ${indoorRecommendation}
+        - Outdoor Recommendation: ${outdoorRecommendation}
+        - Respiratory Condition Recommendation: ${respiratoryConditionRecommendation}
+    `;
+
+    return recommendation;
+};
+
+const buildPayload = async (
+    last10Allergens,
+    sensorDataWithAverage,
+    environmentalHealthDataWithAverage,
+    respiratoryConditions,
+    allergies,
+    medications,
+    lastLocation 
+) => {
+    try {
+
+        const lastSeverityEntry = await prisma.dailyHealth.findFirst({
+            select: { severity: true },
+            orderBy: { createdAt: 'desc' },
+        });
+
+        const healthRecommendation = generateHealthRecommendation(
+            lastSeverityEntry,
+            sensorDataWithAverage,
+            environmentalHealthDataWithAverage,
+            last10Allergens,
+            respiratoryConditions,
+            allergies,
+            lastLocation
+        );
+
+        const payload = {
+            messages: [
+                { role: 'system', content: 'Your name is MedCat, your mainly care about users health, and you can be a little bit humorous too .' },
+                { role: 'user', content: 'What is my health recommendation?' },
+                { role: 'assistant', content: healthRecommendation },
+
+            ],
+        };
+
+        return payload;
+    } catch (error) {
+        console.error('Error:', error);
+    } finally {
+        await prisma.$disconnect();
+    }
+};
+
+const sendToOpenAI = async (payload) => {
+    const openaiApiKey = process.env.OPENAI_API_KEY; 
+    console.log('body api key', openaiApiKey);
+    const openaiEndpoint = 'https://api.openai.com/v1/chat/completions';
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${openaiApiKey}`,
+    };
+    console.log('Request Headers:', headers);
+    try {
+        const response = await axios.post(openaiEndpoint, payload, { headers });
+        console.log(response.data.choices[0].message['content']);
+    } catch (error) {
+        console.error('Error communicating with OpenAI API:', error);
+    }
+};
 
 async function generateOpenAIPayload() {
     try {
@@ -17,6 +120,11 @@ async function generateOpenAIPayload() {
         });
         console.log(last10Allergens);
 
+        const lastSeverityEntry = await prisma.dailyHealth.findFirst({
+            select : {severity: true},
+            orderBy : { createdAt : 'desc'}
+        })
+        console.log(lastSeverityEntry);
 
         const sensorDataWithAverage = await prisma.sensorData.findMany({
             take: 200,
@@ -42,8 +150,6 @@ async function generateOpenAIPayload() {
         const averageVoc = calculatedAverages.voc.reduce((sum, value) => sum + value, 0) / calculatedAverages.voc.length;
         fixedCo2 = parseFloat(averageCo2.toFixed(2));
         fixedVoC = parseFloat(averageVoc.toFixed(2));
-
-        console.log({ 'avergeCo2': fixedCo2, 'averageVoC':fixedVoC });
 
 
         const environmentalHealthDataWithAverage = await prisma.enviromentalHealthData.groupBy({
@@ -107,17 +213,6 @@ async function generateOpenAIPayload() {
         const fixedPm25 = parseFloat(averagePm25.toFixed(2));
         const fixedPm10 = parseFloat(averagePm10.toFixed(2));
 
-        console.log({
-            averageAqi: fixedAqi,
-            averageCoLevel: fixedCoLevel,
-            averageO3Level: fixedO3Level,
-            averageSo2Level: fixedSo2Level,
-            averageNo2Level: fixedNo2Level,
-            averagePm25: fixedPm25,
-            averagePm10: fixedPm10,
-            userId: calculatedEnvironmentalAverages.userId,
-            createdAt: calculatedEnvironmentalAverages.createdAt,
-        });
   
         const respiratoryConditions = await prisma.respiratoryCondition.findMany();
         const allergies = await prisma.allergy.findMany();
@@ -127,10 +222,9 @@ async function generateOpenAIPayload() {
             id: 'desc',
             },
         });
-        console.log(respiratoryConditions);
     
         const payload = buildPayload(last10Allergens, sensorDataWithAverage, environmentalHealthDataWithAverage, respiratoryConditions, allergies, medications, lastLocation);
-    
+        await sendToOpenAI(payload);
         console.log({ payload });
         } catch (error) {
         console.error('Error:', error);
@@ -138,4 +232,5 @@ async function generateOpenAIPayload() {
         await prisma.$disconnect();
         }
 }
-generateOpenAIPayload();
+
+ generateOpenAIPayload();
