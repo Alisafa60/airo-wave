@@ -29,8 +29,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: 'Activities',
         ),
         BottomNavigationBarItem(
-          icon: SvgPicture.asset('lib/assets/icons/community.svg', height: 35, width: 35),
-          label: 'Community',
+          icon: SvgPicture.asset('lib/assets/icons/profile-round.svg', height: 30, width: 30),
+          label: 'Profile',
         ),
       ],
       currentIndex: selectedIndex,
