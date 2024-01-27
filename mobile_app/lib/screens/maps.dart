@@ -298,6 +298,7 @@ class _MapsScreenState extends State<MapsScreen> {
               ),
             },
             tileOverlays: tileOverlaysSet,
+             myLocationEnabled: true,
           ),
           Column(
             children: [
@@ -484,7 +485,7 @@ class _MapsScreenState extends State<MapsScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 2),
                         child: Image.asset(
                           'lib/assets/icons/rectangle-filled.png',
-                          height: 30,
+                          height: 20,
                           width: 40,
                         ),
                       ),
@@ -510,7 +511,7 @@ class _MapsScreenState extends State<MapsScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 70),
+                              SizedBox(width: 100),
                               GestureDetector(
                                 onTap: () {
                                   _pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
@@ -520,6 +521,7 @@ class _MapsScreenState extends State<MapsScreen> {
                                   decoration: BoxDecoration(
                                     color: _currentPageIndex == 1 ? Color.fromRGBO(255, 115, 19, 1) : const Color.fromARGB(100, 0, 0, 0),
                                     borderRadius: BorderRadius.circular(8),
+                                    
                                   ),
                                   child: Text(
                                     'Saved',
