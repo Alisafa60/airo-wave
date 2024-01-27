@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/requests/profile.dart';
 import 'package:mobile_app/widgets/dropdown_menu.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -32,11 +33,30 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController adressController = TextEditingController();
+  late ProfileService profileService;
+  Map<String, dynamic>? profileData;
 
   @override
   void initState() {
     super.initState();
-    _loadProfileImage();
+    profileService = ProfileService(widget.apiService);
+    _initializeProfileData();
+  }
+
+  Future<void> _loadProfile() async {
+      try {
+        final Map<String, dynamic> data = await profileService.getProfile();
+        setState(() {
+          profileData = data;
+        });
+        
+      } catch (error) {
+        print('Error loading health data: $error');
+      }
+  }
+  Future<void> _initializeProfileData() async {
+    await _loadProfile();
+    await _loadProfileImage();
   }
   
   Future<String?> getToken() async {
@@ -138,6 +158,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         );
 
         if (response.statusCode == 204) {
+          await _removeOldImagePath();
           setState(() {
             _imagePath = null;
             fileName = null;
@@ -153,10 +174,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Future<String?> getImagePath() async {
     final ImagePicker picker = ImagePicker();
-    
     try {
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      print('image-path ${image?.path}');
       return image?.path;
+      
     } catch (e) {
       print('Error picking image: $e');
       return null;
@@ -191,18 +213,26 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Future<void> _saveImagePath(String imagePath) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('profileImagePath', imagePath);
-    print('saved image pathh: $imagePath');
+    String userId = profileData?['user']?['id'].toString() ?? '';
+    String key = 'profileImagePath_$userId';
+    await prefs.setString(key, imagePath);
+    print('Saved image path key: $key');
+    print('Saved image path: $imagePath');
   }
 
   Future<void> _loadProfileImage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedImagePath = prefs.getString('profileImagePath');
+    String userId = profileData?['user']?['id'].toString() ?? '';
+    String key = 'profileImagePath_$userId';
+
+    String? savedImagePath = prefs.getString(key);
+    print('Loaded image path key: $key');
+    
     if (savedImagePath != null){
       setState(() {
         fileName = savedImagePath;
       });
-      print('image path $fileName');
+      print('Loaded image path: $fileName');
     }
   }
   
