@@ -140,45 +140,42 @@ class _UserHealthState extends State<UserHealthScreen> {
     }
   }
 
- Future<void> addMedication() async {
-  String? token = await getToken();
+  Future<void> addMedication() async {
+    String? token = await getToken();
 
-  if (token != null) {
-    final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+    if (token != null) {
+      final Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
 
-    for (int i = 0; i < medicationEntries.length; i++) {
-      MedicationFieldsState medicationFieldsState = medicationFieldsKeys[i].currentState!;
-      MedicationData medicationData = medicationFieldsState.getMedicationData();
+      for (int i = 0; i < medicationEntries.length; i++) {
+        MedicationFieldsState medicationFieldsState = medicationFieldsKeys[i].currentState!;
+        MedicationData medicationData = medicationFieldsState.getMedicationData();
 
-      final Map<String, dynamic> requestBody = {
-        'name': medicationData.medication,
-        'dosage': medicationData.dosage,
-        'frequency': medicationData.frequency,
-        'startDate': medicationData.startDate,
-        'context': medicationData.healthCondition,
-      };
+        final Map<String, dynamic> requestBody = {
+          'name': medicationData.medication,
+          'dosage': medicationData.dosage,
+          'frequency': medicationData.frequency,
+          'startDate': medicationData.startDate,
+          'context': medicationData.healthCondition,
+        };
 
-      try {
-        final http.Response response = await widget.apiService.post(
-          '/api/user/health/medication',
-          headers,
-          requestBody,
-        );
+        try {
+          final http.Response response = await widget.apiService.post(
+            '/api/user/health/medication',
+            headers,
+            requestBody,
+          );
 
-        print(requestBody);
-
-        if (response.statusCode == 201) {
-          print('Medication added successfully');
-          print(requestBody);
-        } else {
-          print('Medication addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+          if (response.statusCode == 201) {
+            print('medication added succesfuly');
+          } else {
+            print('Medication addition failed. Status code: ${response.statusCode}, Body: ${response.body}');
+          }
+        } catch (error) {
+          print('Error during medication addition: $error');
         }
-      } catch (error) {
-        print('Error during medication addition: $error');
       }
     }
   }
-}
   Future<void> addRespiratoryCondition() async {
     String? token = await getToken();
 
@@ -442,13 +439,14 @@ Widget build(BuildContext context) {
               child: SaveButton(
                 buttonText: 'Save',
                 onPressed: () async {
-                  
                   await Future.wait([
-                    // addAllergyCondition(),
+                    addAllergyCondition(),
                     addMedication(),
-                    // addRespiratoryCondition(),
-                    // addHealthCondition(),
+                    addRespiratoryCondition(),
+                    addHealthCondition(),
+                    Navigator.pushReplacementNamed(context, '/home'),
                   ]);
+                   
                 },
               ),
               ),
