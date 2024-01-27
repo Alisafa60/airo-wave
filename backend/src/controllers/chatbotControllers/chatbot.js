@@ -10,8 +10,8 @@ async function sendToOpenAI(payload, prompt) {
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
             messages: [
-                { role: 'system', content: 'Your name is MedCat, you mainly care about users health that provide you with enviromental data they provide and health condition.' },
-                { role: 'user', content: 'can you tell me about my condition?' },
+                { role: 'system', content: 'Your name is MedCat, you mainly care about users health that provide you with enviromental data they provide and health condition, you are consise and caan be fun.' },
+                { role: 'user', content: 'Give me recommendation by analyzing enviromental condition and my health conditions, start with greeting' },
                 { role: 'assistant', content: prompt },
             ],
             
@@ -143,6 +143,7 @@ async function generateOpenAIPayload(userId) {
                 healthConditionId: true
             }
         });
+        console.log(respiratoryConditions[0].condition)
     
         const allergies = await prisma.allergy.findMany({
             where: { healthConditionId: conditionId },
@@ -191,21 +192,32 @@ async function generateOpenAIPayload(userId) {
         } || {};
         const healthData = healthCondition || [];
         console.log('Allergens:', allergens)
+        const determineAllergenSeverity = (color) => {
+            if (color === 'secondary') {
+                return 'low';
+            } else if (color === 'primary') {
+                return 'moderate';
+            } else if (color === 'red') {
+                return 'high';
+            } else {
+                return 'unknown';
+            }
+        };
 
         const payload = {
             severity : lastSeverityEntry[{severity: lastSeverityEntry.severity}],
             allergens: [{ name: allergens.name, color: allergens.color }],
-            respiratoryConditions: [{
-                condition: respiratoryConditions.condition,
-                symptomsFrequency: respiratoryConditions.symptomsFrequency,
-                triggers: respiratoryConditions.triggers,
-            }],
-            allergies: allergies[{
-                allergen: allergies.allergen,
-                severity: allergies.severity,
-                duration: allergies.duration,
-                trigger: allergies.triggers,
-            }],
+            respiratoryConditions: respiratoryConditions.map(condition => ({
+                condition: condition.condition,
+                symptomsFrequency: condition.symptomsFrequency,
+                triggers: condition.triggers,
+            })),
+            allergies: allergies.map(allergy => ({
+                allergen: allergy.allergen,
+                severity: allergy.severity,
+                duration: allergy.duration,
+                trigger: allergy.triggers,
+            })),
             healthData: {
                 weight: healthCondition.weight,
                 bloodType: healthCondition.bloodType,
@@ -222,7 +234,8 @@ async function generateOpenAIPayload(userId) {
             },
             lastLocation: lastLocation ? lastLocation.location : null,
         };
-
+        console.log(payload.respiratoryConditions);
+        const allergenPrompt = payload.allergens.length > 0 ? `- ${payload.allergens.map(allergen => `${allergen.name} (Severity: ${determineAllergenSeverity(allergen.color)})`).join(', ')}` : 'No allergens';
         const prompt = `
             Generate health recommendations for the user.
 
@@ -231,7 +244,7 @@ async function generateOpenAIPayload(userId) {
             - VOC levels: ${payload.indoorSensorData.voc} ppm
 
             Allergens:
-            ${payload.allergens.length > 0 ? `- ${payload.allergens[0].name}, Duration: ${payload.allergens[0].duration}, Recommendation: ${payload.severityRecommendation}` : ''}
+            ${allergenPrompt}
 
             Outdoor Air Quality:
             - AQI: ${payload.outdoorAirCondition.aqi}
@@ -242,17 +255,18 @@ async function generateOpenAIPayload(userId) {
             - PM2.5 levels: ${payload.outdoorAirCondition.pm25} µg/m³
             - SO2 levels: ${payload.outdoorAirCondition.so2Level} ppm
 
-            Health Condition:
+            Health information:
             - Weight: ${payload.healthData.weight} kg
             - Blood Type: ${payload.healthData.bloodType}
 
             Respiratory Conditions:
-            ${payload.respiratoryConditions.length > 0 ? `- ${payload.respiratoryConditions[0].condition}` : ''}
+            ${payload.respiratoryConditions.length > 0 ? `- ${payload.respiratoryConditions.map(condition => condition.condition).join(', ')}` : 'No respiratory conditions'}
 
-            Location:
-            ${payload.lastLocation ? `- Last location: ${payload.lastLocation}` : '- Location not available'}
-        `;
+            Allergies:
+            ${payload.allergies.length > 0 ? `- ${payload.allergies.map(allergy => allergy.allergen).join(', ')}` : 'No allergies'}
+                `;
             console.log(payload.outdoorAirCondition.aqi);
+            console.log(payload.respiratoryConditions);
         await sendToOpenAI(payload, prompt);
     } catch (error) {
         console.error('Error:', error);
