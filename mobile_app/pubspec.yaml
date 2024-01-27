@@ -101,6 +101,7 @@ flutter:
       - lib/assets/icons/rectangle-filled.png
       - lib/assets/icons/play-button.svg
       - lib/assets/icons/start-button.png
+      - lib/assets/icons/stop-button.svg
       - lib/assets/icons/environment.svg
       - lib/assets/icons/finish-button.png
       - lib/assets/icons/resume-button.png
@@ -125,6 +126,9 @@ flutter:
       - lib/assets/icons/tree-green.svg
       - lib/assets/icons/leaf-green.svg
       - lib/assets/icons/leaf-white.svg
+      - lib/assets/icons/sad-circle.svg
+      - lib/assets/icons/happy-circle.svg
+      - lib/assets/icons/profile-round.svg
       
 
 

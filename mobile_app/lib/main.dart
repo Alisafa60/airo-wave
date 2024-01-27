@@ -14,6 +14,7 @@ import 'package:mobile_app/screens/signup.dart';
 import 'package:mobile_app/screens/user_profile.dart';
 import 'package:mobile_app/screens/user_health.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/widgets/activity_test.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -32,19 +33,20 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(255, 115, 15, 1)),
         useMaterial3: true,
       ),
-      home: HomeScreen(apiService: apiService,),
-      // initialRoute: '/',
-      // routes: {
-      //   '/signup': (context) => SignupScreen(apiService: apiService),
-      //   '/': (context) => LoginScreen(apiService: apiService),
-      //   '/home': (context) => HomeScreen(apiService: apiService,),
-      //   '/home/profile': (context) => UserProfileScreen(apiService: apiService),
-      //   '/home/health': (context) => UserHealthScreen(apiService: apiService),
-      //   '/medcat': (context) => MedCatScreen(),
-      //   '/maps': (context) => MapsScreen(),
-      //   '/record':(context) => RecordActivityScreen(),
-      // },
-      
+      // home: SignupScreen(apiService: apiService,),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SignupScreen(apiService: apiService),
+        '/login': (context) => LoginScreen(apiService: apiService),
+        '/home': (context) => HomeScreen(apiService: apiService,),
+        '/home/profile/edit': (context) => UserProfileScreen(apiService: apiService),
+        '/home/profile': (context) => ShowHealthScreen(apiService: apiService),
+        '/health': (context) => UserHealthScreen(apiService: apiService),
+        '/medcat': (context) => MedCatScreen(apiService: apiService,),
+        '/maps': (context) => MapsScreen(apiService: apiService,),
+        '/record':(context) => RecordActivityScreen(),
+      },
+      debugShowCheckedModeBanner: false,
     );
   }
 }
