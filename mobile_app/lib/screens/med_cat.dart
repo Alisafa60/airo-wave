@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/requests/profile.dart';
 import 'package:mobile_app/requests/severity_service.dart';
 import 'package:mobile_app/utils/image_helper.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
@@ -19,7 +20,9 @@ class _MedCatScreenState extends State<MedCatScreen> {
   bool isExpanded = false;
   int expandedContainerIndex = -1;
   late SeverityService severityService;
+  late ProfileService profileService;
   String? fileName;
+  Map<String, dynamic>? profileData;
   
   void handleContainerTap (int index){
     setState(() {
@@ -35,7 +38,6 @@ class _MedCatScreenState extends State<MedCatScreen> {
   void handleNumberCircleTap(int severity) {
     try {
       severityService.addSeverity(severity);
-      print('Severity $severity added successfully');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Severity $severity added successfully'),
@@ -61,12 +63,24 @@ class _MedCatScreenState extends State<MedCatScreen> {
       print('image path $fileName');
     }
   }
+   Future<void> _loadProfile() async {
+      try {
+        final Map<String, dynamic> data = await profileService.getProfile();
+        setState(() {
+          profileData = data;
+        });
+      } catch (error) {
+        print('Error loading health data: $error');
+      }
+    }
 
   @override
   void initState() {
     super.initState();
     severityService = SeverityService(widget.apiService);
     _loadProfileImage();
+    profileService = ProfileService(widget.apiService);
+    _loadProfile();
   }
 
   @override
@@ -126,8 +140,8 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           ),
                           ),
                           const SizedBox(height: 5,),
-                          const Text(
-                            'Ali Safa',
+                          Text(
+                            '${profileData?['user']?['firstName']} ${profileData?['user']?['lastName']}',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -139,7 +153,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                     ),
                     const SizedBox(height: 20,),
                     Text(
-                      ' How is your Allergy today?',
+                      ' How are you feeling today?',
                       style: TextStyle(
                         fontSize: 16,
                         color: Color.fromRGBO(74, 74, 74, 1),
@@ -216,7 +230,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                                   ),
                                 ),
                                 child: const Text(
-                                  'Show Analysis',
+                                  'Analysis',
                                   style: TextStyle(
                                     fontSize: 10,
                                     color: Colors.white,
