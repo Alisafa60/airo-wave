@@ -51,13 +51,13 @@ class RespiratoryConditionSurvice {
       try {
         final Map<String, dynamic> requestBody = {
           'condition': condition,
-          'diangnosis': diagnosis,
+          'diagnosis': diagnosis,
           'symptomsFrequency': symptomsFrequency,
           'triggers': triggers,
         };
 
         final http.Response response = await apiService.post(
-          '/api/user/health/respiratoryCondition/edit',
+          '/api/user/health/edit-respiratory-condition',
           headers,
           requestBody,
         );
