@@ -9,8 +9,10 @@ import 'package:mobile_app/requests/profile.dart';
 import 'package:mobile_app/requests/respiratory_condition_survice.dart';
 import 'package:mobile_app/utils/image_helper.dart';
 import 'package:mobile_app/widgets/allergy_overlay.dart';
+import 'package:mobile_app/widgets/bottom_bar.dart';
 import 'package:mobile_app/widgets/medication_overlay.dart';
 import 'package:mobile_app/widgets/respiratory_overlay.dart';
+import 'package:mobile_app/widgets/weight_overlay.dart';
 
 class ShowHealthScreen extends StatefulWidget {
   const ShowHealthScreen({super.key, required this.apiService});
@@ -29,6 +31,8 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
   late MedicationSurvice medicationSurvice;
   late ProfileService profileService;
   String? fileName;
+
+  TextEditingController weightController = TextEditingController();
 
   TextEditingController allergyNameController = TextEditingController();
   TextEditingController allergySeverityController = TextEditingController();
@@ -281,6 +285,19 @@ Future<void> updateRespiratoryCondition({
       print('Error updating medication: $error');
     }
   }
+
+  Future<void> updateWeight({
+    required int weight,
+  }) async {
+    try {
+      final Map<int, dynamic> updateWeight = await healthService.updateWeight(
+        weight: weight,
+      );
+      await _loadHealthData();
+    } catch (error) {
+     print(error);
+    }
+  }
   
   Widget build(BuildContext context) {
     return Scaffold(
@@ -308,6 +325,7 @@ Future<void> updateRespiratoryCondition({
             color: Colors.black12,
           ),
         ),
+        
       ),
       body: Padding(
         padding: EdgeInsets.all(15),
@@ -315,13 +333,14 @@ Future<void> updateRespiratoryCondition({
           children: [
             Container(
               height: 100,
+              width: 200,
               alignment: Alignment.center,
               color: const Color.fromRGBO(255, 252, 252, 1),
               child: Column(
                 children: [
                   GestureDetector(
                     onTap: () {
-                      
+                      Navigator.pushNamed(context, '/home/profile/edit');
                     },
                     child: Stack(
                       children: [
@@ -341,16 +360,16 @@ Future<void> updateRespiratoryCondition({
                             ),
                           ),
                         Positioned(
-                          top: 5,
-                          right: 5,
+                          top: 30,
+                          left: 27,
                           child: GestureDetector(
                             onTap: () {},
                             child: Container(
                               padding: EdgeInsets.all(10),
                               child: Icon(
-                                Icons.edit_note,
+                                Icons.edit,
                                 size: 25,
-                                color: myGray.withOpacity(0.4),
+                                color: myGray.withOpacity(1),
                               ),
                             ),
                           ),
@@ -397,23 +416,6 @@ Future<void> updateRespiratoryCondition({
                                 Icons.bloodtype_outlined,
                                 size: 30,
                                 color: Colors.red.withOpacity(0.6),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 5,
-                          right: 5,
-                          child: GestureDetector(
-                            onTap: () {
-                              
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-                              child: Icon(
-                                Icons.edit_note,
-                                size: 30,
-                                color: myGray.withOpacity(0.4),
                               ),
                             ),
                           ),
@@ -471,8 +473,18 @@ Future<void> updateRespiratoryCondition({
                           top: 5,
                           right: 5,
                           child: GestureDetector(
-                            onTap: () {
-                             
+                             onTap: () {
+                              showEditWeightOverlay(
+                                context,
+                                weightController,
+                                () async {
+                                  int weight = weightController as int;
+                                  await updateWeight(
+                                    weight: weight,
+                                  );
+
+                                },
+                              );
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
@@ -632,27 +644,26 @@ Future<void> updateRespiratoryCondition({
                     right: 5,
                     child: GestureDetector(
                       onTap: () {
-                    
                         showEditRespiratoryConditionOverlay(
-                        context,
-                        respiratoryConditionController,
-                        respiratoryDiagnosisController,
-                        respiratorySymptomsFrequencyController,
-                        respiratoryTriggersController,
-                        () async {
-                          String condition = respiratoryConditionController.text;
-                          String diagnosis = respiratoryDiagnosisController.text;
-                          String symptomsFrequency = respiratorySymptomsFrequencyController.text;
-                          String triggers = respiratoryTriggersController.text;
-                          await updateRespiratoryCondition(
-                            condition: condition,
-                            diagnosis: diagnosis,
-                            symptomsFrequency: symptomsFrequency,
-                            triggers: triggers,
-                          );
+                          context,
+                          respiratoryConditionController,
+                          respiratoryDiagnosisController,
+                          respiratorySymptomsFrequencyController,
+                          respiratoryTriggersController,
+                          () async {
+                            String condition = respiratoryConditionController.text;
+                            String diagnosis = respiratoryDiagnosisController.text;
+                            String symptomsFrequency = respiratorySymptomsFrequencyController.text;
+                            String triggers = respiratoryTriggersController.text;
+                            await updateRespiratoryCondition(
+                              condition: condition,
+                              diagnosis: diagnosis,
+                              symptomsFrequency: symptomsFrequency,
+                              triggers: triggers,
+                            );
 
-                        },
-                      );
+                          },
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -783,36 +794,9 @@ Future<void> updateRespiratoryCondition({
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/home-filled.svg',
-              height: 35, width: 35,),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/MedCat.svg',
-              height: 35, width: 35,),
-            label: 'MedCat',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/map-location.svg',
-              height: 35, width: 35,),
-            label: 'Maps',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/activity-waves.svg',
-              height: 35, width: 35,),
-            label: 'Activities',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('lib/assets/icons/community.svg',
-              height: 35, width: 35,),
-            label: 'Community',
-          ),
-        ],
-      ),
+       bottomNavigationBar: CustomBottomNavigationBar(
+        selectedIndex: 4,
+    )
     );
   }
 }
