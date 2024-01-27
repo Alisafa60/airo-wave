@@ -4,6 +4,8 @@ import 'package:mobile_app/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:mobile_app/widgets/dropdown_menu.dart';
+
 class SignupScreen extends StatefulWidget {
   final ApiService apiService;
   const SignupScreen({super.key, required this.apiService});
@@ -47,8 +49,7 @@ class _SignupScreenState extends State<SignupScreen> {
       final http.Response response = await widget.apiService.post1('/auth/register', requestBody);
       if (response.statusCode == 200){
         final Map<String, dynamic>data = jsonDecode(response.body);
-        print('Login successful: $data');
-        Navigator.pushReplacementNamed(currentContext, '/login');
+        Navigator.pushReplacementNamed(context, '/login');
       }else{
         setState(() {
           errorText = 'Invalid email/password';
@@ -145,8 +146,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ]
             ),
             SizedBox(height: 20,),
-            GenderDropdownFormField(
-              selectedGender: selectedGender,
+            GenderDropdownForm(
+             currentValue: selectedGender,
               onChanged: (String? value) {
                 print('selected gender: $value');
                 setState(() {
@@ -177,6 +178,21 @@ class _SignupScreenState extends State<SignupScreen> {
                       isHealthProfessional = value!;
                     });
                   },
+                ),
+                SizedBox(width: 5,),
+               GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
+                  child: Text(
+                    ' Login?',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: myGray.withOpacity(0.6), // You can set your preferred color
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
             ),

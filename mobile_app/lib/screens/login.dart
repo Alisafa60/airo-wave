@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (token != null && token.isNotEmpty) {
           await saveToken(token);
-          Navigator.pushReplacementNamed(currentContext, '/home');
+          Navigator.pushReplacementNamed(currentContext, '/health');
 
         } else {
           print('Invalid or empty token received.');
@@ -57,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final FlutterSecureStorage storage = FlutterSecureStorage();
       await storage.write(key: 'jwtToken', value: token);
+      
       print('Token saved successfully: $token');
 
     } catch (error) {
@@ -67,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(255, 252, 252, 1),
       ),
@@ -125,130 +127,130 @@ class _LoginScreenState extends State<LoginScreen> {
               buttonText: 'Log In',
               onPressed: loginUser,
             ),
-            const SizedBox(height: 15),
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 1,
-                    color: Colors.grey,
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    'or',
-                    style: TextStyle(
-                      color: Color.fromRGBO(74, 74, 74, 0.6),
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    height: 1,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 15,),
-            Container(
-              height: 50,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 247, 241),
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-              ),
-              child: Row(
-                children: [
-                  // Add the Google logo here
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Image.asset(
-                      'lib/assets/images/google.png',
-                      height: 24,
-                      width: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 55,),
-                  const Text(
-                    'Continue with Google',
-                    style: TextStyle(
-                      color: Color.fromRGBO(74, 74, 74, 1),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10,),
-            Container(
-              height: 50,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 247, 241),
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-              ),
-              child: const Row(
-                children: [
-                  // Add the Google logo here
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Icon(
-                      Icons.facebook,
-                      size: 24,
-                    ),
-                  ),
-                  SizedBox(width: 52,),
-                  Text(
-                    'Continue with Facebook',
-                    style: TextStyle(
-                      color: Color.fromRGBO(74, 74, 74, 1),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10,),
-            Container(
-              height: 50,
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 247, 241),
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-              ),
-              child: const Row(
-                children: [
-                  // Add the Google logo here
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Icon(
-                      Icons.apple,
-                      size: 24,
-                    ),
-                  ),
-                  SizedBox(width: 60,),
-                  Text(
-                    'Continue with Apple',
-                    style: TextStyle(
-                      color: Color.fromRGBO(74, 74, 74, 1),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // const SizedBox(height: 15),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: Container(
+            //         height: 1,
+            //         color: Colors.grey,
+            //       ),
+            //     ),
+            //     const Padding(
+            //       padding: EdgeInsets.symmetric(horizontal: 10),
+            //       child: Text(
+            //         'or',
+            //         style: TextStyle(
+            //           color: Color.fromRGBO(74, 74, 74, 0.6),
+            //           fontSize: 16,
+            //         ),
+            //       ),
+            //     ),
+            //     Expanded(
+            //       child: Container(
+            //         height: 1,
+            //         color: Colors.grey,
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 15,),
+            // Container(
+            //   height: 50,
+            //   width: double.infinity,
+            //   padding: const EdgeInsets.all(5),
+            //   decoration: BoxDecoration(
+            //     color: const Color.fromARGB(255, 255, 247, 241),
+            //     borderRadius: BorderRadius.circular(5),
+            //     border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+            //   ),
+            //   child: Row(
+            //     children: [
+            //       // Add the Google logo here
+            //       Padding(
+            //         padding: const EdgeInsets.symmetric(horizontal: 10),
+            //         child: Image.asset(
+            //           'lib/assets/images/google.png',
+            //           height: 24,
+            //           width: 24,
+            //         ),
+            //       ),
+            //       const SizedBox(width: 55,),
+            //       const Text(
+            //         'Continue with Google',
+            //         style: TextStyle(
+            //           color: Color.fromRGBO(74, 74, 74, 1),
+            //           fontSize: 16,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(height: 10,),
+            // Container(
+            //   height: 50,
+            //   width: double.infinity,
+            //   padding: const EdgeInsets.all(5),
+            //   decoration: BoxDecoration(
+            //     color: const Color.fromARGB(255, 255, 247, 241),
+            //     borderRadius: BorderRadius.circular(5),
+            //     border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+            //   ),
+            //   child: const Row(
+            //     children: [
+            //       // Add the Google logo here
+            //       Padding(
+            //         padding: EdgeInsets.symmetric(horizontal: 10),
+            //         child: Icon(
+            //           Icons.facebook,
+            //           size: 24,
+            //         ),
+            //       ),
+            //       SizedBox(width: 52,),
+            //       Text(
+            //         'Continue with Facebook',
+            //         style: TextStyle(
+            //           color: Color.fromRGBO(74, 74, 74, 1),
+            //           fontSize: 16,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(height: 10,),
+            // Container(
+            //   height: 50,
+            //   width: double.infinity,
+            //   padding: const EdgeInsets.all(5),
+            //   decoration: BoxDecoration(
+            //     color: const Color.fromARGB(255, 255, 247, 241),
+            //     borderRadius: BorderRadius.circular(5),
+            //     border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
+            //   ),
+            //   child: const Row(
+            //     children: [
+            //       // Add the Google logo here
+            //       Padding(
+            //         padding: EdgeInsets.symmetric(horizontal: 10),
+            //         child: Icon(
+            //           Icons.apple,
+            //           size: 24,
+            //         ),
+            //       ),
+            //       SizedBox(width: 60,),
+            //       Text(
+            //         'Continue with Apple',
+            //         style: TextStyle(
+            //           color: Color.fromRGBO(74, 74, 74, 1),
+            //           fontSize: 16,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
