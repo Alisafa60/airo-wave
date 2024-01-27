@@ -13,6 +13,7 @@ import 'package:mobile_app/utils/allergens_info.dart';
 import 'package:mobile_app/utils/co2_voc_color.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 import 'package:mobile_app/utils/image_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.apiService});
@@ -46,7 +47,7 @@ class _MyHomeScreen extends State<HomeScreen> {
     super.initState();
     sensorService = SensorService(widget.apiService);
     _loadSensor();
-    sensorUpdateTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
+    sensorUpdateTimer = Timer.periodic(Duration(minutes: 10), (Timer timer) {
       _loadSensor();
     });
     // locationService = LocationService(widget.apiService);
@@ -57,18 +58,40 @@ class _MyHomeScreen extends State<HomeScreen> {
     // saveAllergenService = SaveAllergenService(widget.apiService);
     // _loadEnviromentalData();
     // _fetchAndPostAirQualityData();
-   _loadProfileImage();
+   
     profileService = ProfileService(widget.apiService);
-    _loadProfile();
+    _initializeProfileData();
   }
 
+  Future<void> _loadProfile() async {
+      try {
+        final Map<String, dynamic> data = await profileService.getProfile();
+        setState(() {
+          profileData = data;
+        });
+        
+      } catch (error) {
+        print('Error loading health data: $error');
+      }
+    }
+     Future<void> _initializeProfileData() async {
+      await _loadProfile();
+      await _loadProfileImage();
+    }
+
   Future<void> _loadProfileImage() async {
-    String? savedImagePath = await ImageHelper.loadProfileImage();
-    if (savedImagePath != null) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = profileData?['user']?['id'].toString() ?? '';
+    String key = 'profileImagePath_$userId';
+
+    String? savedImagePath = prefs.getString(key);
+    print('Loaded image path key: $key');
+    
+    if (savedImagePath != null){
       setState(() {
         fileName = savedImagePath;
       });
-      print('image path $fileName');
+      print('Loaded image path: $fileName');
     }
   }
 
@@ -126,17 +149,6 @@ class _MyHomeScreen extends State<HomeScreen> {
       print('Error loading health data: $error');
     }
   }
-    Future<void> _loadProfile() async {
-      try {
-        final Map<String, dynamic> data = await profileService.getProfile();
-        setState(() {
-          profileData = data;
-        });
-        
-      } catch (error) {
-        print('Error loading health data: $error');
-      }
-    }
 
     Future<void> _fetchAndPostAirQualityData() async {
       try {
