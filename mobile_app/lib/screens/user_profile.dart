@@ -177,7 +177,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           fileName = basename(uploadedImagePath);
         });
       } else {
+        print('image path: $imagePath');
         print('Image upload failed');
+        print(imagePath);
       }
     }
   }

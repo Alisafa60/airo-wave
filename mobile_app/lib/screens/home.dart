@@ -46,7 +46,7 @@ class _MyHomeScreen extends State<HomeScreen> {
     super.initState();
     sensorService = SensorService(widget.apiService);
     _loadSensor();
-    sensorUpdateTimer = Timer.periodic(Duration(minutes: 10), (Timer timer) {
+    sensorUpdateTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
       _loadSensor();
     });
     // locationService = LocationService(widget.apiService);
@@ -57,7 +57,6 @@ class _MyHomeScreen extends State<HomeScreen> {
     // saveAllergenService = SaveAllergenService(widget.apiService);
     // _loadEnviromentalData();
     // _fetchAndPostAirQualityData();
-    // fetchPollen();
    _loadProfileImage();
     profileService = ProfileService(widget.apiService);
     _loadProfile();
@@ -133,7 +132,7 @@ class _MyHomeScreen extends State<HomeScreen> {
         setState(() {
           profileData = data;
         });
-        print(profileData);
+        
       } catch (error) {
         print('Error loading health data: $error');
       }
@@ -241,17 +240,16 @@ class _MyHomeScreen extends State<HomeScreen> {
         ),
       ),
 
-
       body: Padding(
         padding: EdgeInsets.all(5),
         child: Column(
           children: [
             Container(
-              height: (screenHeight - appBarHeight - bottomNavBarHeight) * 0.38,
+              height: (screenHeight - appBarHeight - bottomNavBarHeight) * 0.355,
               color: const Color.fromRGBO(255, 252, 252, 1),
               child: Column(
                 children: [
-                  SizedBox(height: 5,),
+                  SizedBox(height: 30,),
                   Container(
                     padding: const EdgeInsets.only(top: 10),
                     color: const Color.fromRGBO(255, 252, 252, 1),
@@ -260,12 +258,12 @@ class _MyHomeScreen extends State<HomeScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            //route for user profile
+                            Navigator.pushNamed(context, '/home/profile/edit');
                           },
                           child: ClipOval(
                             child: Container(
-                              width: 70,
-                              height: 70,
+                              width: 90,
+                              height: 90,
                               child: fileName != null
                               ? Image.network(
                                   'http://172.25.135.58:3000/uploads/$fileName',
@@ -318,30 +316,30 @@ class _MyHomeScreen extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 15,),
-                  Container(
-                    width: 360,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: myGray.withOpacity(0.3), width: 1),
-                      borderRadius: BorderRadius.circular(15)
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  Container(
-                    width: 360,
-                    height: 50,
-                   decoration: BoxDecoration(
-                    border: Border.all(color: myGray.withOpacity(0.3), width: 1),
-                    borderRadius: BorderRadius.circular(15)
-                  ),
-                  )
+                  // const SizedBox(height: 15,),
+                  // Container(
+                  //   width: 360,
+                  //   height: 50,
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                  //     borderRadius: BorderRadius.circular(15)
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 10,),
+                  // Container(
+                  //   width: 360,
+                  //   height: 50,
+                  //  decoration: BoxDecoration(
+                  //   border: Border.all(color: myGray.withOpacity(0.3), width: 1),
+                  //   borderRadius: BorderRadius.circular(15)
+                  // ),
+                  // )
                 ],
               ),
             ),
 
             Container(
-              height: (screenHeight - appBarHeight - bottomNavBarHeight) * 0.55,
+              height: (screenHeight - appBarHeight - bottomNavBarHeight) * 0.57,
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Column(
                 children: [
@@ -545,12 +543,6 @@ class _MyHomeScreen extends State<HomeScreen> {
                                  ))
                                 ],
                               ),
-                              SizedBox( height: 10),
-                              Container(
-                                height: 1.5,
-                                width: 100,
-                                color: myGray.withOpacity(0.2),
-                              ),
                               SizedBox(height: 5,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -618,7 +610,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                     children: [
                        Expanded(
                         child: Container(
-                          height: 179,
+                          height: 190,
                           decoration: BoxDecoration(
                             border: Border.all(color: myGray.withOpacity(0.3), width: 1),
                             borderRadius: BorderRadius.circular(15)
