@@ -12,7 +12,6 @@ import 'package:mobile_app/requests/sensor_request.dart';
 import 'package:mobile_app/utils/allergens_info.dart';
 import 'package:mobile_app/utils/co2_voc_color.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
-import 'package:mobile_app/utils/image_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -555,7 +554,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                  ))
                                 ],
                               ),
-                              SizedBox(height: 5,),
+                              SizedBox(height: 10,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -855,7 +854,7 @@ class _MyHomeScreen extends State<HomeScreen> {
         ),
       ),
        bottomNavigationBar: CustomBottomNavigationBar(
-        selectedIndex: 1, 
+        selectedIndex: 0, 
      ),
     );
   }

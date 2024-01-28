@@ -17,7 +17,6 @@ class UserHealthScreen extends StatefulWidget {
   
   @override
   State<UserHealthScreen> createState() => _UserHealthState();
-  
 }
 
 class _UserHealthState extends State<UserHealthScreen> {
@@ -214,8 +213,8 @@ class _UserHealthState extends State<UserHealthScreen> {
       }
     }
   }
-
-
+  
+  
  @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -440,10 +439,10 @@ Widget build(BuildContext context) {
                 buttonText: 'Save',
                 onPressed: () async {
                   await Future.wait([
+                    addHealthCondition(),
+                    addRespiratoryCondition(),
                     addAllergyCondition(),
                     addMedication(),
-                    addRespiratoryCondition(),
-                    addHealthCondition(),
                     Navigator.pushReplacementNamed(context, '/home'),
                   ]);
                    

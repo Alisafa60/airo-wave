@@ -15,6 +15,7 @@ import 'package:mobile_app/screens/user_profile.dart';
 import 'package:mobile_app/screens/user_health.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/widgets/activity_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");

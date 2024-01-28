@@ -1,4 +1,5 @@
 class Profile {
+  final int    userId;
   final String firstName;
   final String lastName;
   final String gender;
@@ -8,6 +9,7 @@ class Profile {
   final String unit;
 
   Profile({
+    required this.userId,
     required this.firstName,
     required this.lastName,
     required this.email,
@@ -19,6 +21,7 @@ class Profile {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': userId,
       'firstName': firstName,
       'lastName': lastName,
       'email': email,

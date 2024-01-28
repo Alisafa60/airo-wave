@@ -13,6 +13,7 @@ import 'package:mobile_app/widgets/bottom_bar.dart';
 import 'package:mobile_app/widgets/medication_overlay.dart';
 import 'package:mobile_app/widgets/respiratory_overlay.dart';
 import 'package:mobile_app/widgets/weight_overlay.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ShowHealthScreen extends StatefulWidget {
   const ShowHealthScreen({super.key, required this.apiService});
@@ -166,66 +167,66 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       : [];
 }
 
-List<Widget> buildRespiratoryWidgets(Map<String, dynamic>? respiratoryData) {
-  return (respiratoryData?.containsKey('respiratoryConditions') == true &&
-          respiratoryData!['respiratoryConditions'] is List)
-      ? List<Map<String, dynamic>>.from(
-          respiratoryData['respiratoryConditions'])
-          .map((respiratoryCondition) {
-          return Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Container(
-              height: 30,
-              width: 100,
-              decoration: BoxDecoration(
-                  border:
-                      Border.all(color: myGray.withOpacity(0.3), width: 1),
-                  borderRadius: BorderRadius.circular(15)),
-              child: Center(
-                child: Text(
-                  '${respiratoryCondition['condition'] ?? "Unknown Condition"}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: myGray.withOpacity(0.8),
-                    fontWeight: FontWeight.w400,
+  List<Widget> buildRespiratoryWidgets(Map<String, dynamic>? respiratoryData) {
+    return (respiratoryData?.containsKey('respiratoryConditions') == true &&
+            respiratoryData!['respiratoryConditions'] is List)
+        ? List<Map<String, dynamic>>.from(
+            respiratoryData['respiratoryConditions'])
+            .map((respiratoryCondition) {
+            return Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Container(
+                height: 30,
+                width: 100,
+                decoration: BoxDecoration(
+                    border:
+                        Border.all(color: myGray.withOpacity(0.3), width: 1),
+                    borderRadius: BorderRadius.circular(15)),
+                child: Center(
+                  child: Text(
+                    '${respiratoryCondition['condition'] ?? "Unknown Condition"}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: myGray.withOpacity(0.8),
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        }).toList()
-      : [];
-}
+            );
+          }).toList()
+        : [];
+  }
 
-List<Widget> buildMedicationWidgets(Map<String, dynamic>? medicationData) {
-  return (medicationData?.containsKey('medications') == true &&
-          medicationData!['medications'] is List)
-      ? List<Map<String, dynamic>>.from(medicationData['medications'])
-          .map((medication) {
-          return Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Container(
-              height: 30,
-              width: 100,
-              decoration: BoxDecoration(
-                  border:
-                      Border.all(color: myGray.withOpacity(0.3), width: 1),
-                  borderRadius: BorderRadius.circular(15)),
-              child: Center(
-                child: Text(
-                  '${medication['name'] ?? "Unknown Medication"}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: myGray.withOpacity(0.8),
-                    fontWeight: FontWeight.w400,
+  List<Widget> buildMedicationWidgets(Map<String, dynamic>? medicationData) {
+    return (medicationData?.containsKey('medications') == true &&
+            medicationData!['medications'] is List)
+        ? List<Map<String, dynamic>>.from(medicationData['medications'])
+            .map((medication) {
+            return Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Container(
+                height: 30,
+                width: 100,
+                decoration: BoxDecoration(
+                    border:
+                        Border.all(color: myGray.withOpacity(0.3), width: 1),
+                    borderRadius: BorderRadius.circular(15)),
+                child: Center(
+                  child: Text(
+                    '${medication['name'] ?? "Unknown Medication"}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: myGray.withOpacity(0.8),
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        }).toList()
-      : [];
-}
+            );
+          }).toList()
+        : [];
+  }
 
   Future<void> updateAllergy({
     required String allergen,
@@ -298,35 +299,57 @@ Future<void> updateRespiratoryCondition({
      print(error);
     }
   }
+
+  void signOut() async {
+  // Clear the JWT token from shared preferences
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.remove('jwtToken');
+
+  // Navigate to the login screen or perform any other necessary actions
+  Navigator.pushReplacementNamed(context, '/');
+}
   
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(255, 252, 252, 1),
-        title: const Text(
-          "Health",
-          selectionColor: Color.fromRGBO(74, 74, 74, 1),
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
+  return Scaffold(
+    resizeToAvoidBottomInset: false,
+    appBar: AppBar(
+      backgroundColor: const Color.fromRGBO(255, 252, 252, 1),
+      title: const Text(
+        "Health",
+        selectionColor: Color.fromRGBO(74, 74, 74, 1),
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
         ),
-        centerTitle: true,
-        leading: IconButton(
-          padding: EdgeInsets.all(15),
-          icon: Icon(Icons.arrow_back_ios, color: myGray),
-          onPressed: () {},
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(
-            height: 1,
-            color: Colors.black12,
-          ),
-        ),
-        
       ),
+      centerTitle: true,
+      leading: IconButton(
+        padding: EdgeInsets.all(15),
+        icon: Icon(Icons.arrow_back_ios, color: myGray),
+        onPressed: () {
+          // Handle back navigation logic
+        },
+      ),
+      actions: [
+        IconButton(
+          padding: EdgeInsets.all(15),
+          icon: Icon(Icons.exit_to_app, color: myGray),
+          onPressed: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.remove('jwtToken');
+            await prefs.setBool('firstLogin', true);
+            Navigator.pushReplacementNamed(context, '/');
+          },
+        ),
+      ],
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Container(
+          height: 1,
+          color: Colors.black12,
+        ),
+      ),
+    ),
       body: Padding(
         padding: EdgeInsets.all(15),
         child: Column(
