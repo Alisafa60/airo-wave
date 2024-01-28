@@ -67,9 +67,9 @@ class BorderedInputField extends StatelessWidget {
 
 class SaveButton extends StatelessWidget {
   final String buttonText;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
-  const SaveButton({super.key, required this.buttonText, required this.onPressed});
+  const SaveButton({super.key, required this.buttonText, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
