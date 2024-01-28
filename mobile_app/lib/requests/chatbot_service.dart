@@ -29,7 +29,8 @@ class OpenAiService {
           requestBody,
         );
 
-        if (response.statusCode == 200) {
+        if (response.statusCode == 201) {
+          
           final Map<String, dynamic> responseData = json.decode(response.body);
           return responseData;
         } else {
