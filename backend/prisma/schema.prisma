@@ -101,7 +101,7 @@ model Medication{
   name                    String
   frequency               String?
   dosage                  String?
-  startDate               DateTime?
+  startDate               String?
   respiratoryConditionId  Int?
   respiratoryCondition    RespiratoryCondition?  @relation(fields: [respiratoryConditionId], references: [id])
   allergyId               Int?
