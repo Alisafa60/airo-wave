@@ -7,6 +7,7 @@ import 'package:mobile_app/requests/profile.dart';
 import 'package:mobile_app/requests/severity_service.dart';
 import 'package:mobile_app/utils/image_helper.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MedCatScreen extends StatefulWidget {
   final ApiService apiService;
@@ -60,16 +61,6 @@ class _MedCatScreenState extends State<MedCatScreen> {
       );
     }
   }
-
-  Future<void> _loadProfileImage() async {
-    String? savedImagePath = await ImageHelper.loadProfileImage();
-    if (savedImagePath != null) {
-      setState(() {
-        fileName = savedImagePath;
-      });
-      print('image path $fileName');
-    }
-  }
   
    Future<void> _loadProfile() async {
       try {
@@ -87,10 +78,30 @@ class _MedCatScreenState extends State<MedCatScreen> {
   void initState() {
     super.initState();
     severityService = SeverityService(widget.apiService);
-    _loadProfileImage();
     profileService = ProfileService(widget.apiService);
     openAiService = OpenAiService(widget.apiService);
-    _loadProfile();
+    _initializeProfileData();
+  }
+
+   Future<void> _initializeProfileData() async {
+      await _loadProfile();
+      await _loadProfileImage();
+    }
+
+  Future<void> _loadProfileImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = profileData?['user']?['id'].toString() ?? '';
+    String key = 'profileImagePath_$userId';
+
+    String? savedImagePath = prefs.getString(key);
+    print('Loaded image path key: $key');
+    
+    if (savedImagePath != null){
+      setState(() {
+        fileName = savedImagePath;
+      });
+      print('Loaded image path: $fileName');
+    }
   }
 
   Future<void> _loadChatbotResponse() async {
