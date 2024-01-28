@@ -3,25 +3,40 @@ const { PrismaClient } = require("@prisma/client");
 const { default: OpenAI } = require('openai');
 require('dotenv').config();
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+    // log: ['query', 'info', 'warn', 'error'],
+});
 
-async function sendToOpenAI(payload, prompt) {
+async function sendToOpenAI(userId, payload, prompt) {
     try {
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
             messages: [
-                { role: 'system', content: "Your name is MedCat, you mainly care about user's health, where they provide you with real time\
-                 enviromental data and their health conditions whether it's allergy or respiratory condition and perhaps medical history,\
-                  you are consise and can be fun with just a bit of humor." },
+                { role: 'system', content: "Your name is MedCat, you mainly care about user's health by analyzing the provided air quality and \
+                allergens. And you give recommendation based speifically on their condition. You're concise, and can be fun. don't realy a lot on bullet point as\
+                they can be boring. Don't elaborate a lot. Speak mostly in context of user health condition and \
+                enviromental data unless you're asked otherwise" },
                 { role: 'user', content: 'Give me recommendation by analyzing enviromental condition and my health conditions, start with greeting' },
                 { role: 'assistant', content: prompt },
             ],
             
         });
-
-        result = response.choices[0].message.content;
+        
+        const result = response.choices[0].message.content;
         console.log(result)
-        // res.status(200).json({ result });
+        try {
+            const openAiResponse = await prisma.openAiResponse.create({
+               data : {
+                userId:userId,
+                response: result
+               } 
+               
+            });
+        
+        } catch (error) {
+            console.error('Error saving result to Prisma:', error);
+        }
+        
     } catch (error) {
         console.error('Error in sendToOpenAI:', error);
         throw error;
@@ -30,8 +45,6 @@ async function sendToOpenAI(payload, prompt) {
 async function generateOpenAIPayload(userId, userMessage) {
     
     try {
-        // const userId = req.user.id;
-        // const userMessage = req.body.userMessage; 
 
         const allergens = await prisma.allergen.findFirst({
             where: { userId: userId },
@@ -149,7 +162,6 @@ async function generateOpenAIPayload(userId, userMessage) {
                 healthConditionId: true
             }
         });
-        console.log(respiratoryConditions[0].condition)
     
         const allergies = await prisma.allergy.findMany({
             where: { healthConditionId: conditionId },
@@ -300,13 +312,12 @@ async function generateOpenAIPayload(userId, userMessage) {
             - SO2 levels: ${payload.outdoorAirCondition.so2Level} ppm
                 `;
 
-            await sendToOpenAI(payload, userMessage + '\n' + prompt);;
+            await sendToOpenAI(userId, payload, userMessage + '\n' + prompt);;
     } catch (error) {
         console.error('Error:', error);
     } finally {
         await prisma.$disconnect();
     }
 }
-generateOpenAIPayload(1, 'whats my health recommendation for today?');
 
 module.exports = {generateOpenAIPayload}
