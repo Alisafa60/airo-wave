@@ -23,11 +23,11 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _isMetric = true;
   String? selectedGender;
   bool isHealthProfessional = false;
-  bool isLoading = false; // Added loading state
+  bool isLoading = false;
 
   Future<void> signupUser() async {
     setState(() {
-      isLoading = true; // Set loading to true when signup begins
+      isLoading = true; 
     });
 
     final String email = emailController.text;
@@ -69,7 +69,7 @@ class _SignupScreenState extends State<SignupScreen> {
       print('Error during signup: $error');
     } finally {
       setState(() {
-        isLoading = false; // Set loading to false when signup completes
+        isLoading = false; 
       });
     }
   }
@@ -208,7 +208,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: Text(
                     ' Login?',
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 16,
                       color: myGray.withOpacity(0.6),
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.w600,
