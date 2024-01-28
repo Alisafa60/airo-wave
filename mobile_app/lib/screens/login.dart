@@ -72,7 +72,6 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           loginError = 'Invalid email/password';
         });
-        print('Login failed. Status code: ${response.statusCode}, Body: ${response.body}');
       }
     } catch (error) {
       print('Error during login: $error');
@@ -97,102 +96,102 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(255, 252, 252, 1),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: EdgeInsets.all(15),
+        child:  GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus(); 
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                 const Text(
-                "Log In",
+              Center(
+                child: Image.asset(
+                  'lib/assets/images/Ali_Safa_logo.png',
+                  height: 140,
+                  width: 140,
+                ),
+              ),
+              SizedBox(height: 30),
+              const Text(
+                'Log In',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w700,
                   color: Color.fromRGBO(46, 46, 46, 1),
                 ),
               ),
-               Image.asset(
-                  'lib/assets/images/Ali_Safa_logo.png',
-                  height: 100,
-                  width: 100,
+              SizedBox(height: 30),
+              const Text(
+                'Email',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey,
                 ),
+              ),
+              const SizedBox(height: 10),
+              BorderedInputField(hintText: 'Email', controller: emailController,),
+              const SizedBox(height: 20),
+              const Text(
+                'Password',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 10),
+              BorderedInputField(hintText: 'Password', controller: passwordController,),
+              const SizedBox(height: 5),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, '/');
+                },
+                child:  Row(
+                  children: [
+                    const Text(
+                      "  Don't have an Account?",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 3),
+                    Text(
+                      'Signup', style: 
+                      TextStyle(
+                        color: Colors.grey.withOpacity(0.6), 
+                        fontSize: 16, fontWeight: 
+                        FontWeight.w500,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 2),
+              Text(loginError, style: TextStyle(color: Colors.red, fontSize: 15),),
+              SizedBox(height: 30),
+              SaveButton(
+                buttonText: 'Log In',
+                onPressed: isLoading ? null : loginUser,
+              ),
+              if (isLoading) 
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: CircularProgressIndicator(),
+                ),
+              SizedBox(height: 20),
             ],
-           ),
-            const SizedBox(height: 0),
-            const Text(
-              'Email',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                color: myGray,
-              ),
-            ),
-            const SizedBox(height: 10,),
-            BorderedInputField(hintText: 'Email', controller: emailController,),
-            const SizedBox(height: 20),
-            const Text(
-              'Password',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                color: myGray,
-              ),
-            ),
-            const SizedBox(height: 10,),
-            BorderedInputField(hintText: 'Password', controller: passwordController,),
-            const SizedBox(height: 5,),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/');
-              },
-              child:  Row( children: [ const Text(
-                "Don't have an Account?",
-                  style: TextStyle(
-                  color: Color.fromRGBO(74, 74, 74, 0.6),
-                  fontSize: 16,
-                ),
-              ),
-              SizedBox(width: 3,),
-              Text(
-                'Signup', style: 
-                TextStyle(
-                  color: myGray.withOpacity(0.6), 
-                  fontSize: 16, fontWeight: 
-                  FontWeight.w500,
-                  decoration: TextDecoration.underline,
-                  ),)
-              ]
-              )
-            ),
-            const SizedBox(height: 2,),
-            Text(loginError, style: TextStyle(color: Colors.red, fontSize: 15),),
-            const SizedBox(height: 30),
-            SaveButton(
-              buttonText: 'Log In',
-              onPressed: isLoading ? null : loginUser,
-            ),
-            if (isLoading) 
-              const Padding(
-                padding: EdgeInsets.all(10),
-                child: CircularProgressIndicator(),
-              ),
-              SizedBox(height: 20,),
-              // Center(
-              //   child: Image.asset(
-              //     'lib/assets/images/Ali_Safa_logo.png',
-              //     height: 200,
-              //     width: 200,
-              //   ),
-              // )
-          ],
+          ),
         ),
       ),
+      )
     );
   }
 }
