@@ -1,0 +1,37 @@
+{
+  "allergens": {
+    "name": "Tree",
+    "color": "secondaryColor"
+  },
+  "lastSeverityEntry": {
+    "severity": 2
+  },
+  "healthCondition": {
+    "weight": 72,
+    "bloodType": "A+",
+    "id": 2
+  },
+  "fixedCo2": 510.74,
+  "fixedVoC": 16.46,
+  "averageAqi": 59.05882352941177,
+  "averageCoLevel": 204.04,
+  "averageNo2Level": 2.2352941176470584,
+  "averageO3Level": 29.479999999999993,
+  "averagePm10": 10.298823529411763,
+  "averagePm25": 9.17411764705882,
+  "respiratoryConditions": [
+    {
+      "condition": "Asthma",
+      "symptomsFrequency": "Intermittent",
+      "triggers": "Allergens, smoke, exercise",
+      "healthConditionId": 2
+    }
+  ],
+  "allergies": [],
+  "lastLocation": {
+    "location": {
+      "latitude": 69.3842017,
+      "longitude": -124.9429
+    }
+  }
+}
