@@ -13,14 +13,15 @@ async function sendToOpenAI(payload, prompt) {
                 { role: 'system', content: "Your name is MedCat, you mainly care about user's health, where they provide you with real time\
                  enviromental data and their health conditions whether it's allergy or respiratory condition and perhaps medical history,\
                   you are consise and can be fun with just a bit of humor." },
-                { role: 'user', content: prompt.userMessage },
-                { role: 'assistant', content: prompt.assistantPrompt },
+                { role: 'user', content: 'Give me recommendation by analyzing enviromental condition and my health conditions, start with greeting' },
+                { role: 'assistant', content: prompt },
             ],
             
         });
 
         result = response.choices[0].message.content;
         console.log(result)
+        // res.status(200).json({ result });
     } catch (error) {
         console.error('Error in sendToOpenAI:', error);
         throw error;
@@ -29,6 +30,9 @@ async function sendToOpenAI(payload, prompt) {
 async function generateOpenAIPayload(userId, userMessage) {
     
     try {
+        // const userId = req.user.id;
+        // const userMessage = req.body.userMessage; 
+
         const allergens = await prisma.allergen.findFirst({
             where: { userId: userId },
             orderBy: {
@@ -256,20 +260,35 @@ async function generateOpenAIPayload(userId, userMessage) {
             },
             lastLocation: lastLocation ? lastLocation.location : null,
         };
-        console.log(payload.respiratoryConditions);
+       
         const allergenPrompt = payload.allergens.length > 0 ? `- ${payload.allergens.map(allergen => `${allergen.name} (Severity: ${determineAllergenSeverity(allergen.color)})`).join(', ')}` : 'No allergens';
+       
         const medicationPrompt = medications.length > 0 ?
                 `- ${medications.map(med => `${med.name} (Severity: ${med.severity})`).join(', ')}` :
                 'No medications';
-        const assistantPrompt  = `
+        
+        const prompt  = `
             Generate health recommendations for the user.
+
+            Respiratory Conditions:
+            ${payload.respiratoryConditions.length > 0 ? `- ${payload.respiratoryConditions.map(condition => condition.condition).join(', ')}` : 'No respiratory conditions'}
+            
+            Health information:
+            - Weight: ${payload.healthData.weight} kg
+            - Blood Type: ${payload.healthData.bloodType}
+
+            Medications:
+            ${medicationPrompt}
+
+            Allergies:
+            ${payload.allergies.length > 0 ? `- ${payload.allergies.map(allergy => allergy.allergen).join(', ')}` : 'No allergies'}
+            
+            Allergens:
+            ${allergenPrompt}
 
             Indoor Air Quality:
             - CO2 levels: ${payload.indoorSensorData.co2} ppm
             - VOC levels: ${payload.indoorSensorData.voc} ppm
-
-            Allergens:
-            ${allergenPrompt}
 
             Outdoor Air Quality:
             - AQI: ${payload.outdoorAirCondition.aqi}
@@ -279,29 +298,15 @@ async function generateOpenAIPayload(userId, userMessage) {
             - PM10 levels: ${payload.outdoorAirCondition.pm10} µg/m³
             - PM2.5 levels: ${payload.outdoorAirCondition.pm25} µg/m³
             - SO2 levels: ${payload.outdoorAirCondition.so2Level} ppm
-
-            Health information:
-            - Weight: ${payload.healthData.weight} kg
-            - Blood Type: ${payload.healthData.bloodType}
-
-            Medications:
-            ${medicationPrompt}
-
-            Respiratory Conditions:
-            ${payload.respiratoryConditions.length > 0 ? `- ${payload.respiratoryConditions.map(condition => condition.condition).join(', ')}` : 'No respiratory conditions'}
-
-            Allergies:
-            ${payload.allergies.length > 0 ? `- ${payload.allergies.map(allergy => allergy.allergen).join(', ')}` : 'No allergies'}
                 `;
-            console.log(payload.outdoorAirCondition.aqi);
-            console.log(payload.respiratoryConditions);
-        await sendToOpenAI(payload, { userMessage, assistantPrompt });
+
+            await sendToOpenAI(payload, userMessage + '\n' + prompt);;
     } catch (error) {
         console.error('Error:', error);
     } finally {
         await prisma.$disconnect();
     }
 }
-generateOpenAIPayload(1, 'is medcat from medical cat?');
+generateOpenAIPayload(1, 'whats my health recommendation for today?');
 
 module.exports = {generateOpenAIPayload}
