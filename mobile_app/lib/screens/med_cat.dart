@@ -25,9 +25,11 @@ class _MedCatScreenState extends State<MedCatScreen> {
   late OpenAiService openAiService;
   String? fileName;
   Map<String, dynamic>? profileData;
+  Map<String, dynamic>? chatbotResponse;
   String openAiResponse = '';
   String openAiUserMessage_1 = "What's my health recommendation for today?";
   String openAiUserMessage_2 = "I'm going out, should I take any measures?";
+  bool isLoading = false;
   
   void handleContainerTap (int index){
     setState(() {
@@ -68,6 +70,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
       print('image path $fileName');
     }
   }
+  
    Future<void> _loadProfile() async {
       try {
         final Map<String, dynamic> data = await profileService.getProfile();
@@ -79,6 +82,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
       }
     }
 
+     
   @override
   void initState() {
     super.initState();
@@ -88,6 +92,19 @@ class _MedCatScreenState extends State<MedCatScreen> {
     openAiService = OpenAiService(widget.apiService);
     _loadProfile();
   }
+
+  Future<void> _loadChatbotResponse() async {
+      try {
+        final Map<String, dynamic> data = await openAiService.getChatbotResponse();
+        setState(() {
+          chatbotResponse = data;
+        });
+        print('chat boooooooot ${chatbotResponse?['openAiResponse']?['response']}',);
+      } catch (error) {
+        print('Error loading chatbot response: $error');
+      }
+    }
+
 
   Future<void> fetchOpenAiResponse(String userMessage) async {
     try {
@@ -266,20 +283,20 @@ class _MedCatScreenState extends State<MedCatScreen> {
           ),
           GestureDetector(
             onTap: () {
-            if (!isExpanded) {
-              setState(() {
-                isExpanded = true;
-                expandedContainerIndex = -1;
-              });
-            }
-          },
-          onVerticalDragUpdate: (details) {
-            if (details.primaryDelta! > 0 && isExpanded) {
-              setState(() {
-                isExpanded = false;
-                expandedContainerIndex = -1;
-              });
-            }
+              if (!isExpanded) {
+                setState(() {
+                  isExpanded = true;
+                  expandedContainerIndex = -1;
+                });
+              }
+            },
+            onVerticalDragUpdate: (details) {
+              if (details.primaryDelta! > 0 && isExpanded) {
+                setState(() {
+                  isExpanded = false;
+                  expandedContainerIndex = -1;
+                });
+              }
             },
             child: AnimatedContainer(
               duration: Duration(milliseconds: 500),
@@ -291,81 +308,116 @@ class _MedCatScreenState extends State<MedCatScreen> {
               ),
               child: Padding(
                 padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(
-                          isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        SvgPicture.asset(
-                          'lib/assets/icons/MedCat-white.svg', 
-                          height: 30,
-                          width: 30,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10,),
-                    GestureDetector(
-                      onTap: () async {
-                        await fetchOpenAiResponse(openAiUserMessage_1);
-                        handleContainerTap(0);
-                      },
-                      child: Visibility(
-                        visible: expandedContainerIndex == 0 || !isExpanded,
-                        child: Container(
-                          width: double.infinity,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all( color: secondaryColor, width: 2),
+                child: SingleChildScrollView( 
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(
+                            isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                            color: Colors.white,
+                            size: 30,
                           ),
-                          child: Center(
-                            child: Text(
-                              openAiUserMessage_1,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                          SvgPicture.asset(
+                            'lib/assets/icons/MedCat-white.svg', 
+                            height: 30,
+                            width: 30,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10,),
+                      GestureDetector(
+                        onTap: () async {
+                          setState(() {
+                            isLoading = true; 
+                          });
+                          // await fetchOpenAiResponse(openAiUserMessage_1);
+                          await Future.delayed(Duration(seconds: 4));
+                          _loadChatbotResponse();
+
+                          setState(() {
+                            isLoading = false;
+                          });
+
+                          handleContainerTap(0);
+                        },
+                        child: Visibility(
+                          visible: expandedContainerIndex == 0 || !isExpanded,
+                          child: Column(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 70,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all( color: secondaryColor, width: 2),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    openAiUserMessage_1,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 10,),
+                              Visibility(
+                                visible: expandedContainerIndex == 0 && isExpanded,
+                                child: Container(
+                                  width: 300,
+                                  // decoration: BoxDecoration(
+                                  //   borderRadius: BorderRadius.circular(10),
+                                  //   border: Border.all(color: secondaryColor, width: 2),
+                                  // ),
+                                  child: Center(
+                                    child: Text(
+                                      '${chatbotResponse?['openAiResponse']?['response']}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      GestureDetector(
+                        onTap: () async {
+                          // await fetchOpenAiResponse(openAiUserMessage_2);
+                          handleContainerTap(1);
+                        },
+                        child: Visibility(
+                          visible: expandedContainerIndex == 1 || !isExpanded,
+                          child: Container(
+                            width: double.infinity,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all( color: secondaryColor, width: 2),
+                            ),
+                            child: Center(
+                              child: Text(
+                                openAiUserMessage_2,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 10,),
-                    GestureDetector(
-                    onTap: () async {
-                        await fetchOpenAiResponse(openAiUserMessage_2);
-                        handleContainerTap(1);
-                      },
-                      child: Visibility(
-                        visible: expandedContainerIndex == 1 || !isExpanded,
-                        child: Container(
-                          width: double.infinity,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all( color: secondaryColor, width: 2),
-                          ),
-                          child: Center(
-                            child: Text(
-                              openAiUserMessage_2,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: isExpanded,
-                      child: Expanded(
+                      Visibility(
+                        visible: isExpanded,
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
@@ -399,12 +451,13 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
+
         ],
       ),
     bottomNavigationBar: CustomBottomNavigationBar(
