@@ -116,7 +116,7 @@ const updateRespiratoryConditionById = async (req, res) => {
 const updateRespiratoryConditionByName = async (req, res) => {
     try {
       const userId = req.user.id;
-      const { name, diagnosis, symptomsFrequency, triggers } = req.body;
+      const { condition, diagnosis, symptomsFrequency, triggers } = req.body;
   
       const healthCondition = await prisma.healthCondition.findUnique({
         where: {
@@ -126,7 +126,7 @@ const updateRespiratoryConditionByName = async (req, res) => {
   
       let existingRespiratoryCondition = await prisma.respiratoryCondition.findFirst({
         where: {
-          name: name,
+          condition: condition,
           healthConditionId: healthCondition.id,
         },
       });
@@ -135,7 +135,7 @@ const updateRespiratoryConditionByName = async (req, res) => {
         // If the respiratory condition doesn't exist, create a new one
         existingRespiratoryCondition = await prisma.respiratoryCondition.create({
           data: {
-            name: name,
+            condition: condition,
             diagnosis: diagnosis,
             symptomsFrequency: symptomsFrequency, 
             triggers: triggers, 

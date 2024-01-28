@@ -63,6 +63,7 @@ const userRoutes = require('./routes/createRoutes.controllers');
 const device = require('./routes/device.routes');
 const sensorRoutes = require('./routes/sensor.routes');
 const allergenRoutes = require('./routes/allergen.routes');
+const openAi = require('./routes/chatbot.routes');
 
 app.use('/auth', authRoutes);
 app.use('/api', sensorRoutes);
@@ -86,6 +87,7 @@ app.use('/api', authMiddleware, heartRate);
 app.use('/api', authMiddleware, userRoutes);
 app.use('/api', authMiddleware, device);
 app.use('/api', authMiddleware, allergenRoutes);
+app.use('/api', authMiddleware, openAi);
 module.exports = app;
 
 const PORT = process.env.PORT || 3000;

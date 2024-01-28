@@ -196,7 +196,7 @@ const updateMedicationByName = async (req, res) => {
         data: {
           frequency: frequency || existingMedication.frequency,
           dosage: dosage || existingMedication.dosage,
-          startDate: startDate || existingMedication.startDate,
+          startDate: startDate || existingMedication.startDate || null,
         },
       });
     }

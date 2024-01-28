@@ -7,5 +7,5 @@ router.get('/user/health/respiratoryConditions', respiratoryConditionController.
 router.get('/user/health/respiratoryCondition/:id', respiratoryConditionController.getRespiratoryConditionById);
 router.put('/user/health/respiratoryCondition/:id', respiratoryConditionController.updateRespiratoryConditionById);
 router.delete('/user/health/respiratoryCondition/:id', respiratoryConditionController.deleteRespiratoryConditionById);
-router.put('/user/health/respiratoryCondition', respiratoryConditionController.updateRespiratoryConditionByName);
+router.post('/user/health/edit-respiratory-condition', respiratoryConditionController.updateRespiratoryConditionByName);
 module.exports = router;
