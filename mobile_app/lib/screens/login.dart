@@ -23,13 +23,16 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false; 
 
   Future<bool> isFirstLogin() async {
+    final String email = emailController.text;
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isFirstLogin = prefs.getBool('firstLogin');
+    bool? isFirstLogin = prefs.getBool('firstLogin_$email');
 
     if (isFirstLogin == null || isFirstLogin) {
-      await prefs.setBool('firstLogin', false);
+      await prefs.setBool('firstLogin_$email', false);
       return true;
     }
+
     return isFirstLogin;
   }
 
