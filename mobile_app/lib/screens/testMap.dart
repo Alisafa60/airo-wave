@@ -12,7 +12,6 @@ class _ImageTestScreenState extends State<ImageTestScreen> {
   @override
   void initState() {
     super.initState();
-    // Replace the URL with a known PNG image URL
     fetchAndDisplayImage('https://static.vecteezy.com/system/resources/thumbnails/027/254/720/small/colorful-ink-splash-on-transparent-background-png.png');
   }
 

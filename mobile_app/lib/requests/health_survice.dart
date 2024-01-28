@@ -6,6 +6,7 @@ import 'package:mobile_app/api_service.dart';
 class HealthService {
   final ApiService apiService;
   HealthService(this.apiService);
+
   Future<Map<String, dynamic>> getUserHealthData() async {
      String? token = await _getToken();
 
@@ -18,7 +19,7 @@ class HealthService {
           headers,
         );
 
-        if (response.statusCode == 200) {
+        if (response.statusCode == 201) {
           final Map<String, dynamic> data = json.decode(response.body);
           return data;
         } else {
@@ -56,7 +57,7 @@ class HealthService {
           requestBody.cast<String, dynamic>(),
         );
         print(requestBody);
-        if (response.statusCode == 200) {
+        if (response.statusCode == 201) {
           final Map<int, dynamic> updateWeight = json.decode(response.body);
           return updateWeight;
         } else {

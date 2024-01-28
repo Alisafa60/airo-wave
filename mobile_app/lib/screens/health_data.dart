@@ -68,17 +68,27 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
     _loadAllergy();
     _loadRespiratory();
     _loadMedication();
-    _loadProfile();
-    _loadProfileImage();
+    _initializeProfileData();
   }
 
+   Future<void> _initializeProfileData() async {
+      await _loadProfile();
+      await _loadProfileImage();
+    }
+
   Future<void> _loadProfileImage() async {
-    String? savedImagePath = await ImageHelper.loadProfileImage();
-    if (savedImagePath != null) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = profileData?['user']?['id'].toString() ?? '';
+    String key = 'profileImagePath_$userId';
+
+    String? savedImagePath = prefs.getString(key);
+    print('Loaded image path key: $key');
+    
+    if (savedImagePath != null){
       setState(() {
         fileName = savedImagePath;
       });
-      print('image path $fileName');
+      print('Loaded image path: $fileName');
     }
   }
 
@@ -111,7 +121,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
         allergyData = data;
       });
     } catch (error) {
-      
+      print(error);
     }
   }
 
@@ -301,11 +311,8 @@ Future<void> updateRespiratoryCondition({
   }
 
   void signOut() async {
-  // Clear the JWT token from shared preferences
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.remove('jwtToken');
-
-  // Navigate to the login screen or perform any other necessary actions
   Navigator.pushReplacementNamed(context, '/');
 }
   
