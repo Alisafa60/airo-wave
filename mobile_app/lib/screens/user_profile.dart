@@ -134,11 +134,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           final String uploadedFileName = basename(uploadedImagePath);
           return uploadedFileName;
         } else {
-            print('Image upload failed. Status code: ${response.statusCode}, Body: ${response.body}');
             return null; 
           }
         } catch (error) {
-          print('Error during image upload: $error');
           return null; 
         }
       }
@@ -176,11 +174,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final ImagePicker picker = ImagePicker();
     try {
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-      print('image-path ${image?.path}');
       return image?.path;
       
     } catch (e) {
-      print('Error picking image: $e');
       return null;
     }
   }
@@ -199,16 +195,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           fileName = basename(uploadedImagePath);
         });
       } else {
-        print('image path: $imagePath');
-        print('Image upload failed');
-        print(imagePath);
       }
     }
   }
 
   Future<void> _removeOldImagePath() async {
+     String userId = profileData?['user']?['id'].toString() ?? '';
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('profileImagePath');
+    await prefs.remove('profileImagePath_$userId');
   }
 
   Future<void> _saveImagePath(String imagePath) async {
