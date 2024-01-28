@@ -44,7 +44,7 @@ model User{
   notifications         PushNotification[]
   healthProessional     HealthProfessional[]
   contactProfesional    ContactProfessional[]
-  mlPrediction          MlPrediction[]
+  openAiResponse        openAiResponse[]
   feedback              Feedback[]
   conversationWithBot   ConversationWithBot[]
   conversation          Conversation[] 
@@ -255,13 +255,12 @@ model PushNotification {
   user            User      @relation(fields: [userId], references: [id])
 }
 
-model MlPrediction{
+model openAiResponse{
   id             Int          @id @default(autoincrement())
   userId         Int
   user           User         @relation(fields: [userId], references: [id])
-  predictedValue String
+  response       String
   timestamp      DateTime     @default(now())
-  feedback       Feedback[]
 }
 
 model Feedback {
@@ -273,7 +272,6 @@ model Feedback {
   feedbackType       FeedbackType   
   comments           String?
   predictionId       Int
-  prediction         MlPrediction       @relation(fields: [predictionId], references: [id])
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
 }
