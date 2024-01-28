@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const openaiController = require('../controllers/chatbotControllers/chatbot');
+const { chatBotController, getLastResponse } = require('../controllers/chatbotControllers/openAi.controller');
 
-router.post('/medcat/message', openaiController.generateOpenAIPayload);
+router.post('/medcat/message', chatBotController);
+router.get('/medcat/message', getLastResponse);
 
 module.exports = router;

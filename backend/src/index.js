@@ -63,7 +63,7 @@ const userRoutes = require('./routes/createRoutes.controllers');
 const device = require('./routes/device.routes');
 const sensorRoutes = require('./routes/sensor.routes');
 const allergenRoutes = require('./routes/allergen.routes');
-const openAi = require('./routes/chatbot.routes');
+const openAi = require('./routes/openAi.routes');
 
 app.use('/auth', authRoutes);
 app.use('/api', sensorRoutes);
