@@ -106,15 +106,25 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Log In",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w700,
-                color: Color.fromRGBO(46, 46, 46, 1),
+           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+                 const Text(
+                "Log In",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  color: Color.fromRGBO(46, 46, 46, 1),
+                ),
               ),
-            ),
-            const SizedBox(height: 40),
+               Image.asset(
+                  'lib/assets/images/Ali_Safa_logo.png',
+                  height: 100,
+                  width: 100,
+                ),
+            ],
+           ),
+            const SizedBox(height: 0),
             const Text(
               'Email',
               style: TextStyle(
@@ -139,15 +149,26 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 5,),
             GestureDetector(
               onTap: () {
-                
+                Navigator.pushReplacementNamed(context, '/');
               },
-              child: const Text(
-                'Forgot Password?',
-                style: TextStyle(
+              child:  Row( children: [ const Text(
+                "Don't have an Account?",
+                  style: TextStyle(
                   color: Color.fromRGBO(74, 74, 74, 0.6),
-                  fontSize: 15,
+                  fontSize: 16,
                 ),
               ),
+              SizedBox(width: 3,),
+              Text(
+                'Signup', style: 
+                TextStyle(
+                  color: myGray.withOpacity(0.6), 
+                  fontSize: 16, fontWeight: 
+                  FontWeight.w500,
+                  decoration: TextDecoration.underline,
+                  ),)
+              ]
+              )
             ),
             const SizedBox(height: 2,),
             Text(loginError, style: TextStyle(color: Colors.red, fontSize: 15),),
@@ -161,6 +182,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: EdgeInsets.all(10),
                 child: CircularProgressIndicator(),
               ),
+              SizedBox(height: 20,),
+              // Center(
+              //   child: Image.asset(
+              //     'lib/assets/images/Ali_Safa_logo.png',
+              //     height: 200,
+              //     width: 200,
+              //   ),
+              // )
           ],
         ),
       ),
