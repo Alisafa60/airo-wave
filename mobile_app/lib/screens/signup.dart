@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import 'package:mobile_app/widgets/dropdown_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SignupScreen extends StatefulWidget {
   final ApiService apiService;
   const SignupScreen({super.key, required this.apiService});
-  
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -25,16 +23,21 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _isMetric = true;
   String? selectedGender;
   bool isHealthProfessional = false;
+  bool isLoading = false; // Added loading state
 
-   Future<void> signupUser() async {
+  Future<void> signupUser() async {
+    setState(() {
+      isLoading = true; // Set loading to true when signup begins
+    });
+
     final String email = emailController.text;
     final String password = passwordController.text;
     final String firstName = firstNameController.text;
     final String lastName = lastNameController.text;
-    final String gender = selectedGender??'';
+    final String gender = selectedGender ?? '';
     final String unitPreference = _isMetric ? 'Metric' : 'Imperial';
     final String userType = isHealthProfessional ? 'healthProfessional' : 'user';
-    print(userType);
+
     final Map<String, String> requestBody = {
       'email': email,
       'password': password,
@@ -44,27 +47,30 @@ class _SignupScreenState extends State<SignupScreen> {
       'unit': unitPreference,
       'type': userType,
     };
-    print(requestBody);
-    final BuildContext currentContext = context;
-    try{
+
+    try {
       final http.Response response = await widget.apiService.post1('/auth/register', requestBody);
-      if (response.statusCode == 200){
-        final Map<String, dynamic>data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
         Navigator.pushReplacementNamed(context, '/login');
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.remove('healthScreenVisited');
         await prefs.remove('firstLogin');
-            }else{
+      } else {
         setState(() {
           errorText = 'Invalid email/password';
         });
-        print('Login failed. Status code: ${response.statusCode}, Body: ${response.body}');
+        print('Signup failed. Status code: ${response.statusCode}, Body: ${response.body}');
       }
-    } catch(error){
+    } catch (error) {
       setState(() {
-        errorText = 'Error during login: $error';
+        errorText = 'Error during signup: $error';
       });
-      print('Error during login: $error');
+      print('Error during signup: $error');
+    } finally {
+      setState(() {
+        isLoading = false; // Set loading to false when signup completes
+      });
     }
   }
 
@@ -83,7 +89,8 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
+        child:  Padding(
         padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +116,7 @@ class _SignupScreenState extends State<SignupScreen> {
             BorderedInputField(
               hintText: 'Email',
               controller: emailController,
-              ),
+            ),
             const SizedBox(height: 20),
             const Text(
               ' Password',
@@ -123,7 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
             BorderedInputField(
               hintText: 'Password',
               controller: passwordController,
-              ),
+            ),
             const SizedBox(height: 5),
             Text(
               'Password must contain at least 8 characters',
@@ -141,17 +148,27 @@ class _SignupScreenState extends State<SignupScreen> {
                 color: myGray,
               ),
             ),
-            SizedBox(height: 15,),
+            SizedBox(height: 15),
             Row(
-                children:[ 
-                  Expanded(child: BorderedInputField(hintText: 'First Name', controller: firstNameController,)),
-                  const SizedBox(width: 10),
-                  Expanded(child: BorderedInputField(hintText: 'Last Name', controller: lastNameController,)),
-                ]
+              children: [
+                Expanded(
+                  child: BorderedInputField(
+                    hintText: 'First Name',
+                    controller: firstNameController,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: BorderedInputField(
+                    hintText: 'Last Name',
+                    controller: lastNameController,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             GenderDropdownForm(
-             currentValue: selectedGender,
+              currentValue: selectedGender,
               onChanged: (String? value) {
                 print('selected gender: $value');
                 setState(() {
@@ -183,8 +200,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     });
                   },
                 ),
-                SizedBox(width: 5,),
-               GestureDetector(
+                SizedBox(width: 5),
+                GestureDetector(
                   onTap: () {
                     Navigator.pushReplacementNamed(context, '/login');
                   },
@@ -192,7 +209,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ' Login?',
                     style: TextStyle(
                       fontSize: 16.0,
-                      color: myGray.withOpacity(0.6), // You can set your preferred color
+                      color: myGray.withOpacity(0.6),
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.w600,
                     ),
@@ -203,9 +220,15 @@ class _SignupScreenState extends State<SignupScreen> {
             const SizedBox(height: 20),
             SaveButton(
               buttonText: 'Sign Up',
-              onPressed: signupUser,
-            )
-          ],
+              onPressed: isLoading ? null : signupUser,
+            ),
+            if (isLoading)
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          ),
         ),
       ),
     );
