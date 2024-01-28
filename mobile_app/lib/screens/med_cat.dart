@@ -23,6 +23,9 @@ class _MedCatScreenState extends State<MedCatScreen> {
   late ProfileService profileService;
   String? fileName;
   Map<String, dynamic>? profileData;
+  String openAiResponse = '';
+  String openAiUserMessage_1 = "What's my health recommendation for today?";
+  String openAiUserMessage_2 = "I'm going out, should I take any measures?";
   
   void handleContainerTap (int index){
     setState(() {
@@ -306,7 +309,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              'Press me!',
+                              openAiUserMessage_1,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -330,7 +333,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              'Press meee!',
+                              openAiUserMessage_2,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
