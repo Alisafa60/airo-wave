@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_app/api_service.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/requests/chatbot_service.dart';
 import 'package:mobile_app/requests/profile.dart';
 import 'package:mobile_app/requests/severity_service.dart';
 import 'package:mobile_app/utils/image_helper.dart';
@@ -21,6 +22,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
   int expandedContainerIndex = -1;
   late SeverityService severityService;
   late ProfileService profileService;
+  late OpenAiService openAiService;
   String? fileName;
   Map<String, dynamic>? profileData;
   String openAiResponse = '';
@@ -83,7 +85,19 @@ class _MedCatScreenState extends State<MedCatScreen> {
     severityService = SeverityService(widget.apiService);
     _loadProfileImage();
     profileService = ProfileService(widget.apiService);
+    openAiService = OpenAiService(widget.apiService);
     _loadProfile();
+  }
+
+  Future<void> fetchOpenAiResponse(String userMessage) async {
+    try {
+      final Map<String, dynamic> response = await openAiService.sendToOpenAI(userMessage);
+      setState(() {
+        openAiResponse = response.toString();
+      });
+    } catch (error) {
+      print('Error fetching OpenAI response: $error');
+    }
   }
 
   @override
@@ -297,7 +311,10 @@ class _MedCatScreenState extends State<MedCatScreen> {
                     ),
                     SizedBox(height: 10,),
                     GestureDetector(
-                      onTap: () => handleContainerTap(0),
+                      onTap: () async {
+                        await fetchOpenAiResponse(openAiUserMessage_1);
+                        handleContainerTap(0);
+                      },
                       child: Visibility(
                         visible: expandedContainerIndex == 0 || !isExpanded,
                         child: Container(
@@ -321,7 +338,10 @@ class _MedCatScreenState extends State<MedCatScreen> {
                     ),
                     SizedBox(height: 10,),
                     GestureDetector(
-                      onTap: () => handleContainerTap(1),
+                    onTap: () async {
+                        await fetchOpenAiResponse(openAiUserMessage_2);
+                        handleContainerTap(1);
+                      },
                       child: Visibility(
                         visible: expandedContainerIndex == 1 || !isExpanded,
                         child: Container(
