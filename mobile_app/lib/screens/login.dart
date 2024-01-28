@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   final ApiService apiService;
+
   const LoginScreen({super.key, required this.apiService});
 
   @override
@@ -18,28 +19,30 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   String loginError = '';
-  
+  bool isVisited = false;
+  bool isLoading = false; 
+
   Future<bool> isFirstLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? isFirstLogin = prefs.getBool('firstLogin');
 
-    print('isFirstLogin value: $isFirstLogin');
-
-    if (isFirstLogin == null) {
-      await prefs.setBool('firstLogin', true);
+    if (isFirstLogin == null || isFirstLogin) {
+      await prefs.setBool('firstLogin', false);
       return true;
     }
-
     return isFirstLogin;
   }
 
   Future<void> markHealthScreenVisited() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('healthScreenVisited', true);
-    print('healthScreenVisited marked as true');
   }
 
   Future<void> loginUser() async {
+    setState(() {
+      isLoading = true; 
+    });
+
     final String email = emailController.text;
     final String password = passwordController.text;
     final Map<String, String> requestBody = {'email': email, 'password': password};
@@ -54,13 +57,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (token != null && token.isNotEmpty) {
           await saveToken(token);
-          print('Before isFirstLogin');
           if (await isFirstLogin()) {
-             print('Inside isFirstLogin');
-            await markHealthScreenVisited();
             Navigator.pushReplacementNamed(currentContext, '/health');
           } else {
-            print('Inside else');
             Navigator.pushReplacementNamed(currentContext, '/home');
           }
         } else {
@@ -74,18 +73,19 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (error) {
       print('Error during login: $error');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
-
-  
   Future<void> saveToken(String token) async {
     try {
       final FlutterSecureStorage storage = FlutterSecureStorage();
       await storage.write(key: 'jwtToken', value: token);
-      
-      print('Token saved successfully: $token');
 
+      print('Token saved successfully: $token');
     } catch (error) {
       print('Error saving token: $error');
     }
@@ -151,132 +151,13 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 30),
             SaveButton(
               buttonText: 'Log In',
-              onPressed: loginUser,
+              onPressed: isLoading ? null : loginUser,
             ),
-            // const SizedBox(height: 15),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child: Container(
-            //         height: 1,
-            //         color: Colors.grey,
-            //       ),
-            //     ),
-            //     const Padding(
-            //       padding: EdgeInsets.symmetric(horizontal: 10),
-            //       child: Text(
-            //         'or',
-            //         style: TextStyle(
-            //           color: Color.fromRGBO(74, 74, 74, 0.6),
-            //           fontSize: 16,
-            //         ),
-            //       ),
-            //     ),
-            //     Expanded(
-            //       child: Container(
-            //         height: 1,
-            //         color: Colors.grey,
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // const SizedBox(height: 15,),
-            // Container(
-            //   height: 50,
-            //   width: double.infinity,
-            //   padding: const EdgeInsets.all(5),
-            //   decoration: BoxDecoration(
-            //     color: const Color.fromARGB(255, 255, 247, 241),
-            //     borderRadius: BorderRadius.circular(5),
-            //     border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-            //   ),
-            //   child: Row(
-            //     children: [
-            //       // Add the Google logo here
-            //       Padding(
-            //         padding: const EdgeInsets.symmetric(horizontal: 10),
-            //         child: Image.asset(
-            //           'lib/assets/images/google.png',
-            //           height: 24,
-            //           width: 24,
-            //         ),
-            //       ),
-            //       const SizedBox(width: 55,),
-            //       const Text(
-            //         'Continue with Google',
-            //         style: TextStyle(
-            //           color: Color.fromRGBO(74, 74, 74, 1),
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.w500,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(height: 10,),
-            // Container(
-            //   height: 50,
-            //   width: double.infinity,
-            //   padding: const EdgeInsets.all(5),
-            //   decoration: BoxDecoration(
-            //     color: const Color.fromARGB(255, 255, 247, 241),
-            //     borderRadius: BorderRadius.circular(5),
-            //     border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-            //   ),
-            //   child: const Row(
-            //     children: [
-            //       // Add the Google logo here
-            //       Padding(
-            //         padding: EdgeInsets.symmetric(horizontal: 10),
-            //         child: Icon(
-            //           Icons.facebook,
-            //           size: 24,
-            //         ),
-            //       ),
-            //       SizedBox(width: 52,),
-            //       Text(
-            //         'Continue with Facebook',
-            //         style: TextStyle(
-            //           color: Color.fromRGBO(74, 74, 74, 1),
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.w500,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(height: 10,),
-            // Container(
-            //   height: 50,
-            //   width: double.infinity,
-            //   padding: const EdgeInsets.all(5),
-            //   decoration: BoxDecoration(
-            //     color: const Color.fromARGB(255, 255, 247, 241),
-            //     borderRadius: BorderRadius.circular(5),
-            //     border: Border.all(color: const Color.fromRGBO(74, 74, 74, 0.5)),
-            //   ),
-            //   child: const Row(
-            //     children: [
-            //       // Add the Google logo here
-            //       Padding(
-            //         padding: EdgeInsets.symmetric(horizontal: 10),
-            //         child: Icon(
-            //           Icons.apple,
-            //           size: 24,
-            //         ),
-            //       ),
-            //       SizedBox(width: 60,),
-            //       Text(
-            //         'Continue with Apple',
-            //         style: TextStyle(
-            //           color: Color.fromRGBO(74, 74, 74, 1),
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.w500,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            if (isLoading) 
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: CircularProgressIndicator(),
+              ),
           ],
         ),
       ),
