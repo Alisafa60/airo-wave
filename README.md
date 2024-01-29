@@ -95,9 +95,8 @@ Aggregated air quality metrics were calculated as averages and categorized over 
 <br><br>
 
 <img src="./readme/title9.svg"/>
-| Image upload test      | 
-| ---------------------------- |
-| ![test](./readme/test-image.png) |
+<img src="./readme/test-image.png"/>
+
 
 <br><br>
 <!-- How to run -->
