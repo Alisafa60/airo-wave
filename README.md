@@ -32,7 +32,6 @@
 
 <br><br>
 
-<!-- Implementation -->
 <img src="./readme/title4.svg"/>
 
 > We designed AiroWave using wireframes and mockups, iterating on the design until we reached the ideal layout for easy navigation and a seamless user experience.
@@ -45,6 +44,15 @@
 
 <br><bar>
 
+
+
+<img src="./readme/title5.svg"/>
+
+
+
+<br><br>
+<img src="./readme/title6.svg"/>
+
 > Using the wireframes and mockups as a guide, we implemented the Coffee Express app with the following features:
 
 ### User Screens (Mobile)
@@ -55,15 +63,6 @@
 | ![Landing](https://placehold.co/900x1600) | ![fsdaf](https://placehold.co/900x1600) | ![fsdaf](https://placehold.co/900x1600) | ![fsdaf](https://placehold.co/900x1600) |
 
 
-<br><br>
-
-<!-- Tech stack -->
-<img src="./readme/title5.svg"/>
-
-
-
-<br><br>
-<img src="./readme/title6.svg"/>
 <br><br>
 
 <br><br>
