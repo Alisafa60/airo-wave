@@ -38,18 +38,11 @@ model User{
   userTypeId            Int
   userType              UserType           @relation(fields: [userTypeId], references: [id])
   healthCondition       HealthCondition?
-  userLocation          UserLocation[]
   enviromentalHealthData EnviromentalHealthData[]
-  device                Device[]
-  notifications         PushNotification[]
   healthProessional     HealthProfessional[]
   contactProfesional    ContactProfessional[]
   openAiResponse        openAiResponse[]
-  feedback              Feedback[]
-  conversationWithBot   ConversationWithBot[]
-  conversation          Conversation[] 
-  messages              Message[]        
-  responses             Response[]   
+  conversation          Conversation[]  
   replies               Reply[]    
   routes                Route[]
   location              Location[]
@@ -110,70 +103,6 @@ model Medication{
   healthCondition         HealthCondition        @relation(fields: [healthConditionId], references: [id])
 }
 
-model Device{
-  id                      Int                   @id @default(autoincrement())
-  name                    String
-  manufacturer            String
-  model                   String
-  connectivityStatus      Int
-  batteryLevel            String
-  createdAt               DateTime              @default(now())
-  updatedAt               DateTime              @updatedAt
-  sleepData               SleepData[]
-  stressData              StressData[]
-  userLocations           UserLocation[]
-  userId                  Int
-  user                    User                   @relation(fields: [userId], references: [id])
-  heartRateData           HeartRateData[]
-  powerData               PowerData[]
-}
-
-model SleepData{
-  id                      Int                 @id @default(autoincrement())
-  duration                Int
-  quality                 String
-  deviceId                Int
-  device                  Device              @relation(fields: [deviceId], references: [id])
-  dailyHealthId           Int
-  dailyHealth             DailyHealth         @relation(fields: [dailyHealthId], references: [id])
-  userLocationId          Int        
-  userLocation            UserLocation        @relation(fields: [userLocationId], references: [id])
-  
-}
-
-model HeartRateData{
-  id                          Int                 @id @default(autoincrement())
-  restingHr                   Int
-  maxHr                       Int
-  averageHr                   Int
-  createdAt                   DateTime            @default(now())
-  updatedAt                   DateTime            @updatedAt()
-  deviceId                    Int
-  device                      Device              @relation(fields: [deviceId], references: [id])
-  enviromentalHealthDataId    Int
-  enviromentalHealthData      EnviromentalHealthData  @relation(fields: [enviromentalHealthDataId], references: [id])
-}
-
-model PowerData{
-  id                      Int          @id @default(autoincrement())
-  power                   Int
-  maxPower                Int
-  createdAt               DateTime     @default(now())
-  updatedAt               DateTime     @updatedAt
-  deviceId                Int
-  device                  Device        @relation(fields: [deviceId], references: [id])
-}
-
-model StressData{
-  id                      Int                @id @default(autoincrement())
-  stressLevel             String
-  deviceId                Int
-  device                  Device             @relation(fields: [deviceId], references: [id])
-  dailyHealthId           Int
-  dailyHealth             DailyHealth         @relation(fields: [dailyHealthId], references: [id])
-  userLocationId          Int       
-  userLocation            UserLocation       @relation(fields: [userLocationId], references: [id])
-}
 
 model DailyHealth{
   id                      Int                   @id @default(autoincrement())
@@ -181,21 +110,7 @@ model DailyHealth{
   condition               String?
   userHealthId            Int
   healthConditions        HealthCondition       @relation(fields: [userHealthId], references: [id])
-  sleepData               SleepData[]
-  stressData              StressData[]
   createdAt               DateTime               @default(now())
-}
-
-model UserLocation {
-  id                      Int                                      @id @default(autoincrement())
-  location                Unsupported("geography(Point, 4326)")
-  userId                  Int
-  user                    User                                     @relation(fields: [userId], references: [id])
-  deviceId                Int?
-  device                  Device?                                   @relation(fields: [deviceId], references: [id])
-  stress                  StressData[]
-  sleep                   SleepData[]
-  createdAt               DateTime                                 @default(now())
 }
 
 model Location {
@@ -227,7 +142,6 @@ model EnviromentalHealthData{
   bloodO2Level            String?
   dominantPollutant       String?
   location                Json
-  heartRate               HeartRateData[]
   createdAt               DateTime     @default(now())
   updatedAt               DateTime     @updatedAt
   userId                  Int
@@ -242,18 +156,6 @@ model Allergen{
   user                    User         @relation(fields: [userId], references: [id])
 }
 
-model PushNotification {
-  id              Int       @id @default(autoincrement())
-  title           String
-  body            String
-  data            Json      
-  type            String    
-  sentAt          DateTime  @default(now())
-  deliveredAt     DateTime?
-  readAt          DateTime?
-  userId          Int
-  user            User      @relation(fields: [userId], references: [id])
-}
 
 model openAiResponse{
   id             Int          @id @default(autoincrement())
@@ -261,19 +163,6 @@ model openAiResponse{
   user           User         @relation(fields: [userId], references: [id])
   response       String
   timestamp      DateTime     @default(now())
-}
-
-model Feedback {
-  id                 Int                 @id @default(autoincrement())
-  userId             Int
-  user               User                @relation(fields: [userId], references: [id])
-  healthProId        Int?
-  healthProfessional HealthProfessional? @relation(fields: [healthProId], references: [id])
-  feedbackType       FeedbackType   
-  comments           String?
-  predictionId       Int
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
 }
 
 enum FeedbackType {
@@ -290,7 +179,6 @@ model HealthProfessional {
   certifications        String[]
   license               String
   messages              ContactProfessional[]
-  feedback              Feedback[]
   conversations          Conversation[]
 }
 
@@ -325,34 +213,6 @@ model Reply {
   sender            User                @relation(fields: [senderId], references: [id])
   content           String
   sentAt            DateTime            @default(now())
-}
-
-model ConversationWithBot {
-  id            Int          @id @default(autoincrement())
-  userId        Int
-  user          User       @relation(fields: [userId], references: [id])
-  messages      Message[]
-}
-
-model Message {
-  id             Int                @id @default(autoincrement())
-  content        String
-  timestamp      DateTime           @default(now())
-  senderId       Int
-  sender         User               @relation(fields: [senderId], references: [id])
-  conversationId Int
-  conversation   ConversationWithBot @relation(fields: [conversationId], references: [id])
-  responses      Response[]
-}
-
-model Response {
-  id         Int      @id @default(autoincrement())
-  content    String
-  timestamp  DateTime @default(now())
-  senderId   Int
-  sender     User     @relation(fields: [senderId], references: [id])
-  messageId  Int
-  message    Message  @relation(fields: [messageId], references: [id])
 }
 
 model Route {
