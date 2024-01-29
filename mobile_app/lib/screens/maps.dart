@@ -182,13 +182,13 @@ class _MapsScreenState extends State<MapsScreen> {
     });
   }
 
-  Future<String?> getToken() async {
+  static Future<String?> _getToken() async {
     const FlutterSecureStorage storage = FlutterSecureStorage();
     return await storage.read(key: 'jwtToken');
   }
 
   Future<void> addUserLocation() async {
-    String? token = await getToken();
+    String? token = await _getToken();
     double longitude = _currentLocation!.longitude!;
     double latitude = _currentLocation!.latitude!;
     
