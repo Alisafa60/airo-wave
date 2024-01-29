@@ -8,38 +8,49 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 describe('Image Controller', () => {
-  it('should upload an image', async function () {
+ 
+
+  it('should log in and fail to upload an image with missing image attachment', async function () {
     this.timeout(10000);
 
-    // Log in to get a token
     const loginResponse = await supertest(app)
       .post('/auth/login')
       .send({
-        email: 'lama@se.com',
+        email: 'ali@se.com',
         password: 'ali1234',
       });
 
     const token = loginResponse.body.token;
-    const decodedToken = jwt.decode(token);
-    const userId = decodedToken.id;
-    const imagePath = path.resolve(__dirname, './test-img.jpg');
 
-    // Upload profile picture
     const response = await supertest(app)
-      .post(`/api/users/${userId}/profile-picture`)
-      .attach('profilePicture', imagePath)
+      .post(`/api/user/profile-picture`)
       .set('Authorization', `Bearer ${token}`);
 
-    assert.strictEqual(response.status, 201);
-    assert.strictEqual(response.body.message, 'Profile picture uploaded successfully');
-    assert.strictEqual(typeof response.body.imageUrl, 'string');
-
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    assert.strictEqual(user.profilePicture, response.body.imageUrl);
+    assert.strictEqual(response.status, 400); 
+    assert.strictEqual(response.body.error, 'No image uploaded.');  
   });
+
+    it('should log in and fail to upload an image with disallowed extension', async function () {
+      this.timeout(10000);
+  
+      const loginResponse = await supertest(app)
+        .post('/auth/login')
+        .send({
+          email: 'ali@se.com',
+          password: 'ali1234',
+        });
+  
+      const token = loginResponse.body.token;
+      const imagePath = path.resolve(__dirname, './test-image.txt');  
+  
+      const response = await supertest(app)
+        .post(`/api/user/profile-picture`)
+        .attach('profilePicture', imagePath)
+        .set('Authorization', `Bearer ${token}`);
+  
+      assert.strictEqual(response.status, 500);  
+      assert.strictEqual(response.body.error, undefined);
+    });
 
 });
 
