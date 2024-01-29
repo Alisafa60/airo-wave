@@ -15,7 +15,7 @@ const addRespiratoryCondition = async (req, res) => {
             return res.status(400).json({ error: 'User health information not found.' });
         }
 
-        if (!condition || !diagnosis || !symptomsFrequency || !triggers) {
+        if (!condition) {
             return res.status(400).json({ error: 'Required fields are missing for allergy creation.' });
         }
 

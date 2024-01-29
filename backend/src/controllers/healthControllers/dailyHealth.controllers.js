@@ -45,8 +45,6 @@ const getAllDailyHealth = async (req, res) => {
         },
         include: {
           healthConditions: true,
-          sleepData: true,
-          stressData: true,
         },
       });
 

@@ -12,7 +12,7 @@ const createLocation = async (req, res) => {
               longitude: location.longitude,
               latitude: location.latitude,
             },
-            userId: 6,
+            userId: userId,
           },
     });
 
@@ -24,12 +24,14 @@ const createLocation = async (req, res) => {
 };
 
 const getLastLocation = async (req, res) => {
-  const userId = req.user.id; 
-
+  
   try {
+    const userId = req.user.id; 
+    console.log(userId)
     const lastLocation = await prisma.location.findFirst({
+    
       where: {
-        userId,
+        userId:userId,
       },
       orderBy: {
         createdAt: 'desc',
@@ -44,6 +46,7 @@ const getLastLocation = async (req, res) => {
   } catch (error) {
     console.error('Error fetching last location:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+   
   }
 };
 
