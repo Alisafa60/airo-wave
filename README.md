@@ -58,7 +58,7 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 <br><br>
 <img src="./readme/title6.svg"/>
 
-> Using the wireframes and mockups as a guide, we implemented the Coffee Express app with the following features:
+> Using the wireframes and mockups as a guide, AiroWave app with the following features:
 
 ### User Screens (Mobile)
 
@@ -76,7 +76,7 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 
 | Profile Screen       |
 | ---------------------------- |
-| ![Heatmap Allergy](./readme/heath.png) |
+| ![Heatmap Allergy](./readme/health.png) |
 
 
 <br><br>
