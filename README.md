@@ -90,11 +90,15 @@ Aggregated air quality metrics were calculated as averages and categorized over 
 
 <br><br>
 
-<br><br>
 <img src="./readme/title8.svg"/>
+
 <br><br>
 
 <img src="./readme/title9.svg"/>
+| Heatmap Allergy Screen        | 
+| ---------------------------- |
+| ![Profile](./readme/test-image.png) |
+
 <br><br>
 <!-- How to run -->
 <img src="./readme/title10svg"/>
