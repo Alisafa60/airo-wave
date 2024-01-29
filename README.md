@@ -74,9 +74,9 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 | ---------------------------- | ---------------------------------|
 | ![Profile](./readme/heatmap-allergy.png) | ![Heatmap Aqi](./readme/heatmap-aqi.png) |
 
-| Profile Screen       |
-| ---------------------------- |
-| ![Heatmap Allergy](./readme/heath.png) |
+| Chatbot Screen               | Profile Screen               |
+| ---------------------------- | ---------------------------------|
+| ![Profile](./readme/medcat.gif) | ![Heatmap Aqi](./readme/health.png) |
 
 
 <br><br>
