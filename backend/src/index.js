@@ -55,7 +55,6 @@ const healthProfessional = require('./routes/healthProfessional.routes');
 const userProfile = require('./routes/userProfile.routes')
 const contactProfessional = require('./routes/contractProfessional.routes');
 const heartRate = require('./routes/heartRate.routes');
-const stress = require('./routes/stress.routes');
 const userRoutes = require('./routes/createRoutes.controllers');
 const device = require('./routes/device.routes');
 const sensorRoutes = require('./routes/sensor.routes');
@@ -76,7 +75,6 @@ app.use('/api', authMiddleware, enviromentalHealth);
 app.use('/api', authMiddleware, healthProfessional);
 app.use('/api', authMiddleware, userProfile);
 app.use('/api', authMiddleware, contactProfessional);
-app.use('/api', authMiddleware, stress);
 app.use('/api', authMiddleware, heartRate);
 app.use('/api', authMiddleware, userRoutes);
 app.use('/api', authMiddleware, device);
