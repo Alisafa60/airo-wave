@@ -25,7 +25,6 @@ const register = async (req, res) => {
     let userTypeConnect = { type };
     const userInDb = await prisma.user.findUnique({ where: { email } });
 
-    // Check if the password has been modified or it's a new user
     const hashedPassword = userInDb ? userInDb.password : await hashPassword(password);
 
     if (type === 'user' || type === 'healthProfessional') {
