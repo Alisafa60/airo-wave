@@ -50,6 +50,8 @@
 
 ###  User-Centric Data Management:
 
+The data model, utilizing PostgreSQL, includes user profiles, medical history, symptom tracking, and real-time indoor and outdoor environmental data. Ensuring a comprehensive approach to user-centric health information and the enviromental conditions around the user. 
+
 <img src="./readme/airo_wave_er.png"/>
 
 
@@ -59,11 +61,11 @@
 > Using the wireframes and mockups as a guide, we implemented the Coffee Express app with the following features:
 
 ### User Screens (Mobile)
-| Login screen  | Register screen | Landing screen | Loading screen |
+| Login screen  | Register screen | Landing screen |
 | ---| ---| ---| ---|
-| ![Landing](https://placehold.co/900x1600) | ![fsdaf](https://placehold.co/900x1600) | ![fsdaf](https://placehold.co/900x1600) | ![fsdaf](https://placehold.co/900x1600) |
-| Home screen  | Menu Screen | Order Screen | Checkout Screen |
-| ![Landing](https://placehold.co/900x1600) | ![fsdaf](https://placehold.co/900x1600) | ![fsdaf](https://placehold.co/900x1600) | ![fsdaf](https://placehold.co/900x1600) |
+| ![Landing](./readme/login.png) | ![fsdaf](./readme/signup.png) | ![fsdaf](./readme/health-gif.gif) |
+| Home screen  | Profile Screen | Heatmap Aqi Screen | Heatmap allergy Screen |
+| ![Landing](./readme/home1.png) | ![fsdaf](./readme/health.png) | ![fsdaf](./readme/heatmap-aqi.png) | ![fsdaf](./readme/heatmap-allergy.png) |
 
 
 <br><br>
