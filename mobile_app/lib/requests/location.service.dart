@@ -18,7 +18,7 @@ class LocationService {
           headers,
         );
 
-        if (response.statusCode == 200) {
+        if (response.statusCode == 201) {
           final Map<String, dynamic> data = json.decode(response.body);
           return data;
         } else {

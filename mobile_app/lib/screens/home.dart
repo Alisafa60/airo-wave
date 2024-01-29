@@ -863,25 +863,25 @@ class _MyHomeScreen extends State<HomeScreen> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 200, // Adjust the height as needed
+          height: 200, 
           child: Column(
             children: [
-              // Add your notification content here
+           
               ListTile(
                 title: const Text('Notification 1'),
                 onTap: () {
-                  // Handle the tap on the first notification
-                  Navigator.pop(context); // Close the overlay
+                 
+                  Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: const Text('Notification 2'),
                 onTap: () {
-                  // Handle the tap on the second notification
-                  Navigator.pop(context); // Close the overlay
+                 
+                  Navigator.pop(context);
                 },
               ),
-              // Add more notifications as needed
+             
             ],
           ),
         );
