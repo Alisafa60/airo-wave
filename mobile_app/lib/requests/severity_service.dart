@@ -45,4 +45,30 @@ class SeverityService {
       throw Exception('Token is null. Unable to make the API request.');
     }
   }
+  Future<Map<String, dynamic>> getSeverity() async {
+     String? token = await _getToken();
+
+    if (token != null) {
+      final Map<String, String> headers = {'Authorization': 'Bearer $token'};
+
+      try {
+        final http.Response response = await apiService.get(
+          '/api/user/daily-health',
+          headers,
+        );
+
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> data = json.decode(response.body);
+          return data;
+        } else {
+          throw Exception('Failed to load. Status code: ${response.statusCode}, Body: ${response.body}');
+        }
+      } catch (error) {
+        throw Exception('Error during API call: $error');
+      }
+    } else {
+      throw Exception('Token is null. Unable to make the API request.');
+    }
+  }
+
 }
