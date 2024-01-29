@@ -214,7 +214,6 @@ class _UserHealthState extends State<UserHealthScreen> {
     }
   }
   
-  
  @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -440,6 +439,7 @@ Widget build(BuildContext context) {
                 onPressed: () async {
                   await Future.wait([
                     addHealthCondition(),
+                    await Future.delayed(Duration(seconds: 1)),
                     addRespiratoryCondition(),
                     addAllergyCondition(),
                     addMedication(),
