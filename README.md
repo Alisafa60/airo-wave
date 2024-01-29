@@ -50,6 +50,8 @@
 
 ###  User-Centric Data Management:
 
+The data model, utilizing PostgreSQL, includes user profiles, medical history, symptom tracking, and real-time indoor and outdoor environmental data. Ensuring a comprehensive approach to user-centric health information and the enviromental conditions around the user. 
+
 <img src="./readme/airo_wave_er.png"/>
 
 
