@@ -362,7 +362,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                             setState(() {
                               isLoading = true;
                             });
-                            // await fetchOpenAiResponse(openAiUserMessage_1);
+                            await fetchOpenAiResponse(openAiUserMessage_1);
                             await Future.delayed(Duration(seconds: 4));
                             _loadChatbotResponse();
 
@@ -419,10 +419,20 @@ class _MedCatScreenState extends State<MedCatScreen> {
                         ),
                         SizedBox(height: 10,),
                         GestureDetector(
-                          onTap: () async {
-                            // await fetchOpenAiResponse(openAiUserMessage_2);
-                            handleContainerTap(1);
-                          },
+                            onTap: () async {
+                              handleContainerTap(0);
+                              setState(() {
+                                isLoading = true;
+                              });
+                              await fetchOpenAiResponse(openAiUserMessage_1);
+                              await Future.delayed(Duration(seconds: 4));
+                              _loadChatbotResponse();
+
+                              setState(() {
+                                isLoading = false;
+                              });
+                              
+                            },
                           child: Visibility(
                             visible: expandedContainerIndex == 1 || !isExpanded,
                             child: Container(
