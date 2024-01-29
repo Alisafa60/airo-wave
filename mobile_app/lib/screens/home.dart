@@ -49,14 +49,14 @@ class _MyHomeScreen extends State<HomeScreen> {
     sensorUpdateTimer = Timer.periodic(Duration(minutes: 10), (Timer timer) {
       _loadSensor();
     });
-    // locationService = LocationService(widget.apiService);
-    // _loadLocationData();
-    // enviromentalService = EnviromentalService(widget.apiService);
-    // pollenService = PollenService(widget.apiService);
-    // locationService = LocationService(widget.apiService);
-    // saveAllergenService = SaveAllergenService(widget.apiService);
-    // _loadEnviromentalData();
-    // _fetchAndPostAirQualityData();
+    locationService = LocationService(widget.apiService);
+    _loadLocationData();
+    enviromentalService = EnviromentalService(widget.apiService);
+    pollenService = PollenService(widget.apiService);
+    locationService = LocationService(widget.apiService);
+    saveAllergenService = SaveAllergenService(widget.apiService);
+    _loadEnviromentalData();
+    _fetchAndPostAirQualityData();
    
     profileService = ProfileService(widget.apiService);
     _initializeProfileData();
@@ -151,7 +151,7 @@ class _MyHomeScreen extends State<HomeScreen> {
 
     Future<void> _fetchAndPostAirQualityData() async {
       try {
-        final pollen = pollenService.fetchAndPostPollen(32.32, 35.32);
+        final pollen = pollenService.fetchAndPostPollen(latitude, longitude);
         await Future.delayed(Duration(seconds: 1));
         final airQuality = enviromentalService.fetchAirQualityDataAndPost(latitude, longitude);
         
