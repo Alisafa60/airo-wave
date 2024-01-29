@@ -27,14 +27,14 @@
 - To monitor indoor air quality, the project incorporates an [Arduino Uno](https://store.arduino.cc/products/arduino-uno-rev3/) with a [CSS811 air quality sensor](https://learn.adafruit.com/adafruit-ccs811-air-quality-sensor/overview). This hardware component enables real-time tracking and analysis of indoor air quality parameters.
 - For outdoor air quality data, the app integrates data from [Google's Air Quality API](https://developers.google.com/maps/documentation/urls/get-started#directions-action) to provide users with information about the air quality in their outdoor surroundings.
 - To track plant/pollen allergens, the project leverages data from [Google's Pollen API](https://www.google.com/search?q=pollen+api) to give users insights into plant-related allergens in their area.
-- For visualizing data on maps, the project integrates heatmap tiles on maps from [Google Maps Platform](https://cloud.google.com/maps-platform/), enhancing the user experience with geospatial information.
+- For visualizing data on maps, the project integrates png heatmap tiles on maps from [Google Maps Platform](https://cloud.google.com/maps-platform/), enhancing the user experience with geospatial information.
 - The project incorporates a chatbot powered by [OpenAI](https://www.openai.com/) to analyze the data and provide with personalized recommendations.
 
 <br><br>
 
 <img src="./readme/title4.svg"/>
 
-> AiroWave was designed using wireframes and mockups, where a careful attention to user interface and user experience ensured visually appealing and intuitive design..
+> We designed AiroWave using wireframes and mockups, iterating on the design until we reached the ideal layout for easy navigation and a seamless user experience.
 
 
 ### Mockups
@@ -61,22 +61,28 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 > Using the wireframes and mockups as a guide, we implemented the Coffee Express app with the following features:
 
 ### User Screens (Mobile)
-| Login screen  | Register screen | Landing screen |
-| ---| ---| ---| ---|
-| ![Landing](./readme/login.png) | ![fsdaf](./readme/signup.png) | ![fsdaf](./readme/health-gif.gif) |
-| Home screen  | Profile Screen | Heatmap Aqi Screen | Heatmap allergy Screen |
-| ![Landing](./readme/home1.png) | ![fsdaf](./readme/health.png) | ![fsdaf](./readme/heatmap-aqi.png) | ![fsdaf](./readme/heatmap-allergy.png) |
+
+| Login screen                | Register screen                   |
+| --------------------------- | ----------------------------------|
+| ![Login](./readme/login.png) | ![Register](./readme/signup.png)  |
+
+| Landing screen                  | Home screen                      |
+| ------------------------------- | ---------------------------------|
+| ![Landing](./readme/health-gif.gif) | ![Home](./readme/home1.png)      |
+
+| Heatmap Allergy Screen               | Heatmap Aqi Screen               |
+| ---------------------------- | ---------------------------------|
+| ![Profile](./readme/heatmap-allergy.png) | ![Heatmap Aqi](./readme/heatmap-aqi.png) |
+
+| Profile Screen       |
+| ---------------------------- |
+| ![Heatmap Allergy](./readme/heath-profile.gif) |
 
 
 <br><br>
 
 <br><br>
 <img src="./readme/title7.svg"/>
-
-### Carefully Selected and Purified Dataset for AI insights:
-
-Aggregated air quality metrics were calculated as averages and categorized over time, distinguishing between indoor and outdoor environments, and ensuring the latest data is passed. This method ensures a comprehensive dataset passed to the prompt that is not large in size. Additionally, allergens are added and their severity levels are precisely annotated before passing them. By specifying the user's health condition, insights are tailored for a personalized and targeted analysis.
-
 <br><br>
 
 <br><br>
