@@ -19,7 +19,7 @@ class HealthService {
           headers,
         );
 
-        if (response.statusCode == 201) {
+        if (response.statusCode == 200) {
           final Map<String, dynamic> data = json.decode(response.body);
           return data;
         } else {
