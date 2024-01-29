@@ -48,6 +48,9 @@
 
 <img src="./readme/title5.svg"/>
 
+###  User-Centric Data Management:
+
+<img src="./readme/airo_wave_er.png"/>
 
 
 <br><br>
