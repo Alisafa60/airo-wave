@@ -274,7 +274,7 @@ class _RecordActivityScreenState extends State<RecordActivityScreen> {
                         width: 70,
                         child: Image.asset(
                           isTracking
-                              ? 'lib/assets/icons/resume-button.png'
+                              ? 'lib/assets/icons/stop-button.svg'
                               : 'lib/assets/icons/start-button.png',
                           height: 70,
                         ),
