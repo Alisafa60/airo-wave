@@ -109,6 +109,7 @@ class _ShowHealthScreenState extends State<ShowHealthScreen> {
       setState(() {
         healthData = data;
       });
+      print(healthData);
     } catch (error) {
       print('Error loading health data: $error');
     }
@@ -529,6 +530,7 @@ Future<void> updateRespiratoryCondition({
                         if (healthData != null &&
                           healthData!.containsKey('userHealth') &&
                           healthData!['userHealth']!.containsKey('weight'))
+                          
                         Positioned(
                           bottom: 20,
                           left: 20,
