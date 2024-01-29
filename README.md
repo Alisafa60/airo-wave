@@ -83,6 +83,11 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 
 <br><br>
 <img src="./readme/title7.svg"/>
+
+### Curated Dataset for Enhanced AI Insight
+
+Aggregated air quality metrics were calculated as averages and categorized over time, ensuring last data is passed, and distinguishing between indoor and outdoor environments. This method ensures a cohesive yet comprehensive dataset. Additionally, allergens are selected and their severity levels are specified before passing them. Lastly, By specifying the user's health condition, insights are tailored for a personalized and targeted analysis.
+
 <br><br>
 
 <br><br>
