@@ -66,12 +66,6 @@
 - The app uses the font ["Work Sans"](https://fonts.google.com/specimen/Work+Sans) as its main font, and the design of the app adheres to the material design guidelines.
 
 <br><br>
-<img src="./readme/title5.svg"/>
-
-
-<br><br>
-
-
 <img src="./readme/title6.svg"/>
 <br><br>
 
