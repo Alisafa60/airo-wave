@@ -5,7 +5,6 @@ import 'package:mobile_app/constants.dart';
 import 'package:mobile_app/requests/chatbot_service.dart';
 import 'package:mobile_app/requests/profile.dart';
 import 'package:mobile_app/requests/severity_service.dart';
-import 'package:mobile_app/utils/image_helper.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,10 +26,12 @@ class _MedCatScreenState extends State<MedCatScreen> {
   String? fileName;
   Map<String, dynamic>? profileData;
   Map<String, dynamic>? chatbotResponse;
+  Map<String, dynamic>? severityData;
   String openAiResponse = '';
   String openAiUserMessage_1 = "What's my health recommendation for today?";
   String openAiUserMessage_2 = "I'm going out, should I take any measures?";
   bool isLoading = false;
+  bool isOverlayOpen = false;
   
   void handleContainerTap (int index){
     setState(() {
@@ -40,6 +41,12 @@ class _MedCatScreenState extends State<MedCatScreen> {
         isExpanded = true;
         expandedContainerIndex = index;
       }
+    });
+  }
+
+  void toggleOverlay() {
+    setState(() {
+      isOverlayOpen = !isOverlayOpen;
     });
   }
 
@@ -62,17 +69,16 @@ class _MedCatScreenState extends State<MedCatScreen> {
     }
   }
   
-   Future<void> _loadProfile() async {
-      try {
-        final Map<String, dynamic> data = await profileService.getProfile();
-        setState(() {
-          profileData = data;
-        });
-      } catch (error) {
-        print('Error loading health data: $error');
-      }
+  Future<void> _loadProfile() async {
+    try {
+      final Map<String, dynamic> data = await profileService.getProfile();
+      setState(() {
+        profileData = data;
+      });
+    } catch (error) {
+      print('Error loading health data: $error');
     }
-
+  }
      
   @override
   void initState() {
@@ -81,6 +87,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
     profileService = ProfileService(widget.apiService);
     openAiService = OpenAiService(widget.apiService);
     _initializeProfileData();
+    _loadSeverity();
   }
 
    Future<void> _initializeProfileData() async {
@@ -94,13 +101,10 @@ class _MedCatScreenState extends State<MedCatScreen> {
     String key = 'profileImagePath_$userId';
 
     String? savedImagePath = prefs.getString(key);
-    print('Loaded image path key: $key');
-    
     if (savedImagePath != null){
       setState(() {
         fileName = savedImagePath;
       });
-      print('Loaded image path: $fileName');
     }
   }
 
@@ -110,7 +114,18 @@ class _MedCatScreenState extends State<MedCatScreen> {
         setState(() {
           chatbotResponse = data;
         });
-        print('chat boooooooot ${chatbotResponse?['openAiResponse']?['response']}',);
+      } catch (error) {
+        print('Error loading chatbot response: $error');
+      }
+  }
+
+   Future<void> _loadSeverity() async {
+      try {
+        final Map<String, dynamic> data = await severityService.getSeverity();
+        setState(() {
+          severityData = data;
+        });
+        print(severityData?['dailyHealth'][0]['severity']);
       } catch (error) {
         print('Error loading chatbot response: $error');
       }
@@ -165,7 +180,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              //route for user profile
+                              
                             },
                             child: ClipOval(
                               child: Container(
@@ -354,7 +369,6 @@ class _MedCatScreenState extends State<MedCatScreen> {
                             setState(() {
                               isLoading = false;
                             });
-
                             
                           },
                           child: Visibility(
