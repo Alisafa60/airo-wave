@@ -39,7 +39,7 @@
 
 
 ### Mockups
-| Home screen  | Health Screen | Order Screen |
+| Home screen  | Health Screen | Profile Screen |
 | ---| ---| ---|
 | ![Landing](./readme/home.png) | ![fsdaf](./readme/medcat.png) | ![fsdaf](./readme/profile.png) |
 
