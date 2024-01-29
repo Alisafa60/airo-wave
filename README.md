@@ -76,7 +76,7 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 
 | Profile Screen       |
 | ---------------------------- |
-| ![Heatmap Allergy](./readme/heath-profile.gif) |
+| ![Heatmap Allergy](./readme/heath.png) |
 
 
 <br><br>
