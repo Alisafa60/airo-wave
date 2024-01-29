@@ -25,7 +25,7 @@
 ### Mockups
 | Home screen  | Menu Screen | Order Screen |
 | ---| ---| ---|
-| ![Landing](./readme/demo/home.png) | ![fsdaf](./readme/demo/medcat.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| ![Landing](./readme/home.png) | ![fsdaf](./readme/medcat.png) | ![fsdaf](./readme/demo/1440x1024.png) |
 
 <br><br>
 
