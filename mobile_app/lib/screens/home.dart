@@ -303,7 +303,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                             const SizedBox(width: 2,),
                             GestureDetector(
                               onTap: () {
-                                //route to MedCat
+                                Navigator.pushReplacementNamed(context, '/medcat');
                               },
                               child: const Column(
                                 children: [

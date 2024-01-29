@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile_app/api_service.dart';
+import 'package:mobile_app/screens/daily_health.dart';
 
 import 'package:mobile_app/screens/health_data.dart';
 import 'package:mobile_app/screens/home.dart';
@@ -34,19 +35,19 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(255, 115, 15, 1)),
         useMaterial3: true,
       ),
-      // home: SignupScreen(apiService: apiService,),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => SignupScreen(apiService: apiService),
-        '/login': (context) => LoginScreen(apiService: apiService),
-        '/home': (context) => HomeScreen(apiService: apiService,),
-        '/home/profile/edit': (context) => UserProfileScreen(apiService: apiService),
-        '/home/profile': (context) => ShowHealthScreen(apiService: apiService),
-        '/health': (context) => UserHealthScreen(apiService: apiService),
-        '/medcat': (context) => MedCatScreen(apiService: apiService,),
-        '/maps': (context) => MapsScreen(apiService: apiService,),
-        '/record':(context) => RecordActivityScreen(),
-      },
+      home: DailyHeathChart(apiService: apiService,),
+      // initialRoute: '/',
+      // routes: {
+      //   '/': (context) => SignupScreen(apiService: apiService),
+      //   '/login': (context) => LoginScreen(apiService: apiService),
+      //   '/home': (context) => HomeScreen(apiService: apiService,),
+      //   '/home/profile/edit': (context) => UserProfileScreen(apiService: apiService),
+      //   '/home/profile': (context) => ShowHealthScreen(apiService: apiService),
+      //   '/health': (context) => UserHealthScreen(apiService: apiService),
+      //   '/medcat': (context) => MedCatScreen(apiService: apiService,),
+      //   '/maps': (context) => MapsScreen(apiService: apiService,),
+      //   '/record':(context) => RecordActivityScreen(),
+      // },
       debugShowCheckedModeBanner: false,
     );
   }
