@@ -66,10 +66,27 @@
 - The app uses the font ["Work Sans"](https://fonts.google.com/specimen/Work+Sans) as its main font, and the design of the app adheres to the material design guidelines.
 
 <br><br>
+<img src="./readme/title5.svg"/>
 
-<!-- How to run -->
+
+<br><br>
+
+
 <img src="./readme/title6.svg"/>
+<br><br>
 
+<br><br>
+<img src="./readme/title7.svg"/>
+<br><br>
+
+<br><br>
+<img src="./readme/title8.svg"/>
+<br><br>
+
+<img src="./readme/title9.svg"/>
+<br><br>
+<!-- How to run -->
+<img src="./readme/title10svg"/>
 > To set up Coffee Express locally, follow these steps:
 
 ### Prerequisites
