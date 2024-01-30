@@ -137,7 +137,7 @@ class EnviromentalService {
           headers,
           requestBody,
         );
-        print(requestBody);
+        
         if (response.statusCode == 201 || response.statusCode == 200) {
           final Map<String, dynamic> environmentalData = json.decode(response.body) as Map<String, dynamic>;
           return environmentalData;
