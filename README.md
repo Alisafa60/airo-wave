@@ -62,21 +62,21 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 
 ### User Screens (Mobile)
 
-| Login Screen           | Register Screen            | Landing Screen               |
-| ----------------------- | --------------------------- | ---------------------------- |
-| ![Login](./readme/login.png) | ![Register](./readme/signup.png) | ![Landing](./readme/health-gif.gif) |
+| Login Screen                    | Register Screen                      | Landing Screen                        |
+| ------------------------------- | -------------------------------------| --------------------------------------|
+| <img src="./readme/login.png" width="220">    | <img src="./readme/signup.png" width="220">     | <img src="./readme/health-gif.gif" width="220">   |
 
 ---
 
-| Home Screen                | Heatmap Allergy Screen         | Heatmap AQI Screen           |
-| --------------------------- | ----------------------------- | ---------------------------- |
-| ![Home](./readme/home1.png) | ![Heatmap Allergy](./readme/heatmap-allergy.png) | ![Heatmap AQI](./readme/heatmap-aqi.png) |
+| Home Screen                     | Heatmap Allergy Screen                  | Heatmap AQI Screen                    |
+| ------------------------------ | ---------------------------------------- | -------------------------------------|
+| <img src="./readme/home1.png" width="220">    | <img src="./readme/heatmap-allergy.png" width="220"> | <img src="./readme/heatmap-aqi.png" width="220"> |
 
 ---
 
-| Chatbot Screen          | Profile Screen             |
-| ----------------------- | --------------------------- |
-| ![Chatbot](./readme/medcat.gif) | ![Profile](./readme/health.png) |
+| Chatbot Screen                  | Profile Screen                           |
+| ------------------------------- | ---------------------------------------- |
+| <img src="./readme/medcat.gif" width="220"> | <img src="./readme/health.png" width="220">          |
 
 
 <br><br>
