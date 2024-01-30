@@ -236,7 +236,7 @@ The second function, sendToOpenAI, is then triggered where the chatbot is define
 
 | EC2 intance              |
 | ------------------------ |
-| <img src="./readme/test-image.png" width="350"> |
+| <img src="./readme/putty.png" width="450"> |
 
 
 
