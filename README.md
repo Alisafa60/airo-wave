@@ -10,9 +10,24 @@
 > This app combines user profiles, medical history, symptom tracking, and real-time indoor and outdoor environmental data with heatmap visuals. It uses AI analysis to offer personalized recommendations.
 
 ### User Stories
-- As an individual with respiratory problems, I need to monitor and receive real-time alerts about the air quality of my current location and those I plan to visit.
-- As a cyclist with allergies, I want to access real-time environmental data on pollen levels and air quality as I plan for an activity to minimize allergens.
-- As a healthcare professional, I need access to real-time environmental data alongside my patients' health information, enabling me to make informed clinical assessments and provide tailored recommendations.
+
+#### Individual with Respiratory Problems
+
+-Needs a device or app that continuously measures and reports real-time air quality data for the current location.
+-Seeks historical data tracking to identify patterns and potential triggers.
+-Wants the ability to check the air quality of planned destinations in advance.
+
+#### Cyclist with Allergies
+
+-Requires real-time pollen level information to plan outdoor activities and minimize allergen exposure.
+-values integration with navigation apps to choose routes with lower allergen concentrations.
+-Desires historical pollen data to identify seasonal patterns and plan activities during periods of lower allergen prevalence.
+
+#### Healthcare Professional
+
+-Needs a platform that integrates real-time environmental data with patients' health records.
+-Seeks tools that analyze correlations between environmental data and patients' health outcomes.
+-Requires the ability to generate reports or summaries for patients based on historical environmental data.
 
 <br><br>
 
