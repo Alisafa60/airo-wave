@@ -89,10 +89,9 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 
 ---
 
-| Chatbot Screen                  | Profile Screen                           |
-| ------------------------------- | ---------------------------------------- |
-| <img src="./readme/medcat.gif" width="240"> | <img src="./readme/health.png" width="240">          |
-
+| Chatbot Screen                  | Profile Screen                           | Demo Video Section                             |
+| ------------------------------- | ---------------------------------------- | ------------------------------------------|
+| ![Chatbot Screen](./readme/medcat.gif) | ![Profile Screen](./readme/health.png) | [![Video]](./readme/video.mp4) |
 
 <br><br>
 
