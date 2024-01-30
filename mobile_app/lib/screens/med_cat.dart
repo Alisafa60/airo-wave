@@ -362,7 +362,7 @@ class _MedCatScreenState extends State<MedCatScreen> {
                             setState(() {
                               isLoading = true;
                             });
-                            // await fetchOpenAiResponse(openAiUserMessage_1);
+                            await fetchOpenAiResponse(openAiUserMessage_1);
                             await Future.delayed(Duration(seconds: 1));
                             _loadChatbotResponse();
 

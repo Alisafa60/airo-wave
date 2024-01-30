@@ -211,7 +211,7 @@ class _MapsScreenState extends State<MapsScreen> {
          );
 
       if (response.statusCode == 201) {
-          print('Profile update successful');
+          print('location added');
           print({requestBody});
           
         } else {

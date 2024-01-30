@@ -437,15 +437,14 @@ Widget build(BuildContext context) {
               child: SaveButton(
                 buttonText: 'Save',
                 onPressed: () async {
-                  await Future.wait([
-                    addHealthCondition(),
-                    await Future.delayed(Duration(seconds: 1)),
-                    addRespiratoryCondition(),
-                    addAllergyCondition(),
-                    addMedication(),
-                    Navigator.pushReplacementNamed(context, '/home'),
-                  ]);
-                   
+                 await Future.wait([
+                  addHealthCondition(),
+                  addAllergyCondition(),
+                  addRespiratoryCondition(),
+                  addMedication(),
+                  Navigator.pushReplacementNamed(context, '/home')
+                ]);
+                
                 },
               ),
               ),
