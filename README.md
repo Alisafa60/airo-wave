@@ -13,21 +13,21 @@
 
 #### Individual with Respiratory Problems
 
--Needs a device or app that continuously measures and reports real-time air quality data for the current location.
--Seeks historical data tracking to identify patterns and potential triggers.
--Wants the ability to check the air quality of planned destinations in advance.
+- Needs a device or app that continuously measures and reports real-time air quality data for the current location.
+- Seeks historical data tracking to identify patterns and potential triggers.
+- Wants the ability to check the air quality of planned destinations in advance.
 
 #### Cyclist with Allergies
 
--Requires real-time pollen level information to plan outdoor activities and minimize allergen exposure.
--values integration with navigation apps to choose routes with lower allergen concentrations.
--Desires historical pollen data to identify seasonal patterns and plan activities during periods of lower allergen prevalence.
+- Requires real-time pollen level information to plan outdoor activities and minimize allergen exposure.
+- values integration with navigation apps to choose routes with lower allergen concentrations.
+- Desires historical pollen data to identify seasonal patterns and plan activities during periods of lower allergen prevalence.
 
 #### Healthcare Professional
 
--Needs a platform that integrates real-time environmental data with patients' health records.
--Seeks tools that analyze correlations between environmental data and patients' health outcomes.
--Requires the ability to generate reports or summaries for patients based on historical environmental data.
+- Needs a platform that integrates real-time environmental data with patients' health records.
+- Seeks tools that analyze correlations between environmental data and patients' health outcomes.
+- Requires the ability to generate reports or summaries for patients based on historical environmental data.
 
 <br><br>
 
