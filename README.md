@@ -377,7 +377,7 @@ The second function, sendToOpenAI, is then triggered where the chatbot is define
 
 | Upload a photo           | Upload a photo fail        | Register                     |
 | ------------------------ | -------------------------- | ---------------------------- |
-| <img src="./readme/test-image.png" width="250"> | <img src="./readme/test-image2.png" width="250"> | <img src="./readme/test-image3.png" width="250"> |
+| <img src="./readme/test-image.png" width="300"> | <img src="./readme/test-image2.png" width="300"> | <img src="./readme/test-image3.png" width="300"> |
 
 
 <br><br>
