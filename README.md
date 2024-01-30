@@ -257,7 +257,7 @@ Unit testing was performed using supertest, a Node.js library for API testing, d
 
 <br><br>
 <!-- How to run -->
-<img src="./readme/title10svg"/>
+<img src="./readme/title10.png"/>
 > To set up AiroWave locally, follow these steps:
 
 ### Prerequisites
@@ -266,10 +266,6 @@ Unit testing was performed using supertest, a Node.js library for API testing, d
 - Install NodeJS from: [NodeJS](https://nodejs.org/en/download)
 - Install PostgreSQL from: [PostgreSQL](https://www.postgresql.org/download/)
 - Install Android Studio from : [Android Studio](https://developer.android.com/studio)
-* 
-  ```sh
-  
-  ```
 
 ### Installation
 
