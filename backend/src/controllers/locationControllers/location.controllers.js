@@ -37,7 +37,7 @@ const getLastLocation = async (req, res) => {
         createdAt: 'desc',
       },
     });
-
+    
     if (lastLocation) {
       res.json(lastLocation);
     } else {
