@@ -258,6 +258,7 @@ Unit testing was performed using supertest, a Node.js library for API testing, d
 <br><br>
 <!-- How to run -->
 <img src="./readme/title10.svg"/>
+
 > To set up AiroWave locally, follow these steps:
 
 ### Prerequisites
