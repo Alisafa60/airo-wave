@@ -94,7 +94,7 @@ async function generateOpenAIPayload(userId, userMessage) {
     
     try {
 
-        /////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////Sensor Data//////////////////////////////////////////////////
 
         const sensorDataWithAverage = await prisma.sensorData.findMany({
             take: 150,
@@ -120,7 +120,7 @@ async function generateOpenAIPayload(userId, userMessage) {
         const fixedCo2 = parseFloat(averageCo2.toFixed(2));
         const fixedVoC = parseFloat(averageVoc.toFixed(2));
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////Outdoor airquality////////////////////////////////////////////
     
         const environmentalHealthDataWithAverage = await prisma.enviromentalHealthData.groupBy({
             where: { userId: userId },
@@ -181,7 +181,8 @@ async function generateOpenAIPayload(userId, userMessage) {
         const fixedPm25 = parseFloat(averagePm25.toFixed(2));
         const fixedPm10 = parseFloat(averagePm10.toFixed(2));
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      //////////////Allergens data, health conditions, location, severity input/////////////////////
 
         const allergens = await prisma.allergen.findFirst({
             where: { userId: userId },
