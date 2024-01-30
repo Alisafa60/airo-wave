@@ -13,9 +13,8 @@ async function sendToOpenAI(userId, payload, prompt) {
             model: 'gpt-3.5-turbo',
             messages: [
                 { role: 'system', content: "Your name is MedCat, you mainly care about user's health by analyzing the provided air quality and \
-                allergens. And you give recommendation based speifically on their condition. You're concise, and can be fun. don't realy a lot on bullet point as\
-                they can be boring. Don't elaborate a lot. Speak mostly in context of user health condition and \
-                enviromental data unless you're asked otherwise" },
+                allergens. And you give recommendation based speifically on their condition and severity. You're concise, and can be fun. Don't elaborate a lot.\
+                Speak mostly in context of user health condition and enviromental data unless you're asked otherwise" },
                 { role: 'user', content: 'Give me recommendation by analyzing enviromental condition and my health conditions, start with greeting' },
                 { role: 'assistant', content: prompt },
             ],
@@ -46,32 +45,10 @@ async function generateOpenAIPayload(userId, userMessage) {
     
     try {
 
-        const allergens = await prisma.allergen.findFirst({
-            where: { userId: userId },
-            orderBy: {
-                id: 'desc',
-            },
-            select: { name: true, color: true }
-        });
-    
-        const lastSeverityEntry = await prisma.dailyHealth.findFirst({
-            select: { severity: true, userId: userId },
-            orderBy: { createdAt: 'desc' }
-        });
-    
-        const healthCondition = await prisma.healthCondition.findFirst({
-            where: { userId: userId },
-            select: {
-                weight: true,
-                bloodType: true,
-                id: true
-            }
-        });
-    
-        const conditionId = healthCondition.id;
-    
+        /////////////////////////////////////////////////////////////////////////////////////
+
         const sensorDataWithAverage = await prisma.sensorData.findMany({
-            take: 100,
+            take: 150,
             orderBy: {
                 createdAt: 'desc',
             },
@@ -93,6 +70,8 @@ async function generateOpenAIPayload(userId, userMessage) {
     
         const fixedCo2 = parseFloat(averageCo2.toFixed(2));
         const fixedVoC = parseFloat(averageVoc.toFixed(2));
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
     
         const environmentalHealthDataWithAverage = await prisma.enviromentalHealthData.groupBy({
             where: { userId: userId },
@@ -152,6 +131,33 @@ async function generateOpenAIPayload(userId, userMessage) {
         const fixedNo2Level = parseFloat(averageNo2Level.toFixed(2));
         const fixedPm25 = parseFloat(averagePm25.toFixed(2));
         const fixedPm10 = parseFloat(averagePm10.toFixed(2));
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        const allergens = await prisma.allergen.findFirst({
+            where: { userId: userId },
+            orderBy: {
+                id: 'desc',
+            },
+            select: { name: true, color: true }
+        });
+    
+        const lastSeverityEntry = await prisma.dailyHealth.findFirst({
+            select: { severity: true, userId: userId },
+            orderBy: { createdAt: 'desc' }
+        });
+    
+        const healthCondition = await prisma.healthCondition.findFirst({
+            where: { userId: userId },
+            select: {
+                weight: true,
+                bloodType: true,
+                id: true
+            }
+        });
+    
+        const conditionId = healthCondition.id;
+    
     
         const respiratoryConditions = await prisma.respiratoryCondition.findMany({
             where: { healthConditionId: conditionId },
@@ -194,35 +200,16 @@ async function generateOpenAIPayload(userId, userMessage) {
             }
         });
     
-        const determineSeverityRecommendation = (severity) => {
+        const ConditionSeverityInput = (severity) => {
             if (severity >= 4) {
-                return 'Your health severity is high. Please consult with a healthcare professional.';
+                return 'User health condition severity is high';
             } else if (severity >= 2) {
-                return 'Your health severity is moderate. Consider taking necessary precautions.';
+                return 'Your health condition severity is moderate.';
             } else {
-                return 'Your health severity is low. Continue with your regular health routine.';
+                return 'Your health condition severity is low.';
             }
         };
 
-    
-        const healthRecommendation = 'Your health recommendation message goes here';
-    
-        const allergenData = allergens || [];
-        const respiratoryConditionsData = respiratoryConditions || [];
-        const allergyData = allergies || [];
-        const airQualityData = {
-            fixedCo2,
-            fixedVoC,
-            fixedAqi,
-            fixedCoLevel,
-            fixedNo2Level,
-            fixedO3Level,
-            fixedPm10,
-            fixedPm25,
-            fixedSo2Level
-        } || {};
-        const healthData = healthCondition || [];
-        console.log('Allergens:', allergens)
         const determineAllergenSeverity = (color) => {
             if (color === 'secondary') {
                 return 'low';
@@ -236,7 +223,7 @@ async function generateOpenAIPayload(userId, userMessage) {
         };
 
         const payload = {
-            severity : lastSeverityEntry[{severity: lastSeverityEntry.severity}],
+            severity: lastSeverityEntry ? ConditionSeverityInput(lastSeverityEntry.severity) : 'unknown',
             allergens: [{ name: allergens.name, color: allergens.color }],
             respiratoryConditions: respiratoryConditions.map(condition => ({
                 condition: condition.condition,
@@ -248,7 +235,6 @@ async function generateOpenAIPayload(userId, userMessage) {
                 startDate: medication.startDate,
                 frequency: medication.frequency,
                 dosage: medication.dosage,
-                severity: determineMedicationSeverity(medication.dosage),
             })),
             allergies: allergies.map(allergy => ({
                 allergen: allergy.allergen,
@@ -272,7 +258,7 @@ async function generateOpenAIPayload(userId, userMessage) {
             },
             lastLocation: lastLocation ? lastLocation.location : null,
         };
-       
+        
         const allergenPrompt = payload.allergens.length > 0 ? `- ${payload.allergens.map(allergen => `${allergen.name} (Severity: ${determineAllergenSeverity(allergen.color)})`).join(', ')}` : 'No allergens';
        
         const medicationPrompt = medications.length > 0 ?
@@ -281,6 +267,8 @@ async function generateOpenAIPayload(userId, userMessage) {
         
         const prompt  = `
             Generate health recommendations for the user.
+
+            Health Condition Severity: ${payload.severity}
 
             Respiratory Conditions:
             ${payload.respiratoryConditions.length > 0 ? `- ${payload.respiratoryConditions.map(condition => condition.condition).join(', ')}` : 'No respiratory conditions'}
