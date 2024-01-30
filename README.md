@@ -40,16 +40,16 @@
 - For Database, the app utilizes [PostgreSQL](https://www.postgresql.org/) as the backend database management system, providing a robust and scalable solution for data storage.
 - The backend is implemented using [Node.js](https://nodejs.org/) along with [Prisma](https://www.prisma.io/) for efficient and type-safe database access and smooth communication.
 - To monitor indoor air quality, the project incorporates an [Arduino Uno](https://store.arduino.cc/products/arduino-uno-rev3/) with a [CSS811 air quality sensor](https://learn.adafruit.com/adafruit-ccs811-air-quality-sensor/overview). This hardware component enables real-time tracking and analysis of indoor air quality parameters.
-- For outdoor air quality data, the app integrates data from [Google's Air Quality API](https://developers.google.com/maps/documentation/urls/get-started#directions-action) to provide users with information about the air quality in their outdoor surroundings.
-- To track plant/pollen allergens, the project leverages data from [Google's Pollen API](https://www.google.com/search?q=pollen+api) to give users insights into plant-related allergens in their area.
-- For visualizing data on maps, the project integrates png heatmap tiles on maps from [Google Maps Platform](https://cloud.google.com/maps-platform/), enhancing the user experience with geospatial information.
+- For outdoor air quality data, the app integrates data from [Google's Air Quality API](https://developers.google.com/maps/documentation/urls/get-started#directions-action).
+- To track plant/pollen allergens, the project leverages data from [Google's Pollen API](https://www.google.com/search?q=pollen+api).
+- For visualizing data on maps, the project integrates png heatmap tiles on maps from [Google Maps Platform](https://cloud.google.com/maps-platform/).
 - The project incorporates a chatbot powered by [OpenAI](https://www.openai.com/) to analyze the data and provide with personalized recommendations.
 
 <br><br>
 
 <img src="./readme/title4.svg"/>
 
-> We designed AiroWave using wireframes and mockups, iterating on the design until we reached the ideal layout for easy navigation and a seamless user experience.
+> AiroWave was using wireframes and mockups, iterating on the design until we reached the ideal layout for easy navigation and a seamless user experience.
 
 
 ### Mockups
@@ -101,170 +101,14 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 
 ### Curated Dataset for Enhanced AI Insight
 
-Aggregated air quality metrics were calculated as averages and categorized, ensuring last data is passed, and distinguishing between indoor and outdoor environments. Additionally, allergens are selected and their severity levels are specified before passing them. And By specifying the user's health condition and condition severity input, insights are tailored for a personalized and targeted analysis.
+Aggregated air quality metrics were calculated as averages over number n of last entiers in the database, while distinguishing between indoor and outdoor environmental data. Additionally, allergens are selected and their severity levels are specified before passing them. And By specifying the user's health condition and condition severity input, insights are tailored for a personalized and targeted analysis.
 
 This approach relies on two functions, where user identification and message are passed to the first one, with the necessary data to pass to payload and prompt as shown below:
 ```javascript
 async function generateOpenAIPayload(userId, userMessage) {
     
     try {
-
-        ///////////////////////////////////Sensor Data//////////////////////////////////////////////////
-
-        const sensorDataWithAverage = await prisma.sensorData.findMany({
-            take: 150, //depends on the frequency of updates of sensor data in the database
-            orderBy: {
-                createdAt: 'desc',
-            },
-            select: {
-                co2: true,
-                voc: true,
-                createdAt: true,
-            },
-        });
-    
-        const calculatedAverages = sensorDataWithAverage.reduce((acc, data) => {
-            acc.co2.push(data.co2);
-            acc.voc.push(data.voc);
-            return acc;
-        }, { co2: [], voc: [] });
-    
-        const averageCo2 = calculatedAverages.co2.reduce((sum, value) => sum + value, 0) / calculatedAverages.co2.length;
-        const averageVoc = calculatedAverages.voc.reduce((sum, value) => sum + value, 0) / calculatedAverages.voc.length;
-    
-        const fixedCo2 = parseFloat(averageCo2.toFixed(2));
-        const fixedVoC = parseFloat(averageVoc.toFixed(2));
-
-        //////////////////////////////Outdoor Air Quality Data////////////////////////////////////////////
-    
-        const environmentalHealthDataWithAverage = await prisma.enviromentalHealthData.groupBy({
-            where: { userId: userId },
-            by: ['aqi', 'coLevel', 'o3Level', 'so2Level', 'no2Level', 'pm25', 'pm10', 'userId', 'updatedAt'],
-            orderBy: {
-                updatedAt: 'desc',
-            },
-            take: 20,
-            select: {
-                aqi: true,
-                coLevel: true,
-                o3Level: true,
-                so2Level: true,
-                no2Level: true,
-                pm25: true,
-                pm10: true,
-                userId: true,
-                updatedAt: true,
-            },
-        });
-    
-        const calculatedEnvironmentalAverages = environmentalHealthDataWithAverage.reduce((acc, data) => {
-            acc.aqi.push(data.aqi);
-            acc.coLevel.push(data.coLevel);
-            acc.o3Level.push(data.o3Level);
-            acc.so2Level.push(data.so2Level);
-            acc.no2Level.push(data.no2Level);
-            acc.pm25.push(data.pm25);
-            acc.pm10.push(data.pm10);
-    
-            return acc;
-        }, {
-            aqi: [],
-            ozoneLevel: [],
-            coLevel: [],
-            o3Level: [],
-            vocLevel: [],
-            so2Level: [],
-            no2Level: [],
-            pm25: [],
-            pm10: [],
-            userId: [],
-        });
-    
-        const averageAqi = calculatedEnvironmentalAverages.aqi.reduce((sum, value) => sum + value, 0) / calculatedEnvironmentalAverages.aqi.length;
-        const averageCoLevel = calculatedEnvironmentalAverages.coLevel.reduce((sum, value) => sum + value, 0) / calculatedEnvironmentalAverages.coLevel.length;
-        const averageO3Level = calculatedEnvironmentalAverages.o3Level.reduce((sum, value) => sum + value, 0) / calculatedEnvironmentalAverages.o3Level.length;
-        const averageSo2Level = calculatedEnvironmentalAverages.so2Level.reduce((sum, value) => sum + value, 0) / calculatedEnvironmentalAverages.so2Level.length;
-        const averageNo2Level = calculatedEnvironmentalAverages.no2Level.reduce((sum, value) => sum + value, 0) / calculatedEnvironmentalAverages.no2Level.length;
-        const averagePm25 = calculatedEnvironmentalAverages.pm25.reduce((sum, value) => sum + value, 0) / calculatedEnvironmentalAverages.pm25.length;
-        const averagePm10 = calculatedEnvironmentalAverages.pm10.reduce((sum, value) => sum + value, 0) / calculatedEnvironmentalAverages.pm10.length;
-    
-        const fixedAqi = parseFloat(averageAqi.toFixed(2));
-        const fixedCoLevel = parseFloat(averageCoLevel.toFixed(2));
-        const fixedO3Level = parseFloat(averageO3Level.toFixed(2));
-        const fixedSo2Level = parseFloat(averageSo2Level.toFixed(2));
-        const fixedNo2Level = parseFloat(averageNo2Level.toFixed(2));
-        const fixedPm25 = parseFloat(averagePm25.toFixed(2));
-        const fixedPm10 = parseFloat(averagePm10.toFixed(2));
-
-
-      //////////////Allergens data, health conditions, location, severity input/////////////////////
-
-        const allergens = await prisma.allergen.findFirst({
-            where: { userId: userId },
-            orderBy: {
-                id: 'desc',
-            },
-            select: { name: true, color: true }
-        });
-    
-        const lastSeverityEntry = await prisma.dailyHealth.findFirst({
-            select: { severity: true, userId: userId },
-            orderBy: { createdAt: 'desc' }
-        });
-    
-        const healthCondition = await prisma.healthCondition.findFirst({
-            where: { userId: userId },
-            select: {
-                weight: true,
-                bloodType: true,
-                id: true
-            }
-        });
-    
-        const conditionId = healthCondition.id;
-    
-    
-        const respiratoryConditions = await prisma.respiratoryCondition.findMany({
-            where: { healthConditionId: conditionId },
-            select: {
-                condition: true,
-                symptomsFrequency: true,
-                triggers: true,
-                healthConditionId: true
-            }
-        });
-    
-        const allergies = await prisma.allergy.findMany({
-            where: { healthConditionId: conditionId },
-            select: {
-                allergen: true,
-                severity: true,
-                duration: true,
-                triggers: true
-            }
-        });
-    
-        const lastLocation = await prisma.location.findFirst({
-            orderBy: {
-                id: 'desc',
-            },
-            select: {
-                location: true
-            }
-        });
-
-        const medications = await prisma.medication.findMany({
-            where: {healthConditionId: conditionId},
-            select: {
-                name: true,
-                startDate: true,
-                frequency: true,
-                dosage: true,
-                allergyId:true,
-                respiratoryConditionId:true,
-            }
-        });
-    
+            ///calcualtions and queries, for reference check airowave/backend/src/controllers/chatbotControllers/chatbot.js///
         const ConditionSeverityInput = (severity) => {
             if (severity >= 4) {
                 return 'User health condition severity is high';
@@ -386,6 +230,16 @@ The second function, sendToOpenAI, is then triggered where the chatbot is define
 
 <img src="./readme/title8.svg"/>
 
+### Deployed on AWS EC2 intance
+- Accessing the instance shell was achieved through PuTTy. Refer to this Guide or this short video on setting up PuTTY and SSH keys.
+- Below is the nodeJS instance running, where Prisma migrations of existing models was performed with initial seed on PostgreSQL which was installed prior the migration.
+
+| EC2 intance              |
+| ------------------------ |
+| <img src="./readme/test-image.png" width="350"> |
+
+
+
 <br><br>
 
 <img src="./readme/title9.svg"/>
@@ -414,16 +268,16 @@ This is an example of how to list things you need to use the software and how to
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
-1. Get a free API Key at [https://example.com](https://example.com)
+1. Get a free API Key at [ ]
 2. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/alisafa60/airo-wave.git
    ```
 3. Install NPM packages
    ```sh
    npm install
+   npx prisma migrate dev
+   npx prisma generate
    ```
 4. Enter your API in `config.js`
    ```js
