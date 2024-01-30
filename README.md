@@ -375,6 +375,8 @@ The second function, sendToOpenAI, is then triggered where the chatbot is define
 
 <img src="./readme/title9.svg"/>
 
+Unit testing was performed using supertest, which is a versatile Node.js library for API testing, designed for Express applications. It simplifies the simulation of HTTP requests and excels in integration testing scenarios. With a readable syntax, async/await support, supertest is an effective choice for ensuring the reliability and functionality of your API endpoints. Below are examples of testing scenarious using this library.
+
 | Upload a photo           | Upload a photo fail        | Register                     |
 | ------------------------ | -------------------------- | ---------------------------- |
 | <img src="./readme/test-image.png" width="300"> | <img src="./readme/test-image2.png" width="300"> | <img src="./readme/test-image3.png" width="300"> |
