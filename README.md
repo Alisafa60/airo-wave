@@ -93,6 +93,11 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 | ------------------------------- | ---------------------------------------- | 
 | ![Chatbot Screen](./readme/medcat.gif) | ![Profile Screen](./readme/health.png) 
 
+
+
+https://github.com/Alisafa60/airo-wave/assets/149372082/2dc3fb65-5886-4e58-b26d-bab45df20fa7
+
+
 <br><br>
 
 <br><br>
