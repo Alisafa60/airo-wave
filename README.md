@@ -97,7 +97,7 @@ async function generateOpenAIPayload(userId, userMessage) {
         ///////////////////////////////////Sensor Data//////////////////////////////////////////////////
 
         const sensorDataWithAverage = await prisma.sensorData.findMany({
-            take: 150,
+            take: 150, //depends on the frequency of updates of sensor data in the database
             orderBy: {
                 createdAt: 'desc',
             },
@@ -338,7 +338,7 @@ async function generateOpenAIPayload(userId, userMessage) {
 
             Indoor Air Quality:
             - CO2 levels: ${payload.indoorSensorData.co2} ppm
-            - VOC levels: ${payload.indoorSensorData.voc} ppm
+            - VOC levels: ${payload.indoorSensorData.voc} ppb
 
             Outdoor Air Quality:
             - AQI: ${payload.outdoorAirCondition.aqi}
