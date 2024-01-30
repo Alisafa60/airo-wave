@@ -34,7 +34,6 @@ const getLastResponse = async(req, res) => {
         res.status(200).json({openAiResponse});
     }catch(e){
         handleError(res, e, 'Error retrieving OpenAI response');
-        console.log(error);
     }
 }
 

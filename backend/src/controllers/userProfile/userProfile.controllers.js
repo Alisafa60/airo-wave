@@ -12,7 +12,6 @@ const updateProfile = async (req, res) => {
     try {
       const userId = req.user.id;
       const { firstName, lastName, gender, unit, phone, adress } = req.body;
-      console.log('Incoming Update Profile Request:', req.body);
       const existingUser = await prisma.user.findUnique({ where: { id: userId } });
         
       if (!existingUser) {
@@ -30,7 +29,6 @@ const updateProfile = async (req, res) => {
           address: adress || existingUser.address,
         },
       });
-      console.log('Updated User:', updatedUser);
       return res.status(200).json({ user: updatedUser });
     } catch (e) {
         handleError(res, e, 'Error updating profile');

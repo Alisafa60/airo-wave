@@ -21,7 +21,6 @@ const storeSensorData = async (req, res) => {
 
     res.status(201).json({ message: 'Data stored successfully.' });
   } catch (error) {
-    console.error('Error storing data:', error, req.body);
     res.status(500).json({ message: 'Internal server error.' });
   }
 };
@@ -39,7 +38,6 @@ const getLastSensorData = async (req, res) => {
 
     res.status(200).json({ lastSensorData });
   } catch (error) {
-    console.error('Error getting last sensor data:', error);
     res.status(500).json({ message: 'Internal server error.' });
   }
 };

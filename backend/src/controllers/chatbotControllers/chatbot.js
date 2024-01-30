@@ -22,7 +22,6 @@ async function sendToOpenAI(userId, payload, prompt) {
         });
         
         const result = response.choices[0].message.content;
-        console.log(result)
         try {
             const openAiResponse = await prisma.openAiResponse.create({
                data : {
@@ -33,11 +32,9 @@ async function sendToOpenAI(userId, payload, prompt) {
             });
         
         } catch (error) {
-            console.error('Error saving result to Prisma:', error);
         }
         
     } catch (error) {
-        console.error('Error in sendToOpenAI:', error);
         throw error;
     }
 }
@@ -302,7 +299,6 @@ async function generateOpenAIPayload(userId, userMessage) {
 
             await sendToOpenAI(userId, payload, userMessage + '\n' + prompt);;
     } catch (error) {
-        console.error('Error:', error);
     } finally {
         await prisma.$disconnect();
     }

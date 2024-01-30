@@ -27,7 +27,6 @@ const authMiddleware = async (req, res, next) => {
       req.user = user;
       next();
     } catch (error) {
-      console.error('Error decoding token:', error);
       res.status(401).send('Unauthorized');
     }
   }
@@ -44,7 +43,6 @@ const adminMiddleware = async (req, res, next) => {
       res.status(403).send('Forbidden: Admin access required');
     }
   } catch (error) {
-    console.error('Error checking admin privileges:', error);
     res.status(500).send('Internal Server Error');
   }
 };

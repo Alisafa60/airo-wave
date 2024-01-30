@@ -202,7 +202,6 @@ const updateMedicationByName = async (req, res) => {
     }
 
     res.json({ updatedMedication: existingMedication });
-    console.log(req.body);
   } catch (e) {
     handleError(res, e, 'Error updating medication');
   }

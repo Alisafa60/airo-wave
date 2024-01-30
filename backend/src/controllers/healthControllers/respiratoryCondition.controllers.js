@@ -157,7 +157,6 @@ const updateRespiratoryConditionByName = async (req, res) => {
       }
   
       res.json({ updatedRespiratoryCondition: existingRespiratoryCondition });
-      console.log(req.body);
     } catch (e) {
       handleError(res, e, 'Error updating respiratory condition');
     }
