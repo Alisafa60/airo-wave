@@ -120,7 +120,7 @@ async function generateOpenAIPayload(userId, userMessage) {
         const fixedCo2 = parseFloat(averageCo2.toFixed(2));
         const fixedVoC = parseFloat(averageVoc.toFixed(2));
 
-        //////////////////////////////Outdoor airquality////////////////////////////////////////////
+        //////////////////////////////Outdoor Air Quality Data////////////////////////////////////////////
     
         const environmentalHealthDataWithAverage = await prisma.enviromentalHealthData.groupBy({
             where: { userId: userId },
