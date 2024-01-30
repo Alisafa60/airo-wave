@@ -156,10 +156,8 @@ const updateAllergyByName = async (req, res) => {
     }
 
     res.json({ updatedAllergy: existingAllergy });
-    console.log(req.body);
   } catch (e) {
     handleError(res, e, 'Error updating allergy');
-    console.log(req.body);
   }
 };
 const deleteAllergyById = async (req, res) => {

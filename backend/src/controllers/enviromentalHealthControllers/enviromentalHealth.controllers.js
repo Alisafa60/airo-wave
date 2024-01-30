@@ -144,9 +144,6 @@ const updateLastRowAllergenData = async (req, res) => {
         location: location,
       },
     });
-    console.log('updated'),
-    console.log(coLevel)
-    console.log(location);
     res.status(200).json({ updatedData });
   } catch (error) {
     handleError(res, error, 'Error updating allergen_data in the last row');

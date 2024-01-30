@@ -25,7 +25,6 @@ const uploadProfilePicture = async (req, res) => {
 
     res.status(201).json({ message: 'Profile picture uploaded successfully', imageUrl });
   } catch (error) {
-    console.error('Error uploading profile picture:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -56,7 +55,6 @@ const deleteProfilePicture = async (req, res) => {
   
       res.status(204).send();
     } catch (error) {
-      console.error('Error deleting profile picture:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };

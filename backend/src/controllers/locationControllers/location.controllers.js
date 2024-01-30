@@ -18,7 +18,6 @@ const createLocation = async (req, res) => {
 
     res.status(201).json(newLocation);
   } catch (error) {
-    console.error('Error creating location:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -27,7 +26,6 @@ const getLastLocation = async (req, res) => {
   
   try {
     const userId = req.user.id; 
-    console.log(userId)
     const lastLocation = await prisma.location.findFirst({
     
       where: {
@@ -44,7 +42,6 @@ const getLastLocation = async (req, res) => {
       res.status(404).json({ error: 'Location not found for the user' });
     }
   } catch (error) {
-    console.error('Error fetching last location:', error);
     res.status(500).json({ error: 'Internal Server Error' });
    
   }

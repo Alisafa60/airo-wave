@@ -50,7 +50,7 @@
 <img src="./readme/title4.svg"/>
 
 > AiroWave was using wireframes and mockups, iterating on the design until we reached the ideal layout for easy navigation and a seamless user experience.
-
+- link: [Airo Wave Design]([https://bit.ly/safa-figma/](https://www.figma.com/file/pWIkwLZGDMv897FVjYuDK8/FinalProject?type=design&node-id=0-1&mode=design&t=D9Ay4yLQnkpiZo7D-0))
 
 ### Mockups
 | Home screen              | Health Screen              | Profile Screen              |
@@ -67,11 +67,11 @@
 
 The data model, utilizing PostgreSQL, includes user profiles, medical history, symptom tracking, and real-time indoor and outdoor environmental data. 
 
-<img src="./readme/airo_wave_er.png"/>
+<img src="./readme/airo_wave_er.png" width = "450"/>
 
 
 <br><br>
-<img src="./readme/title6.svg" width = "450"/>
+<img src="./readme/title6.svg"/>
 
 > Using the wireframes and mockups as a guide, AiroWave app with the following features:
 
@@ -247,7 +247,7 @@ The second function, sendToOpenAI, is then triggered where the chatbot is define
 <img src="./readme/title9.svg"/>
 
 
-Unit testing was performed using supertest, a Node.js library for API testing, designed for Express applications. It simplifies the simulation of HTTP requests and excels in integration testing scenarios. it is an effective choice for ensuring the reliability and functionality of your API endpoints. Below are examples of testing scenarious using this library.
+Unit testing was performed using supertest, a Node.js library for API testing, designed for Express applications. It is an effective choice for ensuring the reliability and functionality of your API endpoints. Below are examples of testing scenarious using this library.
 
 
 | Upload a photo           | Upload a photo fail        | Register                     |
@@ -257,7 +257,8 @@ Unit testing was performed using supertest, a Node.js library for API testing, d
 
 <br><br>
 <!-- How to run -->
-<img src="./readme/title10svg"/>
+<img src="./readme/title10.svg"/>
+
 > To set up AiroWave locally, follow these steps:
 
 ### Prerequisites
@@ -266,10 +267,6 @@ Unit testing was performed using supertest, a Node.js library for API testing, d
 - Install NodeJS from: [NodeJS](https://nodejs.org/en/download)
 - Install PostgreSQL from: [PostgreSQL](https://www.postgresql.org/download/)
 - Install Android Studio from : [Android Studio](https://developer.android.com/studio)
-* 
-  ```sh
-  
-  ```
 
 ### Installation
 
