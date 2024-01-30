@@ -391,7 +391,7 @@ The second function, sendToOpenAI, is then triggered where the chatbot is define
 <img src="./readme/title9.svg"/>
 
 
-Unit testing was performed using supertest, which is a versatile Node.js library for API testing, designed for Express applications. It simplifies the simulation of HTTP requests and excels in integration testing scenarios. With a readable syntax, async/await support, supertest is an effective choice for ensuring the reliability and functionality of your API endpoints. Below are examples of testing scenarious using this library.
+Unit testing was performed using supertest, a Node.js library for API testing, designed for Express applications. It simplifies the simulation of HTTP requests and excels in integration testing scenarios. it is an effective choice for ensuring the reliability and functionality of your API endpoints. Below are examples of testing scenarious using this library.
 
 
 | Upload a photo           | Upload a photo fail        | Register                     |
@@ -402,7 +402,7 @@ Unit testing was performed using supertest, which is a versatile Node.js library
 <br><br>
 <!-- How to run -->
 <img src="./readme/title10svg"/>
-> To set up Coffee Express locally, follow these steps:
+> To set up AiroWave locally, follow these steps:
 
 ### Prerequisites
 
@@ -410,6 +410,10 @@ This is an example of how to list things you need to use the software and how to
 * npm
   ```sh
   npm install npm@latest -g
+  npm install prisma -g
+  npx prisma init
+  npx prisma migrate dev
+  npx prisma generate
   ```
 
 ### Installation
