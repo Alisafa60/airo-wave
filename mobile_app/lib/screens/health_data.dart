@@ -7,7 +7,6 @@ import 'package:mobile_app/requests/health_survice.dart';
 import 'package:mobile_app/requests/medication_survice.dart';
 import 'package:mobile_app/requests/profile.dart';
 import 'package:mobile_app/requests/respiratory_condition_survice.dart';
-import 'package:mobile_app/utils/image_helper.dart';
 import 'package:mobile_app/widgets/allergy_overlay.dart';
 import 'package:mobile_app/widgets/bottom_bar.dart';
 import 'package:mobile_app/widgets/medication_overlay.dart';

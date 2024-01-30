@@ -155,6 +155,14 @@ class _MedCatScreenState extends State<MedCatScreen> {
             fontWeight: FontWeight.w500,
           ),
         ),
+        actions: [
+            IconButton(
+              icon: SvgPicture.asset('lib/assets/icons/notification-bell.svg', height: 35, width: 35,), 
+              onPressed: () { 
+                _showDoctorOverlay(context);
+              },
+            )
+          ],
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
@@ -503,6 +511,37 @@ class _MedCatScreenState extends State<MedCatScreen> {
     bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: 1, 
      ),
+    );
+  }
+
+  void _showDoctorOverlay(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 200, 
+          child: Column(
+            children: [
+           
+              ListTile(
+                title: const Text(''),
+                onTap: () {
+                 
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text(''),
+                onTap: () {
+                 
+                  Navigator.pop(context);
+                },
+              ),
+             
+            ],
+          ),
+        );
+      },
     );
   }
 }
