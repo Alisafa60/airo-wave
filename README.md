@@ -50,7 +50,7 @@
 <img src="./readme/title4.svg"/>
 
 > AiroWave was using wireframes and mockups, iterating on the design until we reached the ideal layout for easy navigation and a seamless user experience.
-
+- link: [Airo Wave Design](https://bit.ly/safa-figma/)
 
 ### Mockups
 | Home screen              | Health Screen              | Profile Screen              |
@@ -67,11 +67,11 @@
 
 The data model, utilizing PostgreSQL, includes user profiles, medical history, symptom tracking, and real-time indoor and outdoor environmental data. 
 
-<img src="./readme/airo_wave_er.png"/>
+<img src="./readme/airo_wave_er.png" width = "450"/>
 
 
 <br><br>
-<img src="./readme/title6.svg" width = "450"/>
+<img src="./readme/title6.svg"/>
 
 > Using the wireframes and mockups as a guide, AiroWave app with the following features:
 
