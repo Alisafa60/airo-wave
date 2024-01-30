@@ -409,8 +409,9 @@ Unit testing was performed using supertest, a Node.js library for API testing, d
 This is an example of how to list things you need to use the software and how to install them.
 * npm
   ```sh
-  npm install npm@latest -g
-  npm install prisma -g
+  npm install make
+  npm install
+  npm install prisma
   npx prisma init
   npx prisma migrate dev
   npx prisma generate
