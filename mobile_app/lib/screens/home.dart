@@ -84,13 +84,11 @@ class _MyHomeScreen extends State<HomeScreen> {
     String key = 'profileImagePath_$userId';
 
     String? savedImagePath = prefs.getString(key);
-    print('Loaded image path key: $key');
     
     if (savedImagePath != null){
       setState(() {
         fileName = savedImagePath;
       });
-      print('Loaded image path: $fileName');
     }
   }
 
@@ -104,6 +102,7 @@ class _MyHomeScreen extends State<HomeScreen> {
         longitude = newLongitude;
         locationData = data;
       });
+      print(locationData);
       _fetchAndPostAirQualityData();
       _loadEnviromentalData();
     }catch(error){
@@ -511,7 +510,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                             SvgPicture.asset('lib/assets/icons/leaf2.svg', height: 23, width: 23,),
                                             const SizedBox(width: 5,),
                                             Text(
-                                              '${plantAllergens.isNotEmpty ? plantAllergens[0]['displayName'] ?? '' : ''}',
+                                              '${plantAllergens.isNotEmpty && (plantAllergens.length!=null && plantAllergens.isNotEmpty) ? plantAllergens[0]['displayName'] ?? '' : ''}',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 color: getColorFromName(plantAllergens.isNotEmpty ? plantAllergens[0]['color'] : 'black'),
@@ -525,7 +524,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                             SvgPicture.asset('lib/assets/icons/olive.svg', height: 23, width: 25,),
                                             const SizedBox(width: 5,),
                                             Text(
-                                             '${plantAllergens.isNotEmpty ? plantAllergens[1]['displayName'] ?? '' : ''}',
+                                             '${plantAllergens.isNotEmpty && (plantAllergens.length!=null && plantAllergens.isNotEmpty) ? plantAllergens[1]['displayName'] ?? '' : ''}',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 color: getColorFromName(plantAllergens.isNotEmpty ? plantAllergens[0]['color'] : 'black'),
@@ -566,7 +565,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                             SvgPicture.asset('lib/assets/icons/leaf1.svg', height: 23, width: 23,),
                                             const SizedBox(width: 5,),
                                             Text(
-                                              '${plantAllergens.isNotEmpty ? pollenAllergens[0]['displayName'] ?? '' : ''}',
+                                              '${plantAllergens.isNotEmpty && (pollenAllergens != null && pollenAllergens.isNotEmpty) ? (pollenAllergens.length > 0 ? pollenAllergens[0]['displayName'] ?? '' : '') : ''}',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 color: getColorFromName(plantAllergens.isNotEmpty ? pollenAllergens[0]['color'] : 'black'),
@@ -580,7 +579,7 @@ class _MyHomeScreen extends State<HomeScreen> {
                                             SvgPicture.asset('lib/assets/icons/tree1.svg', height: 23, width: 25,),
                                             const SizedBox(width: 5,),
                                             Text(
-                                             '${plantAllergens.isNotEmpty ? pollenAllergens[1]['displayName'] ?? '' : ''}',
+                                               '${plantAllergens.isNotEmpty && (pollenAllergens != null && pollenAllergens.isNotEmpty) ? (pollenAllergens.length > 1 ? pollenAllergens[1]['displayName'] ?? '' : '') : ''}',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 color: getColorFromName(plantAllergens.isNotEmpty ? pollenAllergens[0]['color'] : 'black'),
