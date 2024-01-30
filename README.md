@@ -38,9 +38,9 @@
 
 
 ### Mockups
-| Home screen  | Health Screen | Profile Screen |
-| ---| ---| ---|
-| ![Landing](./readme/home.png) | ![fsdaf](./readme/medcat.png) | ![fsdaf](./readme/profile.png) |
+| Home screen              | Health Screen              | Profile Screen              |
+| ------------------------ | -------------------------- | ---------------------------- |
+| <img src="./readme/home.png" width="200"> | <img src="./readme/medcat.png" width="200"> | <img src="./readme/profile.png" width="200"> |
 
 <br><bar>
 
@@ -62,21 +62,21 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 
 ### User Screens (Mobile)
 
-| Login screen                | Register screen                   |
-| --------------------------- | ----------------------------------|
-| ![Login](./readme/login.png) | ![Register](./readme/signup.png)  |
+| Login Screen           | Register Screen            | Landing Screen               |
+| ----------------------- | --------------------------- | ---------------------------- |
+| ![Login](./readme/login.png) | ![Register](./readme/signup.png) | ![Landing](./readme/health-gif.gif) |
 
-| Landing screen                  | Home screen                      |
-| ------------------------------- | ---------------------------------|
-| ![Landing](./readme/health-gif.gif) | ![Home](./readme/home1.png)      |
+---
 
-| Heatmap Allergy Screen               | Heatmap Aqi Screen               |
-| ---------------------------- | ---------------------------------|
-| ![Profile](./readme/heatmap-allergy.png) | ![Heatmap Aqi](./readme/heatmap-aqi.png) |
+| Home Screen                | Heatmap Allergy Screen         | Heatmap AQI Screen           |
+| --------------------------- | ----------------------------- | ---------------------------- |
+| ![Home](./readme/home1.png) | ![Heatmap Allergy](./readme/heatmap-allergy.png) | ![Heatmap AQI](./readme/heatmap-aqi.png) |
 
-| Chatbot Screen               | Profile Screen               |
-| ---------------------------- | ---------------------------------|
-| ![Profile](./readme/medcat.gif) | ![Heatmap Aqi](./readme/health.png) |
+---
+
+| Chatbot Screen          | Profile Screen             |
+| ----------------------- | --------------------------- |
+| ![Chatbot](./readme/medcat.gif) | ![Profile](./readme/health.png) |
 
 
 <br><br>
