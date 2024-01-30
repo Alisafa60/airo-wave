@@ -50,7 +50,7 @@
 <img src="./readme/title4.svg"/>
 
 > AiroWave was using wireframes and mockups, iterating on the design until we reached the ideal layout for easy navigation and a seamless user experience.
-- link: [Airo Wave Design]([https://bit.ly/safa-figma/](https://www.figma.com/file/pWIkwLZGDMv897FVjYuDK8/FinalProject?type=design&node-id=0-1&mode=design&t=D9Ay4yLQnkpiZo7D-0))
+- Link: [Airo Wave Design](https://www.figma.com/file/pWIkwLZGDMv897FVjYuDK8/FinalProject?type=design&node-id=0-1&mode=design&t=D9Ay4yLQnkpiZo7D-0)
 
 ### Mockups
 | Home screen              | Health Screen              | Profile Screen              |
