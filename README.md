@@ -85,7 +85,7 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 
 | Home Screen                     | Heatmap Allergy Screen                  | Heatmap AQI Screen                    |
 | ------------------------------ | ---------------------------------------- | -------------------------------------|
-| <img src="./readme/home1.png" width="240">    | <img src="./readme/heatmap-allergy.png" width="240"> | <img src="./readme/heatmap-aqi.png" width="240"> |
+| <img src="./readme/sensor-gif.png" width="240">    | <img src="./readme/heatmap-allergy.png" width="240"> | <img src="./readme/heatmap-aqi.png" width="240"> |
 
 ---
 
