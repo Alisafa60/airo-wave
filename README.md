@@ -65,13 +65,13 @@
 
 ###  User-Centric Data Management:
 
-The data model, utilizing PostgreSQL, includes user profiles, medical history, symptom tracking, and real-time indoor and outdoor environmental data. Ensuring a comprehensive approach to user-centric health information and the enviromental conditions around the user. 
+The data model, utilizing PostgreSQL, includes user profiles, medical history, symptom tracking, and real-time indoor and outdoor environmental data. 
 
 <img src="./readme/airo_wave_er.png"/>
 
 
 <br><br>
-<img src="./readme/title6.svg"/>
+<img src="./readme/title6.svg" width = "450"/>
 
 > Using the wireframes and mockups as a guide, AiroWave app with the following features:
 
@@ -101,9 +101,10 @@ The data model, utilizing PostgreSQL, includes user profiles, medical history, s
 
 ### Curated Dataset for Enhanced AI Insight
 
-Aggregated air quality metrics were calculated as averages over number n of last entiers in the database, while distinguishing between indoor and outdoor environmental data. Additionally, allergens are selected and their severity levels are specified before passing them. And By specifying the user's health condition and condition severity input, insights are tailored for a personalized and targeted analysis.
+Aggregated indoor and outdoor air quality metrics were calculated as averages over number n of last entiers in the database. Additionally, allergens are selected and their severity levels are specified before passing them. And By specifying the user's health condition and condition severity input, insights are tailored for a personalized and targeted analysis.
 
-This approach relies on two functions, where user identification and message are passed to the first one, with the necessary data to pass to payload and prompt as shown below:
+This approach relies on two functions, where user identification and messages are passed to the first one, with the necessary data to pass to payload and prompt as shown below:
+
 ```javascript
 async function generateOpenAIPayload(userId, userMessage) {
     
@@ -230,8 +231,9 @@ The second function, sendToOpenAI, is then triggered where the chatbot is define
 
 <img src="./readme/title8.svg"/>
 
-### Deployed on AWS EC2 intance
-- Accessing the instance shell was achieved through PuTTy. Refer to this Guide or this short video on setting up PuTTY and SSH keys.
+### Deployed on AWS EC2 intance https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html
+
+- Accessing the instance shell was achieved through [Putty](https://https://putty.org/).
 - Below is the nodeJS instance running, where Prisma migrations of existing models was performed with initial seed on PostgreSQL which was installed prior the migration.
 
 | EC2 intance              |
@@ -260,7 +262,10 @@ Unit testing was performed using supertest, a Node.js library for API testing, d
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+- Install Flutter from: [Flutter](https://docs.flutter.dev/get-started/install/)
+- Install NodeJS from: [NodeJS](https://nodejs.org/en/download)
+- Install PostgreSQL from: [PostgreSQL](https://www.postgresql.org/download/)
+- Install Android Studio from : [Android Studio](https://developer.android.com/studio)
 * 
   ```sh
   
@@ -268,20 +273,23 @@ This is an example of how to list things you need to use the software and how to
 
 ### Installation
 
-1. Get a free API Key at [ ]
-2. Clone the repo
+1. Install Flutter from 
+2. Clone the repository
    ```sh
    git clone https://github.com/alisafa60/airo-wave.git
    ```
-3. Install NPM packages
+3. Install NPM packages and migrate Prisma models
    ```sh
+   cd backend
    npm install
    npx prisma migrate dev
    npx prisma generate
    ```
-4. Enter your API in `config.js`
+4. Prisma generates then .env file
    ```js
-   const API_KEY = 'ENTER YOUR API';
+   //.env
+    DATABASE_URL="postgresql://user_name:password@systemlocalhost:5432/data_base_name"
+    JWT_KEY = <A random string>
+    OPENAI_API_KEY=<OpenAI key>
    ```
-
-Now, you should be able to run Coffee Express locally and explore its features.
+5. As for the front end, outdoors air quality, pollen forecast, and png heatmap tiles were fetched using Google API with a Google API key.
